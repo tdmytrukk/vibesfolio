@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,16 +9,27 @@ interface AddPromptModalProps {
   onClose: () => void;
   onSave: (prompt: { title: string; content: string; tags: string[] }) => void;
   existingTags: string[];
+  editingPrompt?: { title: string; content: string; tags: string[] } | null;
 }
 
 const defaultSuggestions = ["starter", "debug", "design", "mega"];
 
-const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalProps) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const AddPromptModal = ({ open, onClose, onSave, existingTags, editingPrompt }: AddPromptModalProps) => {
+  const [title, setTitle] = useState(editingPrompt?.title || "");
+  const [content, setContent] = useState(editingPrompt?.content || "");
   const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(editingPrompt?.tags || []);
   const [generating, setGenerating] = useState(false);
+  const isEdit = !!editingPrompt;
+
+  useEffect(() => {
+    if (open) {
+      setTitle(editingPrompt?.title || "");
+      setContent(editingPrompt?.content || "");
+      setTags(editingPrompt?.tags || []);
+      setTagInput("");
+    }
+  }, [open, editingPrompt]);
 
   const autoGenerateTags = async () => {
     if (!content.trim()) {
@@ -59,10 +70,12 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalP
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) return;
     onSave({ title: title.trim(), content: content.trim(), tags });
-    setTitle("");
-    setContent("");
-    setTags([]);
-    setTagInput("");
+    if (!isEdit) {
+      setTitle("");
+      setContent("");
+      setTags([]);
+      setTagInput("");
+    }
     onClose();
   };
 
@@ -92,10 +105,10 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalP
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="fixed inset-x-4 top-[10%] z-50 mx-auto max-w-lg card-glass p-6 max-h-[80vh] overflow-y-auto"
             role="dialog"
-            aria-label="Add new prompt"
+            aria-label={isEdit ? "Edit prompt" : "Add new prompt"}
           >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-heading text-xl text-foreground">New Prompt</h2>
+              <h2 className="font-heading text-xl text-foreground">{isEdit ? "Edit Prompt" : "New Prompt"}</h2>
               <button
                 onClick={onClose}
                 className="rounded-full p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
@@ -179,7 +192,7 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalP
               disabled={!title.trim() || !content.trim()}
               className="w-full rounded-pill bg-primary py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40"
             >
-              Save Prompt
+              {isEdit ? "Update Prompt" : "Save Prompt"}
             </button>
           </motion.div>
         </>

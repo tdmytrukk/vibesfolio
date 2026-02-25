@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Plus, Pencil } from "lucide-react";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
@@ -8,13 +8,14 @@ import AddPromptModal from "@/components/AddPromptModal";
 import DeletePromptDialog from "@/components/DeletePromptDialog";
 
 const PromptsPage = () => {
-  const { prompts, loading, addPrompt, deletePrompt, allTags } = usePrompts();
+  const { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags } = usePrompts();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Prompt | null>(null);
+  const [editTarget, setEditTarget] = useState<Prompt | null>(null);
 
   // Filter prompts
   const filtered = prompts.filter((p) => {
@@ -229,6 +230,15 @@ const PromptsPage = () => {
                     </button>
 
                     <div className="flex items-center gap-1">
+                      {/* Edit */}
+                      <button
+                        onClick={() => setEditTarget(prompt)}
+                        className="flex items-center gap-1 rounded-pill px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                        aria-label="Edit prompt"
+                      >
+                        <Pencil size={13} />
+                      </button>
+
                       {/* Copy */}
                       <button
                         onClick={() => handleCopy(prompt)}
@@ -260,12 +270,19 @@ const PromptsPage = () => {
         </div>
       )}
 
-      {/* Add prompt modal */}
+      {/* Add/Edit prompt modal */}
       <AddPromptModal
-        open={addModalOpen}
-        onClose={() => setAddModalOpen(false)}
-        onSave={addPrompt}
+        open={addModalOpen || !!editTarget}
+        onClose={() => { setAddModalOpen(false); setEditTarget(null); }}
+        onSave={async (prompt) => {
+          if (editTarget) {
+            await updatePrompt(editTarget.id, prompt);
+          } else {
+            await addPrompt(prompt);
+          }
+        }}
         existingTags={allTags}
+        editingPrompt={editTarget}
       />
 
       {/* Delete confirmation */}
