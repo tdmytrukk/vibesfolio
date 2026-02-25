@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AddPromptModalProps {
   open: boolean;
@@ -16,6 +18,28 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalP
   const [content, setContent] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [generating, setGenerating] = useState(false);
+
+  const autoGenerateTags = async () => {
+    if (!content.trim()) {
+      toast.error("Add some content first to generate tags");
+      return;
+    }
+    setGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-tags", {
+        body: { title: title.trim(), content: content.trim() },
+      });
+      if (error) throw error;
+      const newTags = (data?.tags || []) as string[];
+      setTags((prev) => Array.from(new Set([...prev, ...newTags])));
+      if (newTags.length > 0) toast.success(`Added ${newTags.length} tags`);
+    } catch {
+      toast.error("Couldn't generate tags, try again");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const suggestions = Array.from(new Set([...defaultSuggestions, ...existingTags]))
     .filter((t) => !tags.includes(t))
@@ -103,7 +127,18 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags }: AddPromptModalP
             />
 
             {/* Tags */}
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">Tags</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-muted-foreground">Tags</label>
+              <button
+                type="button"
+                onClick={autoGenerateTags}
+                disabled={generating || !content.trim()}
+                className="inline-flex items-center gap-1 rounded-pill bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground hover:opacity-80 transition-opacity disabled:opacity-40"
+              >
+                {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                Auto-tag
+              </button>
+            </div>
             <div className="flex flex-wrap gap-1.5 mb-2">
               {tags.map((tag) => (
                 <span
