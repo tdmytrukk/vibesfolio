@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      resources: {
+        Row: {
+          category: string
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          domain: string | null
+          favicon_url: string | null
+          id: string
+          og_title: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          category?: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          favicon_url?: string | null
+          id?: string
+          og_title?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          category?: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          favicon_url?: string | null
+          id?: string
+          og_title?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
