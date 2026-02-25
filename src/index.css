@@ -49,7 +49,8 @@
 
     /* Status colors */
     --status-idea: 270 40% 88%;
-    --status-progress: 40 70% 88%;
+    --status-progress: 210 60% 86%;
+    --status-paused: 35 50% 88%;
     --status-shipped: 160 50% 86%;
     --status-archived: 220 10% 90%;
 
