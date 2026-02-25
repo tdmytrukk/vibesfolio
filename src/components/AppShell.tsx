@@ -5,7 +5,7 @@ import QuickAddModal from "./QuickAddModal";
 
 const navItems = [
   { to: "/", label: "Inbox", icon: Inbox },
-  { to: "/prompts", label: "Prompts", icon: Sparkles },
+  { to: "/prompts", label: "Library", icon: Sparkles },
   { to: "/vault", label: "Vault", icon: Archive },
   { to: "/log", label: "Log", icon: Rocket },
 ];
