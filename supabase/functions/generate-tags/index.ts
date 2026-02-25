@@ -15,11 +15,6 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const prompt = `Analyze this prompt and return 2-5 short, lowercase tags that describe its purpose or category. Only return a JSON array of strings, nothing else.
-
-Title: ${title}
-Content: ${content}`;
-
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -32,37 +27,15 @@ Content: ${content}`;
           model: "google/gemini-2.5-flash-lite",
           messages: [
             {
-              role: "system",
-              content:
-                "You extract tags from prompts. Return ONLY a JSON array of 2-5 short lowercase tags. No explanation.",
-            },
-            { role: "user", content: prompt },
-          ],
-          tools: [
-            {
-              type: "function",
-              function: {
-                name: "return_tags",
-                description: "Return generated tags",
-                parameters: {
-                  type: "object",
-                  properties: {
-                    tags: {
-                      type: "array",
-                      items: { type: "string" },
-                      description: "2-5 short lowercase tags",
-                    },
-                  },
-                  required: ["tags"],
-                  additionalProperties: false,
-                },
-              },
+              role: "user",
+              content: `Return ONLY a JSON array of 2-5 short lowercase single-word tags for this prompt. No explanation, no markdown, just the array.
+
+Title: ${title || ""}
+Content: ${(content || "").slice(0, 500)}
+
+Example response: ["css","debug","react"]`,
             },
           ],
-          tool_choice: {
-            type: "function",
-            function: { name: "return_tags" },
-          },
         }),
       }
     );
@@ -86,19 +59,27 @@ Content: ${content}`;
     }
 
     const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    let tags: string[] = [];
+    const raw = data.choices?.[0]?.message?.content || "[]";
+    console.log("AI raw response:", raw);
 
-    if (toolCall?.function?.arguments) {
-      const parsed = JSON.parse(toolCall.function.arguments);
-      tags = parsed.tags || [];
+    // Extract JSON array from response
+    const match = raw.match(/\[[\s\S]*?\]/);
+    let tags: string[] = [];
+    if (match) {
+      try {
+        tags = JSON.parse(match[0]);
+      } catch {
+        console.error("Failed to parse tags JSON:", match[0]);
+      }
     }
 
-    // Normalize
     tags = tags
+      .filter((t: unknown): t is string => typeof t === "string")
       .map((t: string) => t.trim().toLowerCase())
       .filter((t: string) => t.length > 0 && t.length <= 30)
       .slice(0, 5);
+
+    console.log("Generated tags:", tags);
 
     return new Response(JSON.stringify({ tags }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
