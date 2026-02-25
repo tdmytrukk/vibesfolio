@@ -71,6 +71,7 @@ export default {
         status: {
           idea: "hsl(var(--status-idea))",
           progress: "hsl(var(--status-progress))",
+          paused: "hsl(var(--status-paused))",
           shipped: "hsl(var(--status-shipped))",
           archived: "hsl(var(--status-archived))",
         },

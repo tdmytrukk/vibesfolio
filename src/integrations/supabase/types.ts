@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      build_notes: {
+        Row: {
+          build_id: string
+          created_at: string
+          id: string
+          text: string
+        }
+        Insert: {
+          build_id: string
+          created_at?: string
+          id?: string
+          text: string
+        }
+        Update: {
+          build_id?: string
+          created_at?: string
+          id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "build_notes_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      builds: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          lovable_url: string | null
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          lovable_url?: string | null
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          lovable_url?: string | null
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prompts: {
         Row: {
           content: string
