@@ -89,7 +89,7 @@ const AppShell = ({ children }: AppShellProps) => {
           </DropdownMenu>
         </header>
 
-        <div className="px-5 md:px-8">{children}</div>
+        <div className="px-5 pt-4 md:px-8 md:pt-8">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
