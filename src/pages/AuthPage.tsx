@@ -22,10 +22,8 @@ const AuthPage = () => {
 
   if (authLoading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center">
-        <div className="canvas-bg" aria-hidden="true" />
-        <div className="canvas-grain" aria-hidden="true" />
-        <Loader2 className="relative z-10 h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -47,14 +45,24 @@ const AuthPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
         if (error) throw error;
         toast({ title: "Check your email", description: "Password reset link has been sent." });
         setMode("login");
       } else if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName }, emailRedirectTo: window.location.origin } });
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { display_name: displayName },
+            emailRedirectTo: window.location.origin,
+          },
+        });
         if (error) throw error;
         toast({ title: "Check your email", description: "Please verify your email to continue." });
       } else {
@@ -69,21 +77,18 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-5">
-      <div className="canvas-bg" aria-hidden="true" />
-      <div className="canvas-grain" aria-hidden="true" />
-
+    <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center px-5">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="card-glass relative z-10 w-full max-w-sm p-8"
+        className="card-glass w-full max-w-sm p-8"
       >
         <h1 className="font-heading text-2xl text-foreground text-center mb-1">Vibesfolio</h1>
         <p className="text-sm text-muted-foreground text-center mb-8">
           {mode === "login" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
         </p>
 
+        {/* Google Sign-In */}
         {mode !== "forgot" && (
           <>
             <button
@@ -104,17 +109,43 @@ const AuthPage = () => {
               )}
               Continue with Google
             </button>
+
             <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
-              <div className="relative flex justify-center text-xs"><span className="bg-card px-3 text-muted-foreground">or</span></div>
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-card px-3 text-muted-foreground">or</span>
+              </div>
             </div>
           </>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === "signup" && <Input placeholder="Display name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />}
-          <Input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-          {mode !== "forgot" && <Input type="password" placeholder="Password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />}
+          {mode === "signup" && (
+            <Input
+              placeholder="Display name"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+            />
+          )}
+          <Input
+            type="email"
+            placeholder="Email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {mode !== "forgot" && (
+            <Input
+              type="password"
+              placeholder="Password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          )}
           <button
             type="submit"
             disabled={loading}
@@ -127,12 +158,24 @@ const AuthPage = () => {
         <div className="mt-6 text-center text-sm text-muted-foreground space-y-2">
           {mode === "login" && (
             <>
-              <button onClick={() => setMode("forgot")} className="underline hover:text-foreground">Forgot password?</button>
-              <p>Don't have an account?{" "}<button onClick={() => setMode("signup")} className="underline hover:text-foreground">Sign up</button></p>
+              <button onClick={() => setMode("forgot")} className="underline hover:text-foreground">
+                Forgot password?
+              </button>
+              <p>
+                Don't have an account?{" "}
+                <button onClick={() => setMode("signup")} className="underline hover:text-foreground">
+                  Sign up
+                </button>
+              </p>
             </>
           )}
           {mode !== "login" && (
-            <p>Already have an account?{" "}<button onClick={() => setMode("login")} className="underline hover:text-foreground">Sign in</button></p>
+            <p>
+              Already have an account?{" "}
+              <button onClick={() => setMode("login")} className="underline hover:text-foreground">
+                Sign in
+              </button>
+            </p>
           )}
         </div>
       </motion.div>
