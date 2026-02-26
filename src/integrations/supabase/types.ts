@@ -52,6 +52,7 @@ export type Database = {
           name: string
           status: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -61,6 +62,7 @@ export type Database = {
           name: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -70,6 +72,28 @@ export type Database = {
           name?: string
           status?: string
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -80,6 +104,7 @@ export type Database = {
           id: string
           tags: string[]
           title: string
+          user_id: string | null
         }
         Insert: {
           content: string
@@ -87,6 +112,7 @@ export type Database = {
           id?: string
           tags?: string[]
           title: string
+          user_id?: string | null
         }
         Update: {
           content?: string
@@ -94,6 +120,7 @@ export type Database = {
           id?: string
           tags?: string[]
           title?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -109,6 +136,7 @@ export type Database = {
           og_title: string | null
           title: string
           url: string
+          user_id: string | null
         }
         Insert: {
           category?: string
@@ -121,6 +149,7 @@ export type Database = {
           og_title?: string | null
           title: string
           url: string
+          user_id?: string | null
         }
         Update: {
           category?: string
@@ -133,6 +162,7 @@ export type Database = {
           og_title?: string | null
           title?: string
           url?: string
+          user_id?: string | null
         }
         Relationships: []
       }
