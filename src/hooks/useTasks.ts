@@ -90,5 +90,24 @@ export function useTasks(buildId: string) {
   const byBucket = (bucket: TaskBucket) =>
     tasks.filter((t) => t.bucket === bucket).sort((a, b) => a.position - b.position);
 
-  return { tasks, loading, addTask, updateTask, deleteTask, byBucket, refetch: fetchTasks };
+  const reorderTasks = async (updatedTasks: ProjectTask[]) => {
+    const backup = tasks;
+    setTasks(updatedTasks);
+    // Batch update positions for changed tasks
+    const updates = updatedTasks.map((t, i) => ({
+      id: t.id,
+      bucket: t.bucket,
+      position: i,
+    }));
+    // We only need to update tasks whose position or bucket changed
+    const changed = updates.filter((u) => {
+      const orig = backup.find((t) => t.id === u.id);
+      return orig && (orig.position !== u.position || orig.bucket !== u.bucket);
+    });
+    for (const c of changed) {
+      await supabase.from("project_tasks").update({ bucket: c.bucket, position: c.position }).eq("id", c.id);
+    }
+  };
+
+  return { tasks, setTasks, loading, addTask, updateTask, deleteTask, byBucket, reorderTasks, refetch: fetchTasks };
 }
