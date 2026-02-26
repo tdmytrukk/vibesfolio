@@ -21,9 +21,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  Target,
+  Flame,
   CircleDot,
-  Archive,
+  Snowflake,
   Check,
   Plus,
   Trash2,
@@ -33,10 +33,10 @@ import {
 } from "lucide-react";
 import type { ProjectTask, TaskBucket } from "@/hooks/useTasks";
 
-const bucketConfig: Record<TaskBucket, { label: string; icon: React.ReactNode }> = {
-  today: { label: "Today", icon: <Target size={14} /> },
-  next: { label: "Next", icon: <CircleDot size={14} /> },
-  backlog: { label: "Backlog", icon: <Archive size={14} /> },
+const bucketConfig: Record<TaskBucket, { label: string; icon: React.ReactNode; emoji: string }> = {
+  today: { label: "Focus Now", icon: <Flame size={14} />, emoji: "🔥" },
+  next: { label: "Queue", icon: <CircleDot size={14} />, emoji: "⏭" },
+  backlog: { label: "Parking Lot", icon: <Snowflake size={14} />, emoji: "🧊" },
 };
 
 /* ── Sortable Task Item ── */
@@ -65,38 +65,45 @@ const SortableTask = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="group flex items-center gap-2 rounded-lg bg-secondary/40 px-3 py-2.5">
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      layout
+      className={`group flex items-center gap-2 rounded-lg px-3 py-2.5 transition-all ${
+        task.is_done ? "bg-secondary/20" : "bg-secondary/40"
+      }`}
+    >
       <span {...attributes} {...listeners} className="cursor-grab text-muted-foreground/30 hover:text-muted-foreground/60 touch-none">
         <GripVertical size={14} />
       </span>
       <button
         onClick={() => onToggleDone(task)}
-        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
           task.is_done
-            ? "bg-[hsl(var(--status-shipped))] border-[hsl(var(--status-shipped))]"
-            : "border-muted-foreground/30 hover:border-muted-foreground/60"
+            ? "bg-builder-accent border-builder-accent"
+            : "border-muted-foreground/30 hover:border-builder-accent/60"
         }`}
       >
-        {task.is_done && <Check size={10} className="text-foreground" />}
+        {task.is_done && <Check size={10} className="text-builder-accent-foreground" />}
       </button>
-      <span className={`flex-1 text-sm leading-snug ${task.is_done ? "line-through text-muted-foreground/50" : "text-foreground"}`}>
+      <span className={`flex-1 text-sm leading-snug transition-all ${task.is_done ? "line-through text-muted-foreground/40" : "text-foreground"}`}>
         {task.title}
       </span>
       <div className="hidden group-hover:flex items-center gap-0.5">
         {bucket !== "today" && (
-          <button onClick={() => onMoveBucket(task, "today")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Today</button>
+          <button onClick={() => onMoveBucket(task, "today")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Focus</button>
         )}
         {bucket !== "next" && (
-          <button onClick={() => onMoveBucket(task, "next")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Next</button>
+          <button onClick={() => onMoveBucket(task, "next")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Queue</button>
         )}
         {bucket !== "backlog" && (
-          <button onClick={() => onMoveBucket(task, "backlog")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Backlog</button>
+          <button onClick={() => onMoveBucket(task, "backlog")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Park</button>
         )}
         <button onClick={() => onDelete(task.id)} className="rounded px-1 py-0.5 text-muted-foreground/50 hover:text-destructive transition-colors">
           <Trash2 size={12} />
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -104,7 +111,7 @@ const SortableTask = ({
 const DroppableBucket = ({ id, children }: { id: string; children: React.ReactNode }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
   return (
-    <div ref={setNodeRef} className={`min-h-[40px] rounded-lg transition-colors ${isOver ? "bg-primary/5 ring-1 ring-primary/20" : ""}`}>
+    <div ref={setNodeRef} className={`min-h-[40px] rounded-lg transition-colors ${isOver ? "bg-builder-accent/5 ring-1 ring-builder-accent/20" : ""}`}>
       {children}
     </div>
   );
@@ -112,7 +119,7 @@ const DroppableBucket = ({ id, children }: { id: string; children: React.ReactNo
 
 /* ── Drag overlay item ── */
 const DragOverlayItem = ({ task }: { task: ProjectTask }) => (
-  <div className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-2.5 shadow-lg ring-2 ring-primary/20">
+  <div className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-2.5 shadow-lg ring-2 ring-builder-accent/20">
     <GripVertical size={14} className="text-muted-foreground/50" />
     <span className="text-sm text-foreground">{task.title}</span>
   </div>
@@ -154,56 +161,37 @@ const ExecutionBoard = ({ tasks, setTasks, byBucket, addTask, updateTask, delete
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
-    // Auto-expand backlog when dragging
     if (!backlogOpen) setBacklogOpen(true);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
-
     const activeTask = tasks.find((t) => t.id === active.id);
     if (!activeTask) return;
-
-    // Determine target bucket: either from the over item's data or the droppable container id
     let targetBucket: TaskBucket | undefined;
     const overTask = tasks.find((t) => t.id === over.id);
-    if (overTask) {
-      targetBucket = overTask.bucket;
-    } else if (["today", "next", "backlog"].includes(over.id as string)) {
-      targetBucket = over.id as TaskBucket;
-    }
-
+    if (overTask) targetBucket = overTask.bucket;
+    else if (["today", "next", "backlog"].includes(over.id as string)) targetBucket = over.id as TaskBucket;
     if (targetBucket && activeTask.bucket !== targetBucket) {
-      // Move task to new bucket optimistically
-      setTasks((prev) =>
-        prev.map((t) => (t.id === active.id ? { ...t, bucket: targetBucket! } : t))
-      );
+      setTasks((prev) => prev.map((t) => (t.id === active.id ? { ...t, bucket: targetBucket! } : t)));
     }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveId(null);
-
     if (!over) return;
-
     const activeTask = tasks.find((t) => t.id === active.id);
     if (!activeTask) return;
-
     const targetBucket = activeTask.bucket;
-    const bucketItems = tasks
-      .filter((t) => t.bucket === targetBucket)
-      .sort((a, b) => a.position - b.position);
-
+    const bucketItems = tasks.filter((t) => t.bucket === targetBucket).sort((a, b) => a.position - b.position);
     const oldIndex = bucketItems.findIndex((t) => t.id === active.id);
     const overTask = tasks.find((t) => t.id === over.id);
     let newIndex = overTask ? bucketItems.findIndex((t) => t.id === over.id) : bucketItems.length - 1;
     if (newIndex === -1) newIndex = bucketItems.length - 1;
-
     if (oldIndex !== newIndex) {
       const reordered = arrayMove(bucketItems, oldIndex, newIndex);
-      // Update positions
       const updated = tasks.map((t) => {
         if (t.bucket !== targetBucket) return t;
         const idx = reordered.findIndex((r) => r.id === t.id);
@@ -211,12 +199,9 @@ const ExecutionBoard = ({ tasks, setTasks, byBucket, addTask, updateTask, delete
       });
       reorderTasks(updated);
     } else {
-      // Bucket might have changed, persist
-      const updated = tasks.map((t, i) => ({ ...t, position: tasks.filter((tt) => tt.bucket === t.bucket && tasks.indexOf(tt) <= i).length - 1 }));
-      // Simple: re-index each bucket
       const reindexed = [...tasks];
       for (const b of ["today", "next", "backlog"] as TaskBucket[]) {
-        const items = reindexed.filter((t) => t.bucket === b).sort((a, b2) => a.position - b2.position);
+        const items = reindexed.filter((t) => t.bucket === b).sort((a2, b2) => a2.position - b2.position);
         items.forEach((t, i) => { t.position = i; });
       }
       reorderTasks(reindexed);
@@ -229,21 +214,48 @@ const ExecutionBoard = ({ tasks, setTasks, byBucket, addTask, updateTask, delete
     const isBacklog = bucket === "backlog";
     const isCollapsed = isBacklog && !backlogOpen;
 
+    // Progress for Focus Now
+    const isFocus = bucket === "today";
+    const totalFocus = items.length;
+    const doneFocus = items.filter((t) => t.is_done).length;
+
     return (
       <div key={bucket} className="space-y-2">
-        <button
-          onClick={isBacklog ? () => setBacklogOpen(!backlogOpen) : undefined}
-          className={`flex items-center gap-2 text-sm font-medium text-foreground ${isBacklog ? "cursor-pointer" : "cursor-default"}`}
-        >
-          <span className="text-muted-foreground">{config.icon}</span>
-          {config.label}
-          <span className="text-xs text-muted-foreground/60 ml-1">{items.length}</span>
-          {isBacklog && (
-            <span className="text-muted-foreground ml-auto">
-              {isCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
-            </span>
+        <div className="flex items-center justify-between">
+          <button
+            onClick={isBacklog ? () => setBacklogOpen(!backlogOpen) : undefined}
+            className={`flex items-center gap-2 text-sm font-medium text-foreground ${isBacklog ? "cursor-pointer" : "cursor-default"}`}
+          >
+            <span className="text-muted-foreground">{config.icon}</span>
+            {config.label}
+            <span className="text-xs text-muted-foreground/60 ml-1">{items.filter((t) => !t.is_done).length}</span>
+            {isBacklog && (
+              <span className="text-muted-foreground ml-auto">
+                {isCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+              </span>
+            )}
+          </button>
+          {isFocus && totalFocus > 0 && (
+            <span className="text-[11px] text-muted-foreground/60">{doneFocus} of {totalFocus} done</span>
           )}
-        </button>
+        </div>
+
+        {/* Focus Now progress bar */}
+        {isFocus && totalFocus > 0 && (
+          <div className="h-1 rounded-full bg-secondary overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-builder-accent"
+              initial={{ width: 0 }}
+              animate={{ width: `${(doneFocus / totalFocus) * 100}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
+        )}
+
+        {/* Empty state nudge for Focus Now */}
+        {isFocus && items.filter((t) => !t.is_done).length === 0 && totalFocus > 0 && (
+          <p className="text-xs text-muted-foreground/50 py-1">All focus tasks done! Pull from Queue.</p>
+        )}
 
         {(!isBacklog || !isCollapsed) && (
           <DroppableBucket id={bucket}>
