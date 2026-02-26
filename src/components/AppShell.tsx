@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Inbox, Sparkles, Archive, Rocket, Plus, LogOut } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, Rocket, Plus, LogOut } from "lucide-react";
 import QuickAddModal from "./QuickAddModal";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
-  { to: "/", label: "Inbox", icon: Inbox },
+  { to: "/", label: "Ideas", icon: Lightbulb },
   { to: "/prompts", label: "Library", icon: Sparkles },
   { to: "/vault", label: "Vault", icon: Archive },
   { to: "/log", label: "Log", icon: Rocket },
