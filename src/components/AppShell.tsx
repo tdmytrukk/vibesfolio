@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, Rocket, Plus, LogOut, User } from "lucide-react";
-import QuickAddModal from "./QuickAddModal";
+import { Lightbulb, Sparkles, Archive, Rocket, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -22,7 +20,6 @@ interface AppShellProps {
 }
 
 const AppShell = ({ children }: AppShellProps) => {
-  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const location = useLocation();
   const { signOut, user } = useAuth();
 
@@ -59,14 +56,7 @@ const AppShell = ({ children }: AppShellProps) => {
           })}
         </nav>
 
-        <div className="p-4 space-y-2">
-          <button
-            onClick={() => setQuickAddOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-pill bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-          >
-            <Plus size={16} />
-            Quick Add
-          </button>
+        <div className="p-4">
           <button
             onClick={signOut}
             className="flex w-full items-center justify-center gap-2 rounded-pill py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -99,29 +89,8 @@ const AppShell = ({ children }: AppShellProps) => {
           </DropdownMenu>
         </header>
 
-        {/* Desktop header with Quick Add */}
-        <header className="sticky top-0 z-20 hidden md:flex items-center justify-end px-8 py-4">
-          <button
-            onClick={() => setQuickAddOpen(true)}
-            className="flex items-center gap-2 rounded-pill bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity shadow-sm"
-          >
-            <Plus size={16} />
-            Quick Add
-          </button>
-        </header>
-
         <div className="px-5 md:px-8">{children}</div>
       </main>
-
-      {/* Mobile FAB */}
-      <button
-        onClick={() => setQuickAddOpen(true)}
-        className="fixed z-40 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl md:hidden"
-        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 72px)', right: '20px' }}
-        aria-label="Quick Add"
-      >
-        <Plus size={28} strokeWidth={2.5} />
-      </button>
 
       {/* Mobile bottom tabs */}
       <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-around border-t border-border/40 bg-card/80 backdrop-blur-md py-2 pb-[env(safe-area-inset-bottom)] md:hidden">
@@ -141,8 +110,6 @@ const AppShell = ({ children }: AppShellProps) => {
           );
         })}
       </nav>
-
-      <QuickAddModal open={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
     </div>
   );
 };
