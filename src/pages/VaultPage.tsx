@@ -5,7 +5,7 @@ import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
 import AddResourceModal from "@/components/AddResourceModal";
-import DeletePromptDialog from "@/components/DeletePromptDialog";
+import ResourceDetailModal from "@/components/ResourceDetailModal";
 import FloatingActionButton from "@/components/FloatingActionButton";
 
 const categoryConfig: { value: ResourceCategory | "all"; label: string; icon: React.ReactNode; colorIndex: number }[] = [
@@ -34,11 +34,11 @@ const categoryIcons: Record<ResourceCategory, React.ReactNode> = {
 };
 
 const VaultPage = () => {
-  const { resources, loading, addResource, deleteResource } = useResources();
+  const { resources, loading, addResource, updateResource, deleteResource } = useResources();
   const [selectedCategory, setSelectedCategory] = useState<ResourceCategory | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Resource | null>(null);
+  const [detailResource, setDetailResource] = useState<Resource | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -58,10 +58,8 @@ const VaultPage = () => {
     setTimeout(() => setCopiedId(null), 1500);
   }, []);
 
-  const handleDelete = async () => {
-    if (!deleteTarget) return;
-    await deleteResource(deleteTarget.id);
-    setDeleteTarget(null);
+  const handleDeleteFromDetail = async (id: string) => {
+    await deleteResource(id);
   };
 
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
@@ -159,9 +157,7 @@ const VaultPage = () => {
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                   transition={{ duration: 0.25, delay: i * 0.03 }}
                   className="card-glass p-0 overflow-hidden break-inside-avoid cursor-pointer group relative"
-                  onMouseEnter={() => setHoveredId(resource.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  onClick={() => window.open(resource.url, "_blank", "noopener")}
+                  onClick={() => setDetailResource(resource)}
                 >
                   {/* Cover image or fallback */}
                   {hasCover ? (
@@ -235,7 +231,7 @@ const VaultPage = () => {
                           {isCopied ? "Copied!" : "Copy"}
                         </button>
                         <button
-                          onClick={() => setDeleteTarget(resource)}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteFromDetail(resource.id); }}
                           className="flex items-center rounded-pill bg-card px-2.5 py-2 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shadow-md"
                           aria-label="Delete resource"
                         >
@@ -251,8 +247,13 @@ const VaultPage = () => {
         </div>
       )}
 
+      <ResourceDetailModal
+        resource={detailResource}
+        onClose={() => setDetailResource(null)}
+        onUpdate={updateResource}
+        onDelete={handleDeleteFromDetail}
+      />
       <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={addResource} />
-      <DeletePromptDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} />
       <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New resource" />
     </div>
   );
