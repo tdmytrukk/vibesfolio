@@ -14,6 +14,7 @@ export interface Resource {
   cover_image_url: string | null;
   favicon_url: string | null;
   og_title: string | null;
+  tags: string[];
   created_at: string;
 }
 
@@ -55,6 +56,7 @@ export function useResources() {
     url: string;
     category: ResourceCategory;
     description?: string;
+    tags?: string[];
   }) => {
     // Normalize URL
     let normalizedUrl = resource.url.trim();
@@ -81,6 +83,7 @@ export function useResources() {
       cover_image_url: null,
       favicon_url: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
       og_title: null,
+      tags: resource.tags || [],
       created_at: new Date().toISOString(),
     };
     setResources((prev) => [optimistic, ...prev]);
@@ -97,6 +100,7 @@ export function useResources() {
       cover_image_url: meta?.ogImage || null,
       favicon_url: meta?.faviconUrl || optimistic.favicon_url,
       og_title: meta?.ogTitle || null,
+      tags: resource.tags || [],
       user_id: user?.id,
     };
 

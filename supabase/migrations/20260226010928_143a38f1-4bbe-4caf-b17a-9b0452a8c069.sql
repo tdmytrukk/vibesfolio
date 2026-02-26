@@ -1,0 +1,1 @@
+ALTER TABLE public.resources ADD COLUMN tags text[] NOT NULL DEFAULT '{}'::text[];
