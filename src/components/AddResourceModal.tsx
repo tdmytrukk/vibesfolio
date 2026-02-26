@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Upload, FileText, Image, File } from "lucide-react";
 import { ResourceCategory } from "@/hooks/useResources";
 
 interface AddResourceModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (resource: { title: string; url: string; category: ResourceCategory; description?: string; tags?: string[] }) => void;
+  onSave: (resource: { title: string; url: string; category: ResourceCategory; description?: string; tags?: string[]; file?: File }) => void;
 }
 
 const categories: { value: ResourceCategory; label: string; emoji: string }[] = [
@@ -34,6 +34,8 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
   const [showCustomTag, setShowCustomTag] = useState(false);
   const [customTagName, setCustomTagName] = useState("");
   const [customTagEmoji, setCustomTagEmoji] = useState("🏷️");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateUrl = (val: string) => {
     if (!val.trim()) { setUrlError(""); return; }
@@ -62,17 +64,24 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
     setShowCustomTag(false);
   };
 
+  const getFileIcon = (type: string) => {
+    if (type.startsWith("image/")) return <Image size={14} />;
+    if (type.includes("pdf") || type.includes("document")) return <FileText size={14} />;
+    return <File size={14} />;
+  };
+
   const handleSubmit = () => {
-    if (!title.trim() || !url.trim() || urlError) return;
+    if (!title.trim() || (!url.trim() && !selectedFile) || urlError) return;
     onSave({
       title: title.trim(),
-      url: url.trim(),
+      url: url.trim() || `file://${selectedFile?.name}`,
       category,
       description: description.trim() || undefined,
       tags: selectedTags.length > 0 ? selectedTags : undefined,
+      file: selectedFile || undefined,
     });
     setTitle(""); setUrl(""); setCategory("tools"); setDescription("");
-    setUrlError(""); setSelectedTags([]); setShowCustomTag(false);
+    setUrlError(""); setSelectedTags([]); setShowCustomTag(false); setSelectedFile(null);
     onClose();
   };
 
@@ -190,12 +199,39 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
               )}
             </AnimatePresence>
 
+            {/* File Upload */}
+            <label className="block text-xs font-medium text-muted-foreground mb-1.5">Attach File (optional)</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.md,.zip,.rar"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setSelectedFile(file);
+              }}
+            />
+            {selectedFile ? (
+              <div className="flex items-center gap-2 rounded-lg bg-secondary/60 px-4 py-3 mb-4">
+                {getFileIcon(selectedFile.type)}
+                <span className="text-sm text-foreground truncate flex-1">{selectedFile.name}</span>
+                <span className="text-[10px] text-muted-foreground">{(selectedFile.size / 1024).toFixed(0)} KB</span>
+                <button onClick={() => { setSelectedFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                  className="text-muted-foreground hover:text-destructive transition-colors p-1"><X size={14} /></button>
+              </div>
+            ) : (
+              <button onClick={() => fileInputRef.current?.click()}
+                className="w-full rounded-lg bg-secondary/60 border border-dashed border-border/60 px-4 py-3 text-sm text-muted-foreground hover:bg-muted transition-colors mb-4 flex items-center justify-center gap-2">
+                <Upload size={14} /> Choose file…
+              </button>
+            )}
+
             {/* Description */}
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">Notes (optional)</label>
             <textarea placeholder="Why you saved this…" value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
               className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-5 resize-none" />
 
-            <button onClick={handleSubmit} disabled={!title.trim() || !url.trim() || !!urlError}
+            <button onClick={handleSubmit} disabled={!title.trim() || (!url.trim() && !selectedFile) || !!urlError}
               className="w-full rounded-pill bg-primary py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40">
               Save Resource
             </button>
