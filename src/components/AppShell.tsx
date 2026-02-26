@@ -10,9 +10,9 @@ import {
 
 const navItems = [
   { to: "/", label: "Ideas", icon: Lightbulb },
-  { to: "/prompts", label: "Library", icon: Sparkles },
-  { to: "/vault", label: "Vault", icon: Archive },
-  { to: "/log", label: "Log", icon: Rocket },
+  { to: "/prompts", label: "Prompts", icon: Sparkles },
+  { to: "/vault", label: "Resources", icon: Archive },
+  { to: "/log", label: "Projects", icon: Rocket },
 ];
 
 interface AppShellProps {
