@@ -51,9 +51,6 @@ const BuildLogPage = () => {
       return a.name.localeCompare(b.name);
     });
 
-  const handleOpenCockpit = (build: Build) => {
-    toast.info("Cockpit view coming in Phase 2");
-  };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -163,7 +160,6 @@ const BuildLogPage = () => {
                 index={i}
                 onEdit={setEditTarget}
                 onDelete={setDeleteTarget}
-                onOpenCockpit={handleOpenCockpit}
               />
             ))}
           </AnimatePresence>

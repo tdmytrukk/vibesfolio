@@ -7,6 +7,7 @@ import {
   Trash2,
   Activity,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { Build, BuildStatus } from "@/hooks/useBuilds";
 
 const statusLabels: Record<BuildStatus, string> = {
@@ -55,10 +56,10 @@ interface BuildCardProps {
   index: number;
   onEdit: (build: Build) => void;
   onDelete: (build: Build) => void;
-  onOpenCockpit: (build: Build) => void;
 }
 
-const BuildCard = memo(({ build, index, onEdit, onDelete, onOpenCockpit }: BuildCardProps) => {
+const BuildCard = memo(({ build, index, onEdit, onDelete }: BuildCardProps) => {
+  const navigate = useNavigate();
   const momentum = getMomentumLevel(build.updated_at);
 
   return (
@@ -136,7 +137,7 @@ const BuildCard = memo(({ build, index, onEdit, onDelete, onOpenCockpit }: Build
         </div>
 
         <button
-          onClick={() => onOpenCockpit(build)}
+          onClick={() => navigate(`/log/${build.id}`)}
           className="flex items-center gap-1 rounded-pill px-3 py-1.5 text-[11px] font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
         >
           Open <ChevronRight size={12} />
