@@ -1,33 +1,22 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Target,
   Pencil,
-  Check,
-  Plus,
-  Trash2,
-  ChevronDown,
   ChevronRight,
   Clock,
-  CircleDot,
-  Archive,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMission } from "@/hooks/useMission";
-import { useTasks, TaskBucket, ProjectTask } from "@/hooks/useTasks";
+import { useTasks } from "@/hooks/useTasks";
 import { toast } from "sonner";
 import type { Build } from "@/hooks/useBuilds";
 import ShippingLog from "@/components/ShippingLog";
 import DecisionVault from "@/components/DecisionVault";
 import SessionDebrief from "@/components/SessionDebrief";
-
-const bucketConfig: Record<TaskBucket, { label: string; icon: React.ReactNode }> = {
-  today: { label: "Today", icon: <Target size={14} /> },
-  next: { label: "Next", icon: <CircleDot size={14} /> },
-  backlog: { label: "Backlog", icon: <Archive size={14} /> },
-};
+import ExecutionBoard from "@/components/ExecutionBoard";
 
 type CockpitTab = "execute" | "log" | "decisions" | "debrief";
 
@@ -44,9 +33,7 @@ const CockpitPage = () => {
   const [missionDraft, setMissionDraft] = useState({ priority: "", next_step: "", time_estimate: "" });
 
   // Tasks
-  const { loading: tasksLoading, addTask, updateTask, deleteTask, byBucket } = useTasks(buildId!);
-  const [newTaskInputs, setNewTaskInputs] = useState<Record<TaskBucket, string>>({ today: "", next: "", backlog: "" });
-  const [backlogOpen, setBacklogOpen] = useState(false);
+  const taskHook = useTasks(buildId!);
 
   // Fetch build info
   useEffect(() => {
@@ -79,16 +66,6 @@ const CockpitPage = () => {
     else { toast.error("Couldn't save mission"); }
   };
 
-  const handleAddTask = async (bucket: TaskBucket) => {
-    const title = newTaskInputs[bucket]?.trim();
-    if (!title) return;
-    const result = await addTask(title, bucket);
-    if (result) setNewTaskInputs((prev) => ({ ...prev, [bucket]: "" }));
-    else toast.error("Couldn't add task");
-  };
-
-  const handleToggleDone = (task: ProjectTask) => updateTask(task.id, { is_done: !task.is_done });
-  const handleMoveBucket = (task: ProjectTask, newBucket: TaskBucket) => updateTask(task.id, { bucket: newBucket, position: 999 });
 
   if (buildLoading) {
     return (
@@ -117,80 +94,6 @@ const CockpitPage = () => {
     { key: "debrief", label: "Debrief" },
   ];
 
-  const renderBucket = (bucket: TaskBucket) => {
-    const config = bucketConfig[bucket];
-    const items = byBucket(bucket);
-    const isBacklog = bucket === "backlog";
-    const isCollapsed = isBacklog && !backlogOpen;
-
-    return (
-      <div key={bucket} className="space-y-2">
-        <button
-          onClick={isBacklog ? () => setBacklogOpen(!backlogOpen) : undefined}
-          className={`flex items-center gap-2 text-sm font-medium text-foreground ${isBacklog ? "cursor-pointer" : "cursor-default"}`}
-        >
-          <span className="text-muted-foreground">{config.icon}</span>
-          {config.label}
-          <span className="text-xs text-muted-foreground/60 ml-1">{items.length}</span>
-          {isBacklog && (
-            <span className="text-muted-foreground ml-auto">
-              {isCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
-            </span>
-          )}
-        </button>
-
-        {(!isBacklog || !isCollapsed) && (
-          <div className="space-y-1.5">
-            <AnimatePresence initial={false}>
-              {items.map((task) => (
-                <motion.div
-                  key={task.id}
-                  layout
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.2 }}
-                  className="group flex items-center gap-2 rounded-lg bg-secondary/40 px-3 py-2.5"
-                >
-                  <button
-                    onClick={() => handleToggleDone(task)}
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                      task.is_done ? "bg-[hsl(var(--status-shipped))] border-[hsl(var(--status-shipped))]" : "border-muted-foreground/30 hover:border-muted-foreground/60"
-                    }`}
-                  >
-                    {task.is_done && <Check size={10} className="text-foreground" />}
-                  </button>
-                  <span className={`flex-1 text-sm leading-snug ${task.is_done ? "line-through text-muted-foreground/50" : "text-foreground"}`}>
-                    {task.title}
-                  </span>
-                  <div className="hidden group-hover:flex items-center gap-0.5">
-                    {bucket !== "today" && <button onClick={() => handleMoveBucket(task, "today")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Today</button>}
-                    {bucket !== "next" && <button onClick={() => handleMoveBucket(task, "next")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Next</button>}
-                    {bucket !== "backlog" && <button onClick={() => handleMoveBucket(task, "backlog")} className="rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">Backlog</button>}
-                    <button onClick={() => deleteTask(task.id)} className="rounded px-1 py-0.5 text-muted-foreground/50 hover:text-destructive transition-colors"><Trash2 size={12} /></button>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder={`Add to ${config.label.toLowerCase()}…`}
-                value={newTaskInputs[bucket]}
-                onChange={(e) => setNewTaskInputs((prev) => ({ ...prev, [bucket]: e.target.value }))}
-                onKeyDown={(e) => { if (e.key === "Enter" && newTaskInputs[bucket]?.trim()) { e.preventDefault(); handleAddTask(bucket); } }}
-                className="flex-1 rounded-lg bg-secondary/30 border-0 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring/20"
-              />
-              <button onClick={() => handleAddTask(bucket)} disabled={!newTaskInputs[bucket]?.trim()} className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors disabled:opacity-30">
-                <Plus size={14} />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -272,14 +175,16 @@ const CockpitPage = () => {
         className="card-glass p-5"
       >
         {activeTab === "execute" && (
-          <>
-            <h3 className="text-sm font-medium text-foreground mb-4">Execution Board</h3>
-            {tasksLoading ? (
-              <div className="animate-pulse space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-10 bg-muted/50 rounded-lg" />)}</div>
-            ) : (
-              <div className="space-y-6">{(["today", "next", "backlog"] as TaskBucket[]).map(renderBucket)}</div>
-            )}
-          </>
+          <ExecutionBoard
+            tasks={taskHook.tasks}
+            setTasks={taskHook.setTasks}
+            byBucket={taskHook.byBucket}
+            addTask={taskHook.addTask}
+            updateTask={taskHook.updateTask}
+            deleteTask={taskHook.deleteTask}
+            reorderTasks={taskHook.reorderTasks}
+            loading={taskHook.loading}
+          />
         )}
         {activeTab === "log" && <ShippingLog buildId={buildId!} />}
         {activeTab === "decisions" && <DecisionVault buildId={buildId!} />}
