@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, Rocket, Plus, LogOut } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, Rocket, Plus, LogOut, User } from "lucide-react";
 import QuickAddModal from "./QuickAddModal";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   { to: "/", label: "Ideas", icon: Lightbulb },
@@ -18,7 +24,9 @@ interface AppShellProps {
 const AppShell = ({ children }: AppShellProps) => {
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+
+  const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
@@ -71,16 +79,24 @@ const AppShell = ({ children }: AppShellProps) => {
 
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pl-56">
-        {/* Mobile header */}
-        <header className="sticky top-0 z-20 flex items-center justify-between px-5 py-4 md:hidden">
-          <h1 className="font-heading text-lg text-foreground">Builder Journal</h1>
-          <button
-            onClick={() => setQuickAddOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
-            aria-label="Quick Add"
-          >
-            <Plus size={18} />
-          </button>
+        {/* Mobile header - avatar only */}
+        <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-4 md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium"
+                aria-label="Profile"
+              >
+                {userInitial}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={signOut} className="gap-2">
+                <LogOut size={14} />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </header>
 
         {/* Desktop header with Quick Add */}
@@ -96,6 +112,16 @@ const AppShell = ({ children }: AppShellProps) => {
 
         <div className="px-5 md:px-8">{children}</div>
       </main>
+
+      {/* Mobile FAB */}
+      <button
+        onClick={() => setQuickAddOpen(true)}
+        className="fixed z-40 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl md:hidden"
+        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 72px)', right: '20px' }}
+        aria-label="Quick Add"
+      >
+        <Plus size={28} strokeWidth={2.5} />
+      </button>
 
       {/* Mobile bottom tabs */}
       <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-around border-t border-border/40 bg-card/80 backdrop-blur-md py-2 pb-[env(safe-area-inset-bottom)] md:hidden">
