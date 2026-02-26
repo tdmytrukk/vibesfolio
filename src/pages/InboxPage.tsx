@@ -1,27 +1,26 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Inbox, Plus } from "lucide-react";
+import { Lightbulb, Plus, ExternalLink } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import TagChip from "@/components/TagChip";
-
-const sampleIdeas = [
-  {
-    id: 1,
-    title: "AI-powered changelog generator",
-    note: "Pull git commits and generate user-facing changelogs automatically",
-    tags: ["product", "AI"],
-    date: "Today",
-  },
-  {
-    id: 2,
-    title: "Micro-SaaS for freelancers",
-    note: "Invoice + time tracking in one clean tool",
-    tags: ["SaaS", "design"],
-    date: "Yesterday",
-  },
-];
+import AddIdeaModal from "@/components/AddIdeaModal";
+import IdeaDetailModal from "@/components/IdeaDetailModal";
+import { useIdeas, type Idea } from "@/hooks/useIdeas";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const InboxPage = () => {
-  const ideas = sampleIdeas; // will be replaced with Cloud data
+  const { ideas, loading, addIdea, updateIdea, deleteIdea } = useIdeas();
+  const [addOpen, setAddOpen] = useState(false);
+  const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
+
+  const formatDate = (iso: string) => {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = now.getTime() - d.getTime();
+    if (diff < 86400000) return "Today";
+    if (diff < 172800000) return "Yesterday";
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -29,18 +28,34 @@ const InboxPage = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
+        className="flex items-center justify-between mb-8"
       >
-        <h2 className="font-heading text-3xl text-foreground mb-1">Idea Inbox</h2>
-        <p className="text-sm text-muted-foreground mb-8">
-          Capture fast. Organize later.
-        </p>
+        <div>
+          <h2 className="font-heading text-3xl text-foreground mb-1">Ideas</h2>
+          <p className="text-sm text-muted-foreground">
+            Capture fast. Organize later.
+          </p>
+        </div>
+        <button
+          onClick={() => setAddOpen(true)}
+          className="flex items-center gap-2 rounded-pill bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+        >
+          <Plus size={16} />
+          New Idea
+        </button>
       </motion.div>
 
-      {ideas.length === 0 ? (
+      {loading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-24 rounded-[var(--radius)]" />
+          ))}
+        </div>
+      ) : ideas.length === 0 ? (
         <EmptyState
-          icon={<Inbox />}
+          icon={<Lightbulb />}
           title="Drop your first spark"
-          subtitle="Messy is welcome. Tap Quick Add to capture an idea—title is all you need."
+          subtitle="Messy is welcome. Tap New Idea to capture one—title is all you need."
         />
       ) : (
         <div className="space-y-3">
@@ -50,6 +65,7 @@ const InboxPage = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: i * 0.05 }}
+              onClick={() => setSelectedIdea(idea)}
               className="card-glass p-5 cursor-pointer hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex items-start justify-between gap-4">
@@ -60,18 +76,35 @@ const InboxPage = () => {
                       {idea.note}
                     </p>
                   )}
-                  <div className="flex items-center gap-2 mt-3">
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
                     {idea.tags.map((tag, ti) => (
                       <TagChip key={tag} label={tag} colorIndex={ti} />
                     ))}
+                    {idea.links.length > 0 && (
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ExternalLink size={12} />
+                        {idea.links.length} link{idea.links.length > 1 ? "s" : ""}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap pt-0.5">{idea.date}</span>
+                <span className="text-xs text-muted-foreground whitespace-nowrap pt-0.5">
+                  {formatDate(idea.created_at)}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
       )}
+
+      <AddIdeaModal open={addOpen} onClose={() => setAddOpen(false)} onAdd={addIdea} />
+      <IdeaDetailModal
+        idea={selectedIdea}
+        open={!!selectedIdea}
+        onClose={() => setSelectedIdea(null)}
+        onSave={(id, updates) => updateIdea(id, updates)}
+        onDelete={(id) => deleteIdea(id)}
+      />
     </div>
   );
 };
