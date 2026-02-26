@@ -117,6 +117,32 @@ export function useResources() {
     return data as Resource;
   };
 
+  const updateResource = async (
+    id: string,
+    updates: { title?: string; url?: string; category?: ResourceCategory; description?: string | null }
+  ) => {
+    const backup = resources;
+    setResources((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, ...updates } : r))
+    );
+
+    const { data, error } = await supabase
+      .from("resources")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      setResources(backup);
+      return null;
+    }
+    setResources((prev) =>
+      prev.map((r) => (r.id === id ? (data as Resource) : r))
+    );
+    return data as Resource;
+  };
+
   const deleteResource = async (id: string) => {
     const backup = resources;
     setResources((prev) => prev.filter((r) => r.id !== id));
@@ -129,5 +155,5 @@ export function useResources() {
     return true;
   };
 
-  return { resources, loading, addResource, deleteResource, refetch: fetchResources };
+  return { resources, loading, addResource, updateResource, deleteResource, refetch: fetchResources };
 }
