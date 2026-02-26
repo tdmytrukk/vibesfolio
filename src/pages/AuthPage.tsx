@@ -83,7 +83,7 @@ const AuthPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="card-glass w-full max-w-sm p-8"
       >
-        <h1 className="font-heading text-2xl text-foreground text-center mb-1">Builder Journal</h1>
+        <h1 className="font-heading text-2xl text-foreground text-center mb-1">Vibefolio</h1>
         <p className="text-sm text-muted-foreground text-center mb-8">
           {mode === "login" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
         </p>
