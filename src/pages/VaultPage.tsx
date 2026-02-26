@@ -40,7 +40,6 @@ const VaultPage = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [detailResource, setDetailResource] = useState<Resource | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const filtered = resources.filter((r) => {
     const matchCat = selectedCategory === "all" || r.category === selectedCategory;
@@ -68,15 +67,13 @@ const VaultPage = () => {
     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-6"
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="mb-8"
       >
-        <div className="flex items-end justify-between gap-4 mb-1">
-          <h2 className="font-heading text-3xl text-foreground">Resource Vault</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="page-title font-heading text-4xl text-foreground tracking-tight">Resource Vault</h2>
+        <p className="text-sm text-muted-foreground/80 mt-4">
           Your vault stays tidy—one link at a time.
         </p>
       </motion.div>
@@ -88,10 +85,8 @@ const VaultPage = () => {
             <button
               key={cat.value}
               onClick={() => setSelectedCategory(cat.value)}
-              className={`flex items-center gap-1.5 rounded-pill px-3.5 py-2 text-xs font-medium transition-all duration-200 border ${
-                selectedCategory === cat.value
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-secondary/80 text-secondary-foreground border-transparent hover:bg-muted"
+              className={`flex items-center gap-1.5 filter-pill ${
+                selectedCategory === cat.value ? 'filter-pill-active' : 'filter-pill-inactive'
               }`}
               aria-pressed={selectedCategory === cat.value}
             >
@@ -108,7 +103,7 @@ const VaultPage = () => {
             placeholder="Search resources…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-pill bg-card/80 backdrop-blur-sm border border-border/40 pl-9 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 shadow-sm"
+            className="search-studio pl-9 pr-4 py-2"
           />
         </div>
       </div>
@@ -117,7 +112,7 @@ const VaultPage = () => {
       {loading ? (
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="card-glass p-0 overflow-hidden break-inside-avoid animate-pulse">
+            <div key={i} className="studio-card p-0 overflow-hidden break-inside-avoid animate-pulse">
               <div className="bg-muted" style={{ height: `${140 + (i % 3) * 40}px` }} />
               <div className="p-4">
                 <div className="h-3 bg-muted rounded w-3/4 mb-2" />
@@ -128,44 +123,36 @@ const VaultPage = () => {
         </div>
       ) : filtered.length === 0 ? (
         searchQuery || selectedCategory !== "all" ? (
-          <EmptyState
-            icon={<Search />}
-            title="No resources match"
-            subtitle="Try adjusting your search or category filter."
-          />
+          <EmptyState icon={<Search />} title="No resources match" subtitle="Try adjusting your search or category filter." />
         ) : (
-          <EmptyState
-            icon={<Archive />}
-            title="Your bookmarks go here"
-            subtitle='Tap "+ New resource" to save tools, articles, and inspiration—all in one place.'
-          />
+          <EmptyState icon={<Archive />} title="Your bookmarks go here" subtitle='Tap "+ New resource" to save tools, articles, and inspiration—all in one place.' />
         )
       ) : (
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
           <AnimatePresence initial={false}>
             {filtered.map((resource, i) => {
               const hasCover = resource.cover_image_url && !imgErrors.has(resource.id);
-              const isHovered = hoveredId === resource.id;
               const isCopied = copiedId === resource.id;
 
               return (
                 <motion.div
                   key={resource.id}
                   layout
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-0 overflow-hidden break-inside-avoid cursor-pointer group relative"
+                  transition={{ duration: 0.4, delay: i * 0.03, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  className="studio-card p-0 overflow-hidden break-inside-avoid cursor-pointer group"
                   onClick={() => setDetailResource(resource)}
                 >
                   {/* Cover image or fallback */}
                   {hasCover ? (
-                    <div className="relative w-full overflow-hidden bg-muted">
+                    <div className="relative w-full overflow-hidden bg-muted" style={{ borderRadius: '18px 18px 0 0' }}>
                       <img
                         src={resource.cover_image_url!}
                         alt=""
-                        className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                         style={{ maxHeight: "220px" }}
                         loading="lazy"
                         onError={() => setImgErrors((prev) => new Set(prev).add(resource.id))}
@@ -206,47 +193,6 @@ const VaultPage = () => {
                       </p>
                     )}
                   </div>
-
-                  {/* Hover overlay */}
-                  <AnimatePresence>
-                    {isHovered && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute inset-0 bg-foreground/5 backdrop-blur-[2px] flex items-end justify-center pb-4 gap-2"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          onClick={() => window.open(resource.url, "_blank", "noopener")}
-                          className="flex items-center gap-1.5 rounded-pill bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity shadow-md"
-                          aria-label="Open resource"
-                        >
-                          <ExternalLink size={13} /> Open
-                        </button>
-                        <button
-                          onClick={() => handleCopy(resource)}
-                          className={`flex items-center gap-1 rounded-pill px-3 py-2 text-xs font-medium shadow-md transition-all duration-200 ${
-                            isCopied
-                              ? "bg-status-shipped text-foreground"
-                              : "bg-card text-foreground hover:bg-secondary"
-                          }`}
-                          aria-label="Copy link"
-                        >
-                          {isCopied ? <Check size={13} /> : <Copy size={13} />}
-                          {isCopied ? "Copied!" : "Copy"}
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteFromDetail(resource.id); }}
-                          className="flex items-center rounded-pill bg-card px-2.5 py-2 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shadow-md"
-                          aria-label="Delete resource"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </motion.div>
               );
             })}

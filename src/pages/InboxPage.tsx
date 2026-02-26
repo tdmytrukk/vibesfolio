@@ -26,21 +26,21 @@ const InboxPage = () => {
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-8"
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="mb-10"
       >
-        <h2 className="font-heading text-3xl text-foreground mb-1">Ideas</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="page-title font-heading text-4xl text-foreground mb-2 tracking-tight">Ideas</h2>
+        <p className="text-sm text-muted-foreground/80 mt-4">
           Capture fast. Organize later.
         </p>
       </motion.div>
 
       {loading ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-24 rounded-[var(--radius)]" />
+            <Skeleton key={i} className="h-28 rounded-[var(--radius)]" />
           ))}
         </div>
       ) : ideas.length === 0 ? (
@@ -50,15 +50,15 @@ const InboxPage = () => {
           subtitle="Messy is welcome. Tap New Idea to capture one—title is all you need."
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {ideas.map((idea, i) => (
             <motion.div
               key={idea.id}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, delay: i * 0.05 }}
+              transition={{ duration: 0.4, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => setSelectedIdea(idea)}
-              className="card-glass p-5 cursor-pointer hover:shadow-md transition-shadow duration-200"
+              className="studio-card p-5 cursor-pointer"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -80,7 +80,7 @@ const InboxPage = () => {
                     )}
                   </div>
                 </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap pt-0.5">
+                <span className="date-capsule whitespace-nowrap shrink-0">
                   {formatDate(idea.created_at)}
                 </span>
               </div>

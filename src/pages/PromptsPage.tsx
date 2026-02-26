@@ -18,7 +18,6 @@ const PromptsPage = () => {
   const [deleteTarget, setDeleteTarget] = useState<Prompt | null>(null);
   const [editTarget, setEditTarget] = useState<Prompt | null>(null);
 
-  // Filter prompts
   const filtered = prompts.filter((p) => {
     const matchSearch =
       !searchQuery ||
@@ -75,15 +74,13 @@ const PromptsPage = () => {
     <div className="max-w-3xl mx-auto">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-6"
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="mb-8"
       >
-        <div className="flex items-end justify-between gap-4 mb-1">
-          <h2 className="font-heading text-3xl text-foreground">Prompt Library</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="page-title font-heading text-4xl text-foreground tracking-tight">Prompt Library</h2>
+        <p className="text-sm text-muted-foreground/80 mt-4">
           Your go-to prompts, saved and ready.
         </p>
       </motion.div>
@@ -97,22 +94,18 @@ const PromptsPage = () => {
             placeholder="Search prompts…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-pill bg-card/80 backdrop-blur-sm border border-border/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 shadow-sm"
+            className="search-studio pl-10 pr-4 py-2.5 placeholder:text-muted-foreground/60"
           />
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {displayTags.map((tag, i) => {
+          {displayTags.map((tag) => {
             const isSelected = selectedTags.includes(tag);
             return (
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`rounded-pill px-3.5 py-1.5 text-xs font-medium transition-all duration-200 border ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-secondary/80 text-secondary-foreground border-transparent hover:bg-muted"
-                }`}
+                className={`filter-pill ${isSelected ? 'filter-pill-active' : 'filter-pill-inactive'}`}
                 aria-pressed={isSelected}
               >
                 {tag}
@@ -132,9 +125,9 @@ const PromptsPage = () => {
 
       {/* Prompt list */}
       {loading ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="card-glass p-5 animate-pulse">
+            <div key={i} className="studio-card p-5 animate-pulse">
               <div className="h-4 bg-muted rounded w-1/3 mb-3" />
               <div className="h-3 bg-muted rounded w-full mb-2" />
               <div className="h-3 bg-muted rounded w-2/3" />
@@ -143,20 +136,12 @@ const PromptsPage = () => {
         </div>
       ) : filtered.length === 0 ? (
         hasFilters ? (
-          <EmptyState
-            icon={<Search />}
-            title="No prompts match"
-            subtitle="Try adjusting your search or clearing filters."
-          />
+          <EmptyState icon={<Search />} title="No prompts match" subtitle="Try adjusting your search or clearing filters." />
         ) : (
-          <EmptyState
-            icon={<Sparkles />}
-            title="Your prompt cards will appear here"
-            subtitle='Tap "+ New prompt" to save your first one—marketing, code, product, design.'
-          />
+          <EmptyState icon={<Sparkles />} title="Your prompt cards will appear here" subtitle='Tap "+ New prompt" to save your first one—marketing, code, product, design.' />
         )
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <AnimatePresence initial={false}>
             {filtered.map((prompt, i) => {
               const isExpanded = expandedIds.has(prompt.id);
@@ -166,16 +151,16 @@ const PromptsPage = () => {
                 <motion.div
                   key={prompt.id}
                   layout
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-5"
+                  transition={{ duration: 0.4, delay: i * 0.03, ease: [0.22, 1, 0.36, 1] }}
+                  className="studio-card p-5"
                 >
                   {/* Header row */}
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <h3 className="font-medium text-foreground text-[15px] leading-snug">{prompt.title}</h3>
-                    <span className="text-[11px] text-muted-foreground whitespace-nowrap pt-0.5 shrink-0">
+                    <span className="date-capsule whitespace-nowrap shrink-0">
                       {formatDate(prompt.created_at)}
                     </span>
                   </div>
@@ -191,67 +176,46 @@ const PromptsPage = () => {
                     </div>
                   )}
 
-                  {/* Content preview / full */}
+                  {/* Content */}
                   <div className="relative">
-                    <p
-                      className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap ${
-                        !isExpanded ? "line-clamp-3" : ""
-                      }`}
-                    >
+                    <p className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap ${!isExpanded ? "line-clamp-3" : ""}`}>
                       {prompt.content}
                     </p>
                     {!isExpanded && prompt.content.length > 180 && (
-                      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" />
                     )}
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/30">
+                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/20">
                     <button
                       onClick={() => toggleExpand(prompt.id)}
                       className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label={isExpanded ? "Collapse prompt" : "Expand prompt"}
                     >
-                      {isExpanded ? (
-                        <>
-                          <ChevronUp size={14} /> Collapse
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown size={14} /> Expand
-                        </>
-                      )}
+                      {isExpanded ? <><ChevronUp size={14} /> Collapse</> : <><ChevronDown size={14} /> Expand</>}
                     </button>
 
                     <div className="flex items-center gap-1">
-                      {/* Edit */}
                       <button
                         onClick={() => setEditTarget(prompt)}
                         className="flex items-center gap-1 rounded-pill px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-                        aria-label="Edit prompt"
                       >
                         <Pencil size={13} />
                       </button>
-
-                      {/* Copy */}
                       <button
                         onClick={() => handleCopy(prompt)}
-                        className={`relative flex items-center gap-1 rounded-pill px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                        className={`relative flex items-center gap-1 rounded-pill px-3 py-1.5 text-xs font-medium transition-all duration-300 border ${
                           isCopied
-                            ? "bg-status-shipped text-foreground"
-                            : "bg-secondary text-secondary-foreground hover:bg-muted"
+                            ? "bg-status-shipped text-foreground border-transparent"
+                            : "border-border/40 text-muted-foreground hover:border-primary/30 hover:text-primary"
                         }`}
-                        aria-label="Copy prompt"
                       >
                         {isCopied ? <Check size={13} /> : <Copy size={13} />}
                         {isCopied ? "Copied!" : "Copy"}
                       </button>
-
-                      {/* Delete */}
                       <button
                         onClick={() => setDeleteTarget(prompt)}
                         className="flex items-center rounded-pill px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                        aria-label="Delete prompt"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -264,27 +228,17 @@ const PromptsPage = () => {
         </div>
       )}
 
-      {/* Add/Edit prompt modal */}
       <AddPromptModal
         open={addModalOpen || !!editTarget}
         onClose={() => { setAddModalOpen(false); setEditTarget(null); }}
         onSave={async (prompt) => {
-          if (editTarget) {
-            await updatePrompt(editTarget.id, prompt);
-          } else {
-            await addPrompt(prompt);
-          }
+          if (editTarget) await updatePrompt(editTarget.id, prompt);
+          else await addPrompt(prompt);
         }}
         existingTags={allTags}
         editingPrompt={editTarget}
       />
-
-      {/* Delete confirmation */}
-      <DeletePromptDialog
-        open={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={handleDelete}
-      />
+      <DeletePromptDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} />
       <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New prompt" />
     </div>
   );
