@@ -171,6 +171,9 @@ export type Database = {
           description: string | null
           domain: string | null
           favicon_url: string | null
+          file_name: string | null
+          file_type: string | null
+          file_url: string | null
           id: string
           og_title: string | null
           tags: string[]
@@ -185,6 +188,9 @@ export type Database = {
           description?: string | null
           domain?: string | null
           favicon_url?: string | null
+          file_name?: string | null
+          file_type?: string | null
+          file_url?: string | null
           id?: string
           og_title?: string | null
           tags?: string[]
@@ -199,6 +205,9 @@ export type Database = {
           description?: string | null
           domain?: string | null
           favicon_url?: string | null
+          file_name?: string | null
+          file_type?: string | null
+          file_url?: string | null
           id?: string
           og_title?: string | null
           tags?: string[]

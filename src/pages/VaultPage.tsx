@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin } from "lucide-react";
+import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
@@ -204,6 +204,12 @@ const VaultPage = () => {
                       <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
                         {resource.description}
                       </p>
+                    )}
+                    {resource.file_url && (
+                      <div className="flex items-center gap-1 mt-2 text-[11px] text-primary">
+                        <Paperclip size={11} />
+                        <span className="truncate">{resource.file_name || "File attached"}</span>
+                      </div>
                     )}
                   </div>
 

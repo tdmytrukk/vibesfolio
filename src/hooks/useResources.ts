@@ -15,6 +15,9 @@ export interface Resource {
   favicon_url: string | null;
   og_title: string | null;
   tags: string[];
+  file_url: string | null;
+  file_name: string | null;
+  file_type: string | null;
   created_at: string;
 }
 
@@ -51,12 +54,23 @@ export function useResources() {
     }
   };
 
+  const uploadFile = async (file: File): Promise<string | null> => {
+    if (!user?.id) return null;
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("resource-files").upload(path, file);
+    if (error) return null;
+    const { data: urlData } = supabase.storage.from("resource-files").getPublicUrl(path);
+    return urlData.publicUrl;
+  };
+
   const addResource = async (resource: {
     title: string;
     url: string;
     category: ResourceCategory;
     description?: string;
     tags?: string[];
+    file?: File;
   }) => {
     // Normalize URL
     let normalizedUrl = resource.url.trim();
@@ -72,6 +86,12 @@ export function useResources() {
       domain = normalizedUrl;
     }
 
+    // Upload file if provided
+    let fileUrl: string | null = null;
+    if (resource.file) {
+      fileUrl = await uploadFile(resource.file);
+    }
+
     // Optimistic insert with basic data
     const optimistic: Resource = {
       id: crypto.randomUUID(),
@@ -84,6 +104,9 @@ export function useResources() {
       favicon_url: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
       og_title: null,
       tags: resource.tags || [],
+      file_url: fileUrl,
+      file_name: resource.file?.name || null,
+      file_type: resource.file?.type || null,
       created_at: new Date().toISOString(),
     };
     setResources((prev) => [optimistic, ...prev]);
@@ -101,6 +124,9 @@ export function useResources() {
       favicon_url: meta?.faviconUrl || optimistic.favicon_url,
       og_title: meta?.ogTitle || null,
       tags: resource.tags || [],
+      file_url: fileUrl,
+      file_name: resource.file?.name || null,
+      file_type: resource.file?.type || null,
       user_id: user?.id,
     };
 

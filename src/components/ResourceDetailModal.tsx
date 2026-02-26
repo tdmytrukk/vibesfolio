@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save } from "lucide-react";
+import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
 import { Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
 
@@ -178,6 +178,20 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
                     {resource.description}
                   </p>
                 )
+              )}
+
+              {/* File attachment */}
+              {resource.file_url && (
+                <div className="mb-4 p-3 rounded-lg bg-secondary/40 flex items-center gap-3">
+                  {resource.file_type?.startsWith("image/") ? <Image size={16} className="text-muted-foreground shrink-0" /> :
+                   resource.file_type?.includes("pdf") ? <FileText size={16} className="text-muted-foreground shrink-0" /> :
+                   <File size={16} className="text-muted-foreground shrink-0" />}
+                  <span className="text-sm text-foreground truncate flex-1">{resource.file_name || "Attached file"}</span>
+                  <a href={resource.file_url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs text-primary hover:underline shrink-0">
+                    <Download size={13} /> Download
+                  </a>
+                </div>
               )}
 
               {/* Actions */}
