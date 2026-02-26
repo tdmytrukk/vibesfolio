@@ -173,8 +173,14 @@ const VaultPage = () => {
                     </div>
                   ) : (
                     <div className={`flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br ${categoryGradients[resource.category]}`}>
-                      {categoryIcons[resource.category]}
-                      <span className="text-xs font-medium text-foreground/40">{resource.domain || "Link"}</span>
+                      {resource.file_url ? (
+                        <Paperclip size={28} className="text-foreground/30" />
+                      ) : resource.favicon_url ? (
+                        <img src={resource.favicon_url} alt="" className="w-10 h-10 rounded-lg" />
+                      ) : (
+                        categoryIcons[resource.category]
+                      )}
+                      <span className="text-xs font-medium text-foreground/40">{resource.domain || "File"}</span>
                     </div>
                   )}
 
