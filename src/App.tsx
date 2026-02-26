@@ -9,6 +9,7 @@ import InboxPage from "@/pages/InboxPage";
 import PromptsPage from "@/pages/PromptsPage";
 import VaultPage from "@/pages/VaultPage";
 import BuildLogPage from "@/pages/BuildLogPage";
+import CockpitPage from "@/pages/CockpitPage";
 import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import NotFound from "./pages/NotFound";
@@ -42,6 +43,7 @@ const App = () => (
                       <Route path="/prompts" element={<PromptsPage />} />
                       <Route path="/vault" element={<VaultPage />} />
                       <Route path="/log" element={<BuildLogPage />} />
+                      <Route path="/log/:buildId" element={<CockpitPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppShell>

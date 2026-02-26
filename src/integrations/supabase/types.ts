@@ -136,6 +136,88 @@ export type Database = {
         }
         Relationships: []
       }
+      project_missions: {
+        Row: {
+          build_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          next_step: string
+          priority: string
+          time_estimate: string | null
+          updated_at: string
+        }
+        Insert: {
+          build_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          next_step?: string
+          priority?: string
+          time_estimate?: string | null
+          updated_at?: string
+        }
+        Update: {
+          build_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          next_step?: string
+          priority?: string
+          time_estimate?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_missions_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_tasks: {
+        Row: {
+          bucket: string
+          build_id: string
+          created_at: string
+          id: string
+          is_done: boolean
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          bucket?: string
+          build_id: string
+          created_at?: string
+          id?: string
+          is_done?: boolean
+          position?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          bucket?: string
+          build_id?: string
+          created_at?: string
+          id?: string
+          is_done?: boolean
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_tasks_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompts: {
         Row: {
           content: string
