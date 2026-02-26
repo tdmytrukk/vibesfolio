@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Inbox, Sparkles, Archive, Rocket, Plus } from "lucide-react";
+import { Inbox, Sparkles, Archive, Rocket, Plus, LogOut } from "lucide-react";
 import QuickAddModal from "./QuickAddModal";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { to: "/", label: "Inbox", icon: Inbox },
@@ -17,6 +18,7 @@ interface AppShellProps {
 const AppShell = ({ children }: AppShellProps) => {
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const location = useLocation();
+  const { signOut } = useAuth();
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
@@ -49,13 +51,20 @@ const AppShell = ({ children }: AppShellProps) => {
           })}
         </nav>
 
-        <div className="p-4">
+        <div className="p-4 space-y-2">
           <button
             onClick={() => setQuickAddOpen(true)}
             className="flex w-full items-center justify-center gap-2 rounded-pill bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
           >
             <Plus size={16} />
             Quick Add
+          </button>
+          <button
+            onClick={signOut}
+            className="flex w-full items-center justify-center gap-2 rounded-pill py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <LogOut size={14} />
+            Sign Out
           </button>
         </div>
       </aside>

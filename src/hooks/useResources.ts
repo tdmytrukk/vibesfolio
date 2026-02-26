@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type ResourceCategory = "inspiration" | "templates" | "tools" | "learning" | "other";
 
@@ -19,6 +20,7 @@ export interface Resource {
 export function useResources() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchResources = useCallback(async () => {
     const { data, error } = await supabase
@@ -95,6 +97,7 @@ export function useResources() {
       cover_image_url: meta?.ogImage || null,
       favicon_url: meta?.faviconUrl || optimistic.favicon_url,
       og_title: meta?.ogTitle || null,
+      user_id: user?.id,
     };
 
     const { data, error } = await supabase

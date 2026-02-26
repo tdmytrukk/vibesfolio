@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface Prompt {
   id: string;
@@ -12,6 +13,7 @@ export interface Prompt {
 export function usePrompts() {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchPrompts = useCallback(async () => {
     const { data, error } = await supabase
@@ -41,7 +43,7 @@ export function usePrompts() {
 
     const { data, error } = await supabase
       .from("prompts")
-      .insert({ title: prompt.title, content: prompt.content, tags: prompt.tags })
+      .insert({ title: prompt.title, content: prompt.content, tags: prompt.tags, user_id: user?.id })
       .select()
       .single();
 

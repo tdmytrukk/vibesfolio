@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type BuildStatus = "idea" | "in-progress" | "paused" | "shipped";
 
@@ -24,6 +25,7 @@ export interface Build {
 export function useBuilds() {
   const [builds, setBuilds] = useState<Build[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const fetchBuilds = useCallback(async () => {
     const { data, error } = await supabase
@@ -65,6 +67,7 @@ export function useBuilds() {
         description: build.description || null,
         status: build.status,
         lovable_url: build.lovable_url || null,
+        user_id: user?.id,
       })
       .select()
       .single();
