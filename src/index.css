@@ -54,6 +54,11 @@
     --status-shipped: 160 50% 86%;
     --status-archived: 220 10% 90%;
 
+    /* Builder accent */
+    --builder-accent: 263 70% 58%;
+    --builder-accent-foreground: 0 0% 100%;
+    --builder-glow: 263 70% 58% / 0.12;
+
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 240 8% 12%;
@@ -160,6 +165,31 @@
     0 2px 8px -2px hsla(240, 10%, 10%, 0.06),
     inset 0 1px 3px 0 hsla(0, 0%, 100%, 0.5),
     inset 0 -1px 2px 0 hsla(240, 10%, 10%, 0.03);
+}
+
+/* Next action glow card */
+.card-glow {
+  background: hsl(var(--card-glass));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--card-shadow), 0 0 0 1px hsl(var(--builder-glow)), 0 0 24px -8px hsl(var(--builder-glow));
+  border: 1px solid hsl(var(--builder-glow));
+  border-radius: var(--radius);
+}
+
+/* Momentum panel */
+.card-momentum {
+  background: linear-gradient(
+    135deg,
+    hsl(263 70% 58% / 0.04) 0%,
+    hsl(var(--card-glass)) 60%,
+    hsl(20 50% 93% / 0.06) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--card-shadow);
+  border: 1px solid hsl(var(--card-border));
+  border-radius: var(--radius);
 }
 
 .dark .fab-glass {

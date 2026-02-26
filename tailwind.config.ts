@@ -75,6 +75,11 @@ export default {
           shipped: "hsl(var(--status-shipped))",
           archived: "hsl(var(--status-archived))",
         },
+        builder: {
+          accent: "hsl(var(--builder-accent))",
+          "accent-foreground": "hsl(var(--builder-accent-foreground))",
+          glow: "hsl(var(--builder-glow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
