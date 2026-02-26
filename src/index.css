@@ -143,3 +143,36 @@
   border: 1px solid hsl(var(--card-border));
   border-radius: var(--radius);
 }
+
+/* Liquid glass FAB */
+.fab-glass {
+  background: linear-gradient(
+    135deg,
+    hsla(0, 0%, 100%, 0.6) 0%,
+    hsla(270, 30%, 96%, 0.45) 50%,
+    hsla(0, 0%, 100%, 0.55) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1.5px solid hsla(0, 0%, 100%, 0.7);
+  box-shadow:
+    0 8px 32px -4px hsla(240, 10%, 10%, 0.12),
+    0 2px 8px -2px hsla(240, 10%, 10%, 0.08),
+    inset 0 1px 2px 0 hsla(0, 0%, 100%, 0.6),
+    inset 0 -1px 2px 0 hsla(240, 10%, 10%, 0.04);
+}
+
+.dark .fab-glass {
+  background: linear-gradient(
+    135deg,
+    hsla(240, 10%, 18%, 0.65) 0%,
+    hsla(240, 10%, 14%, 0.5) 50%,
+    hsla(240, 10%, 20%, 0.6) 100%
+  );
+  border: 1.5px solid hsla(0, 0%, 100%, 0.12);
+  box-shadow:
+    0 8px 32px -4px hsla(0, 0%, 0%, 0.35),
+    0 2px 8px -2px hsla(0, 0%, 0%, 0.2),
+    inset 0 1px 2px 0 hsla(0, 0%, 100%, 0.08),
+    inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1);
+}

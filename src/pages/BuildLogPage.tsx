@@ -5,7 +5,6 @@ import {
   ChevronUp,
   Trash2,
   Search,
-  Plus,
   Rocket,
   ExternalLink,
   Pencil,
@@ -16,6 +15,7 @@ import { useBuilds, Build, BuildNote, BuildStatus } from "@/hooks/useBuilds";
 import EmptyState from "@/components/EmptyState";
 import AddBuildModal from "@/components/AddBuildModal";
 import DeleteBuildDialog from "@/components/DeleteBuildDialog";
+import FloatingActionButton from "@/components/FloatingActionButton";
 import { toast } from "sonner";
 
 type SortOption = "updated" | "created" | "name";
@@ -174,13 +174,6 @@ const BuildLogPage = () => {
       >
         <div className="flex items-end justify-between gap-4 mb-1">
           <h2 className="font-heading text-3xl text-foreground">Build Log</h2>
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-pill bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
-          >
-            <Plus size={15} />
-            New build
-          </button>
         </div>
         <p className="text-sm text-muted-foreground">
           Shipping is a habit. Log the work.
@@ -460,6 +453,7 @@ const BuildLogPage = () => {
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
       />
+      <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New build" />
     </div>
   );
 };
