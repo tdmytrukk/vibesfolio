@@ -39,7 +39,8 @@ const App = () => (
                 <ProtectedRoute>
                   <AppShell>
                     <Routes>
-                      <Route path="/" element={<InboxPage />} />
+                      <Route path="/" element={<Navigate to="/vault" replace />} />
+                      <Route path="/ideas" element={<InboxPage />} />
                       <Route path="/prompts" element={<PromptsPage />} />
                       <Route path="/vault" element={<VaultPage />} />
                       <Route path="/log" element={<BuildLogPage />} />
