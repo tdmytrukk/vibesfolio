@@ -19,6 +19,13 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
+const glassStyle = {
+  background: 'linear-gradient(135deg, hsla(0,0%,100%,0.45) 0%, hsla(270,30%,96%,0.35) 50%, hsla(0,0%,100%,0.4) 100%)',
+  backdropFilter: 'blur(40px) saturate(1.8)',
+  WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+  boxShadow: '0 8px 32px -4px hsla(240,10%,10%,0.08), inset 0 1px 2px 0 hsla(0,0%,100%,0.5)',
+};
+
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
@@ -27,48 +34,59 @@ const AppShell = ({ children }: AppShellProps) => {
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-56 flex-col border-r border-white/30 dark:border-white/10 md:flex" style={{ background: 'linear-gradient(135deg, hsla(0,0%,100%,0.45) 0%, hsla(270,30%,96%,0.35) 50%, hsla(0,0%,100%,0.4) 100%)', backdropFilter: 'blur(40px) saturate(1.6)', WebkitBackdropFilter: 'blur(40px) saturate(1.6)', boxShadow: '0 8px 32px -4px hsla(240,10%,10%,0.08), inset 0 1px 2px 0 hsla(0,0%,100%,0.5)' }}>
-        <div className="px-6 py-8">
-          <h1 className="font-heading text-xl text-foreground tracking-tight">
-            Vibesfolio
-          </h1>
-          <p className="mt-1 text-xs text-muted-foreground">Capture. Organize. Ship.</p>
-        </div>
+      {/* Desktop floating top nav */}
+      <header
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-30 hidden md:flex items-center gap-1 rounded-full border border-white/30 dark:border-white/10 px-2 py-1.5"
+        style={glassStyle}
+      >
+        <span className="font-heading text-sm text-foreground tracking-tight pl-4 pr-3 select-none">
+          Vibesfolio
+        </span>
 
-        <nav className="flex-1 px-3 space-y-1">
+        <div className="h-5 w-px bg-border/50 mx-1" />
+
+        <nav className="flex items-center gap-0.5">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to;
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-secondary text-foreground"
-                    : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                    ? "bg-white/50 dark:bg-white/10 text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/30 dark:hover:bg-white/5"
                 }`}
               >
-                <item.icon size={18} />
+                <item.icon size={16} strokeWidth={isActive ? 2.2 : 1.6} />
                 {item.label}
               </NavLink>
             );
           })}
         </nav>
 
-        <div className="p-4">
-          <button
-            onClick={signOut}
-            className="flex w-full items-center justify-center gap-2 rounded-pill py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <LogOut size={14} />
-            Sign Out
-          </button>
-        </div>
-      </aside>
+        <div className="h-5 w-px bg-border/50 mx-1" />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground text-xs font-medium hover:bg-muted transition-colors mr-1"
+              aria-label="Profile"
+            >
+              {userInitial}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem onClick={signOut} className="gap-2">
+              <LogOut size={14} />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </header>
 
       {/* Main content */}
-      <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pl-56">
+      <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
         <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-4 md:hidden">
           <DropdownMenu>
@@ -89,7 +107,7 @@ const AppShell = ({ children }: AppShellProps) => {
           </DropdownMenu>
         </header>
 
-        <div className="px-5 pt-4 md:px-8 md:pt-8">{children}</div>
+        <div className="px-5 pt-4 md:px-8 md:pt-0">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
