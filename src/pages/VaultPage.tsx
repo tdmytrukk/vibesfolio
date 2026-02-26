@@ -1,11 +1,12 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Copy, Trash2, Check, Search, Archive, Plus, Layers, Lightbulb, Wrench, BookOpen, Pin } from "lucide-react";
+import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin } from "lucide-react";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
 import AddResourceModal from "@/components/AddResourceModal";
 import DeletePromptDialog from "@/components/DeletePromptDialog";
+import FloatingActionButton from "@/components/FloatingActionButton";
 
 const categoryConfig: { value: ResourceCategory | "all"; label: string; icon: React.ReactNode; colorIndex: number }[] = [
   { value: "all", label: "All", icon: <Layers size={13} />, colorIndex: 0 },
@@ -76,13 +77,6 @@ const VaultPage = () => {
       >
         <div className="flex items-end justify-between gap-4 mb-1">
           <h2 className="font-heading text-3xl text-foreground">Resource Vault</h2>
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-pill bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
-          >
-            <Plus size={15} />
-            New resource
-          </button>
         </div>
         <p className="text-sm text-muted-foreground">
           Your vault stays tidy—one link at a time.
@@ -259,6 +253,7 @@ const VaultPage = () => {
 
       <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={addResource} />
       <DeletePromptDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={handleDelete} />
+      <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New resource" />
     </div>
   );
 };
