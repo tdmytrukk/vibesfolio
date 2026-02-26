@@ -76,6 +76,41 @@ export type Database = {
         }
         Relationships: []
       }
+      decisions: {
+        Row: {
+          build_id: string
+          context: string | null
+          created_at: string
+          id: string
+          outcome: string | null
+          title: string
+        }
+        Insert: {
+          build_id: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          outcome?: string | null
+          title: string
+        }
+        Update: {
+          build_id?: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          outcome?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "decisions_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ideas: {
         Row: {
           created_at: string
@@ -298,6 +333,82 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      session_debriefs: {
+        Row: {
+          blockers: string | null
+          build_id: string
+          created_at: string
+          id: string
+          mood: string | null
+          next_session_plan: string | null
+          what_learned: string | null
+          what_shipped: string | null
+        }
+        Insert: {
+          blockers?: string | null
+          build_id: string
+          created_at?: string
+          id?: string
+          mood?: string | null
+          next_session_plan?: string | null
+          what_learned?: string | null
+          what_shipped?: string | null
+        }
+        Update: {
+          blockers?: string | null
+          build_id?: string
+          created_at?: string
+          id?: string
+          mood?: string | null
+          next_session_plan?: string | null
+          what_learned?: string | null
+          what_shipped?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_debriefs_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shipping_log: {
+        Row: {
+          build_id: string
+          created_at: string
+          description: string | null
+          entry_type: string
+          id: string
+          title: string
+        }
+        Insert: {
+          build_id: string
+          created_at?: string
+          description?: string | null
+          entry_type?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          build_id?: string
+          created_at?: string
+          description?: string | null
+          entry_type?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_log_build_id_fkey"
+            columns: ["build_id"]
+            isOneToOne: false
+            referencedRelation: "builds"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
