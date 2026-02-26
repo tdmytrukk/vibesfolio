@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -11,18 +11,12 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useMission } from "@/hooks/useMission";
 import { useTasks } from "@/hooks/useTasks";
-import { useShippingLog } from "@/hooks/useShippingLog";
-import { useDecisions } from "@/hooks/useDecisions";
-import { useDebriefs } from "@/hooks/useDebriefs";
 import { toast } from "sonner";
 import type { Build } from "@/hooks/useBuilds";
 import ShippingLog from "@/components/ShippingLog";
 import DecisionVault from "@/components/DecisionVault";
 import SessionDebrief from "@/components/SessionDebrief";
 import ExecutionBoard from "@/components/ExecutionBoard";
-import NextActionCard from "@/components/NextActionCard";
-import BuilderMomentum from "@/components/BuilderMomentum";
-import CockpitStepIndicator from "@/components/CockpitStepIndicator";
 
 type CockpitTab = "execute" | "log" | "decisions" | "debrief";
 
@@ -40,22 +34,6 @@ const CockpitPage = () => {
 
   // Tasks
   const taskHook = useTasks(buildId!);
-
-  // Ship log, decisions, debriefs for momentum
-  const shipHook = useShippingLog(buildId!);
-  const decisionHook = useDecisions(buildId!);
-  const debriefHook = useDebriefs(buildId!);
-
-  // Behavioral nudges
-  const hasTasks = taskHook.tasks.filter((t) => !t.is_done).length > 0;
-  const hasDecisions = decisionHook.decisions.length > 0;
-  const hasDebriefs = debriefHook.debriefs.length > 0;
-
-  // Check if user shipped today but hasn't debriefed
-  const todayStr = new Date().toDateString();
-  const shippedToday = shipHook.entries.some((e) => new Date(e.created_at).toDateString() === todayStr);
-  const debriefedToday = debriefHook.debriefs.some((d) => new Date(d.created_at).toDateString() === todayStr);
-  const needsDebrief = shippedToday && !debriefedToday;
 
   // Fetch build info
   useEffect(() => {
@@ -88,9 +66,10 @@ const CockpitPage = () => {
     else { toast.error("Couldn't save mission"); }
   };
 
+
   if (buildLoading) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-muted rounded w-1/3" />
           <div className="h-32 bg-muted/50 rounded-xl" />
@@ -101,9 +80,9 @@ const CockpitPage = () => {
 
   if (!build) {
     return (
-      <div className="max-w-4xl mx-auto text-center py-20">
+      <div className="max-w-3xl mx-auto text-center py-20">
         <p className="text-muted-foreground">Project not found.</p>
-        <button onClick={() => navigate("/log")} className="mt-4 text-sm text-builder-accent underline">Back to projects</button>
+        <button onClick={() => navigate("/log")} className="mt-4 text-sm text-primary underline">Back to projects</button>
       </div>
     );
   }
@@ -115,8 +94,9 @@ const CockpitPage = () => {
     { key: "debrief", label: "Debrief" },
   ];
 
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       {/* Back + title */}
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mb-6">
         <button onClick={() => navigate("/log")} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3">
@@ -171,61 +151,20 @@ const CockpitPage = () => {
         )}
       </motion.section>
 
-      {/* Next Action + Momentum side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <NextActionCard
-          tasks={taskHook.tasks}
-          missionPriority={mission?.priority}
-          onStartWorking={() => setActiveTab("execute")}
-          onBreakIntoTasks={() => setActiveTab("execute")}
-        />
-        <BuilderMomentum
-          tasks={taskHook.tasks}
-          shipEntries={shipHook.entries}
-          decisions={decisionHook.decisions}
-          debriefs={debriefHook.debriefs}
-        />
-      </div>
-
-      {/* Behavioral nudges */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {!hasTasks && mission && (
-          <button onClick={() => setActiveTab("execute")} className="text-[11px] text-muted-foreground/60 bg-secondary/40 rounded-full px-3 py-1.5 hover:bg-secondary hover:text-foreground transition-colors">
-            Break down your mission into tasks →
-          </button>
-        )}
-        {!hasDecisions && (
-          <button onClick={() => setActiveTab("decisions")} className="text-[11px] text-muted-foreground/60 bg-secondary/40 rounded-full px-3 py-1.5 hover:bg-secondary hover:text-foreground transition-colors">
-            Record one key decision today →
-          </button>
-        )}
-        {needsDebrief && (
-          <button onClick={() => setActiveTab("debrief")} className="text-[11px] text-builder-accent/70 bg-builder-accent/5 rounded-full px-3 py-1.5 hover:bg-builder-accent/10 hover:text-builder-accent transition-colors">
-            Close the loop with a reflection →
-          </button>
-        )}
-      </div>
-
       {/* Tab bar */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex gap-1 mb-1 bg-secondary/30 rounded-lg p-1">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex gap-1 mb-4 bg-secondary/30 rounded-lg p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`relative flex-1 rounded-md px-3 py-2 text-xs font-medium transition-all ${
+            className={`flex-1 rounded-md px-3 py-2 text-xs font-medium transition-all ${
               activeTab === tab.key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-            } ${tab.key === "debrief" && needsDebrief && activeTab !== "debrief" ? "text-builder-accent" : ""}`}
+            }`}
           >
             {tab.label}
-            {tab.key === "debrief" && needsDebrief && activeTab !== "debrief" && (
-              <span className="absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full bg-builder-accent animate-pulse" />
-            )}
           </button>
         ))}
       </motion.div>
-
-      {/* Step indicator */}
-      <CockpitStepIndicator activeTab={activeTab} hasUnfinishedDebrief={needsDebrief} />
 
       {/* Tab content */}
       <motion.section
@@ -233,7 +172,7 @@ const CockpitPage = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="card-glass p-5 mt-3"
+        className="card-glass p-5"
       >
         {activeTab === "execute" && (
           <ExecutionBoard
@@ -249,14 +188,7 @@ const CockpitPage = () => {
         )}
         {activeTab === "log" && <ShippingLog buildId={buildId!} />}
         {activeTab === "decisions" && <DecisionVault buildId={buildId!} />}
-        {activeTab === "debrief" && (
-          <SessionDebrief
-            buildId={buildId!}
-            onDebriefSaved={(streak) => {
-              // Completion ritual handled inside SessionDebrief
-            }}
-          />
-        )}
+        {activeTab === "debrief" && <SessionDebrief buildId={buildId!} />}
       </motion.section>
     </div>
   );

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, MessageSquare, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, MessageSquare } from "lucide-react";
 import { useDebriefs, DebriefMood } from "@/hooks/useDebriefs";
 import { toast } from "sonner";
-import { format, differenceInCalendarDays, startOfDay } from "date-fns";
+import { format } from "date-fns";
 
 const moodEmoji: Record<DebriefMood, string> = {
   great: "🔥",
@@ -12,28 +12,9 @@ const moodEmoji: Record<DebriefMood, string> = {
   rough: "😓",
 };
 
-function computeStreak(debriefs: { created_at: string }[]): number {
-  if (debriefs.length === 0) return 0;
-  const sorted = [...debriefs]
-    .map((d) => startOfDay(new Date(d.created_at)).getTime())
-    .sort((a, b) => b - a);
-  const unique = [...new Set(sorted)];
-  let streak = 1;
-  for (let i = 1; i < unique.length; i++) {
-    const diff = differenceInCalendarDays(new Date(unique[i - 1]), new Date(unique[i]));
-    if (diff === 1) streak++;
-    else break;
-  }
-  const daysSinceLast = differenceInCalendarDays(new Date(), new Date(unique[0]));
-  if (daysSinceLast > 1) return 0;
-  return streak;
-}
-
-const SessionDebrief = ({ buildId, onDebriefSaved }: { buildId: string; onDebriefSaved?: (streak: number) => void }) => {
+const SessionDebrief = ({ buildId }: { buildId: string }) => {
   const { debriefs, loading, addDebrief, deleteDebrief } = useDebriefs(buildId);
   const [adding, setAdding] = useState(false);
-  const [justSaved, setJustSaved] = useState(false);
-  const [savedStreak, setSavedStreak] = useState(0);
   const [draft, setDraft] = useState({
     what_shipped: "",
     what_learned: "",
@@ -57,15 +38,7 @@ const SessionDebrief = ({ buildId, onDebriefSaved }: { buildId: string; onDebrie
     if (result) {
       setDraft({ what_shipped: "", what_learned: "", blockers: "", next_session_plan: "", mood: "" });
       setAdding(false);
-
-      // Completion ritual
-      const streak = computeStreak([...debriefs, result]);
-      setSavedStreak(streak);
-      setJustSaved(true);
-      setTimeout(() => setJustSaved(false), 4000);
-
-      onDebriefSaved?.(streak);
-      toast.success("Session logged");
+      toast.success("Session debrief saved");
     } else {
       toast.error("Couldn't save debrief");
     }
@@ -79,9 +52,6 @@ const SessionDebrief = ({ buildId, onDebriefSaved }: { buildId: string; onDebrie
         <h3 className="flex items-center gap-2 text-sm font-medium text-foreground">
           <MessageSquare size={15} className="text-muted-foreground" />
           Session Debrief
-          {debriefs.length > 0 && (
-            <span className="text-[10px] text-muted-foreground/50 ml-1">{debriefs.length}</span>
-          )}
         </h3>
         <button
           onClick={() => setAdding(!adding)}
@@ -90,22 +60,6 @@ const SessionDebrief = ({ buildId, onDebriefSaved }: { buildId: string; onDebrie
           <Plus size={14} />
         </button>
       </div>
-
-      {/* Completion ritual */}
-      <AnimatePresence>
-        {justSaved && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="rounded-lg bg-builder-accent/5 border border-builder-accent/10 p-4 text-center"
-          >
-            <CheckCircle2 size={20} className="text-builder-accent mx-auto mb-2" />
-            <p className="text-sm font-medium text-foreground">Session logged. Streak: {savedStreak} day{savedStreak !== 1 ? "s" : ""}.</p>
-            <p className="text-xs text-muted-foreground/60 mt-1">Consistency compounds.</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <AnimatePresence>
         {adding && (
@@ -124,7 +78,7 @@ const SessionDebrief = ({ buildId, onDebriefSaved }: { buildId: string; onDebrie
                     key={mood}
                     onClick={() => setDraft((d) => ({ ...d, mood: d.mood === mood ? "" : mood }))}
                     className={`rounded-full w-8 h-8 text-sm transition-all ${
-                      draft.mood === mood ? "bg-secondary ring-2 ring-builder-accent/30 scale-110" : "hover:bg-secondary/60"
+                      draft.mood === mood ? "bg-secondary ring-2 ring-ring/20 scale-110" : "hover:bg-secondary/60"
                     }`}
                   >
                     {emoji}
