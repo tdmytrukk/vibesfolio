@@ -152,8 +152,11 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
                   ))}
                 </div>
               ) : (
-                <div className="mb-3">
+                <div className="mb-3 flex gap-1.5 flex-wrap">
                   <TagChip label={resource.category} colorIndex={categoryColorIndex[resource.category]} />
+                  {resource.tags?.map((tag, i) => (
+                    <TagChip key={i} label={tag} colorIndex={i + 1} />
+                  ))}
                 </div>
               )}
 

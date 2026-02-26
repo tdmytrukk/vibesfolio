@@ -193,6 +193,13 @@ const VaultPage = () => {
                       label={resource.category}
                       colorIndex={categoryConfig.findIndex((c) => c.value === resource.category)}
                     />
+                    {resource.tags && resource.tags.length > 0 && (
+                      <div className="flex gap-1 flex-wrap mt-2">
+                        {resource.tags.map((tag, ti) => (
+                          <TagChip key={ti} label={tag} colorIndex={ti} className="text-[10px] px-2 py-0.5" />
+                        ))}
+                      </div>
+                    )}
                     {resource.description && (
                       <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
                         {resource.description}

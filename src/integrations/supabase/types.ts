@@ -173,6 +173,7 @@ export type Database = {
           favicon_url: string | null
           id: string
           og_title: string | null
+          tags: string[]
           title: string
           url: string
           user_id: string | null
@@ -186,6 +187,7 @@ export type Database = {
           favicon_url?: string | null
           id?: string
           og_title?: string | null
+          tags?: string[]
           title: string
           url: string
           user_id?: string | null
@@ -199,6 +201,7 @@ export type Database = {
           favicon_url?: string | null
           id?: string
           og_title?: string | null
+          tags?: string[]
           title?: string
           url?: string
           user_id?: string | null
