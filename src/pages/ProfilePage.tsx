@@ -23,7 +23,7 @@ import {
 import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell } from "lucide-react";
 
 const ProfilePage = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, refreshProfile } = useAuth();
   const { toast } = useToast();
   const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -116,6 +116,7 @@ const ProfilePage = () => {
       if (updateError) throw updateError;
 
       setAvatarUrl(newUrl);
+      await refreshProfile();
       toast({ title: "Avatar updated" });
     } catch (err: any) {
       toast({ title: "Upload failed", description: err.message, variant: "destructive" });
