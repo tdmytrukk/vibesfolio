@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Pencil, Share2, Globe } from "lucide-react";
+import { Copy, Check, Search, Sparkles, Globe } from "lucide-react";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
 import TagChip from "@/components/TagChip";
@@ -8,25 +8,25 @@ import EmptyState from "@/components/EmptyState";
 import AddPromptModal from "@/components/AddPromptModal";
 import DeletePromptDialog from "@/components/DeletePromptDialog";
 import FloatingActionButton from "@/components/FloatingActionButton";
-import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
+import PromptDetailModal from "@/components/PromptDetailModal";
 
 const PromptsPage = () => {
   const { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags } = usePrompts();
   const { myArtifacts, refetchMy } = usePublicArtifacts();
-  
-  // Build a map of prompt title -> artifact ID for shared status
+
   const sharedPromptMap = new Map(
     myArtifacts
       .filter((a) => a.artifact_type === "prompt")
       .map((a) => [a.title, a.id])
   );
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Prompt | null>(null);
   const [editTarget, setEditTarget] = useState<Prompt | null>(null);
+  const [detailPrompt, setDetailPrompt] = useState<Prompt | null>(null);
 
   // Filter prompts
   const filtered = prompts.filter((p) => {
@@ -39,15 +39,6 @@ const PromptsPage = () => {
     return matchSearch && matchTags;
   });
 
-  const toggleExpand = (id: string) => {
-    setExpandedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
   };
@@ -57,7 +48,8 @@ const PromptsPage = () => {
     setSelectedTags([]);
   };
 
-  const handleCopy = useCallback(async (prompt: Prompt) => {
+  const handleCopy = useCallback(async (e: React.MouseEvent, prompt: Prompt) => {
+    e.stopPropagation();
     await navigator.clipboard.writeText(prompt.content);
     setCopiedId(prompt.id);
     setTimeout(() => setCopiedId(null), 1500);
@@ -72,18 +64,8 @@ const PromptsPage = () => {
   const hasFilters = searchQuery || selectedTags.length > 0;
   const displayTags = allTags.length > 0 ? allTags : ["starter", "debug", "design", "mega"];
 
-  const formatDate = (iso: string) => {
-    const d = new Date(iso);
-    const now = new Date();
-    const diff = now.getTime() - d.getTime();
-    if (diff < 86400000) return "Today";
-    if (diff < 172800000) return "Yesterday";
-    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  };
-
   return (
-    <div className="max-w-3xl mx-auto">
-
+    <div className="max-w-4xl mx-auto">
       {/* Search & filters */}
       <div className="mb-6 space-y-3">
         <div className="relative">
@@ -98,7 +80,7 @@ const PromptsPage = () => {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {displayTags.map((tag, i) => {
+          {displayTags.map((tag) => {
             const isSelected = selectedTags.includes(tag);
             return (
               <button
@@ -126,14 +108,14 @@ const PromptsPage = () => {
         </div>
       </div>
 
-      {/* Prompt list */}
+      {/* Prompt grid */}
       {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="card-glass p-5 animate-pulse">
-              <div className="h-4 bg-muted rounded w-1/3 mb-3" />
-              <div className="h-3 bg-muted rounded w-full mb-2" />
-              <div className="h-3 bg-muted rounded w-2/3" />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="card-glass p-4 animate-pulse">
+              <div className="h-4 bg-muted rounded w-2/3 mb-2" />
+              <div className="h-3 bg-muted rounded w-1/2 mb-3" />
+              <div className="h-3 bg-muted rounded w-full" />
             </div>
           ))}
         </div>
@@ -154,11 +136,13 @@ const PromptsPage = () => {
           />
         )
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <AnimatePresence initial={false}>
             {filtered.map((prompt, i) => {
-              const isExpanded = expandedIds.has(prompt.id);
               const isCopied = copiedId === prompt.id;
+              const isShared = sharedPromptMap.has(prompt.title);
+              const visibleTags = prompt.tags.slice(0, 3);
+              const overflowCount = prompt.tags.length - 3;
 
               return (
                 <motion.div
@@ -166,113 +150,54 @@ const PromptsPage = () => {
                   layout
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8, transition: { duration: 0.15 } }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-5"
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+                  transition={{ duration: 0.25, delay: i * 0.02 }}
+                  onClick={() => setDetailPrompt(prompt)}
+                  className="card-glass p-3.5 cursor-pointer hover:ring-1 hover:ring-ring/20 transition-all flex flex-col"
                 >
-                  {/* Header row */}
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-foreground text-[15px] leading-snug">{prompt.title}</h3>
-                      {sharedPromptMap.has(prompt.title) && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-medium">
-                          <Globe size={10} />
-                          Shared
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[11px] text-muted-foreground whitespace-nowrap pt-0.5 shrink-0">
-                      {formatDate(prompt.created_at)}
-                    </span>
-                  </div>
-
-                  {/* Tags */}
-                  {prompt.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {prompt.tags.map((tag, ti) => (
-                        <button key={tag} onClick={() => toggleTag(tag)} className="cursor-pointer">
-                          <TagChip label={tag} colorIndex={ti} />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Content preview / full */}
-                  <div className="relative">
-                    <p
-                      className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap ${
-                        !isExpanded ? "line-clamp-3" : ""
-                      }`}
-                    >
-                      {prompt.content}
-                    </p>
-                    {!isExpanded && prompt.content.length > 180 && (
-                      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                  {/* Title + shared badge */}
+                  <div className="flex items-start gap-1.5 mb-1.5">
+                    <h3 className="font-medium text-sm text-foreground leading-snug line-clamp-2 flex-1">
+                      {prompt.title}
+                    </h3>
+                    {isShared && (
+                      <Globe size={12} className="text-primary shrink-0 mt-0.5" />
                     )}
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/30">
-                    <button
-                      onClick={() => toggleExpand(prompt.id)}
-                      className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label={isExpanded ? "Collapse prompt" : "Expand prompt"}
-                    >
-                      {isExpanded ? (
-                        <>
-                          <ChevronUp size={14} /> Collapse
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown size={14} /> Expand
-                        </>
+                  {/* Tags */}
+                  {visibleTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {visibleTags.map((tag, ti) => (
+                        <TagChip key={tag} label={tag} colorIndex={ti} className="!text-[10px] !px-2 !py-0.5" />
+                      ))}
+                      {overflowCount > 0 && (
+                        <span className="text-[10px] text-muted-foreground px-1.5 py-0.5">
+                          +{overflowCount}
+                        </span>
                       )}
-                    </button>
-
-                    <div className="flex items-center gap-1">
-                      {/* Share */}
-                      <ShareToCommunityToggle
-                        artifactId={sharedPromptMap.get(prompt.title) || null}
-                        artifactType="prompt"
-                        title={prompt.title}
-                        promptContent={prompt.content}
-                        tags={prompt.tags}
-                        onShared={() => refetchMy()}
-                        onUnshared={() => refetchMy()}
-                      />
-
-                      {/* Edit */}
-                      <button
-                        onClick={() => setEditTarget(prompt)}
-                        className="flex items-center gap-1 rounded-pill px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-                        aria-label="Edit prompt"
-                      >
-                        <Pencil size={13} />
-                      </button>
-
-                      {/* Copy */}
-                      <button
-                        onClick={() => handleCopy(prompt)}
-                        className={`relative flex items-center gap-1 rounded-pill px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                          isCopied
-                            ? "bg-status-shipped text-foreground"
-                            : "bg-secondary text-secondary-foreground hover:bg-muted"
-                        }`}
-                        aria-label="Copy prompt"
-                      >
-                        {isCopied ? <Check size={13} /> : <Copy size={13} />}
-                        {isCopied ? "Copied!" : "Copy"}
-                      </button>
-
-                      {/* Delete */}
-                      <button
-                        onClick={() => setDeleteTarget(prompt)}
-                        className="flex items-center rounded-pill px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                        aria-label="Delete prompt"
-                      >
-                        <Trash2 size={13} />
-                      </button>
                     </div>
+                  )}
+
+                  {/* Description preview */}
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1">
+                    {prompt.content}
+                  </p>
+
+                  {/* Copy button */}
+                  <div className="mt-2.5 pt-2 border-t border-border/20">
+                    <button
+                      onClick={(e) => handleCopy(e, prompt)}
+                      className={`flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-medium transition-all duration-200 ${
+                        isCopied
+                          ? "bg-status-shipped text-foreground"
+                          : "bg-secondary text-secondary-foreground hover:bg-muted"
+                      }`}
+                      aria-label="Copy prompt"
+                    >
+                      {isCopied ? <Check size={11} /> : <Copy size={11} />}
+                      {isCopied ? "Copied!" : "Copy"}
+                    </button>
                   </div>
                 </motion.div>
               );
@@ -280,6 +205,17 @@ const PromptsPage = () => {
           </AnimatePresence>
         </div>
       )}
+
+      {/* Detail modal */}
+      <PromptDetailModal
+        prompt={detailPrompt}
+        onClose={() => setDetailPrompt(null)}
+        onEdit={(p) => setEditTarget(p)}
+        onDelete={(p) => setDeleteTarget(p)}
+        sharedArtifactId={detailPrompt ? sharedPromptMap.get(detailPrompt.title) || null : null}
+        onShared={() => refetchMy()}
+        onUnshared={() => refetchMy()}
+      />
 
       {/* Add/Edit prompt modal */}
       <AddPromptModal

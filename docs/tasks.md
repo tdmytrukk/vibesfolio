@@ -21,6 +21,7 @@
 | 5A.4 | Auto-populate resource title/description from metadata | ⬜ | `fetch-url-metadata` already returns ogTitle + ogDescription; wire into AddResourceModal |
 | 5A.5 | Add `updated_at` triggers for ideas, project_tasks, project_missions | ⬜ | DB migration — match the builds trigger pattern |
 | 5A.6 | Empty state improvements across all pages | ✅ | Added action buttons to EmptyState component; contextual CTAs on all 5 pages |
+| 5A.7 | Prompts page compact grid redesign | ✅ | 3-col grid (2 on mobile), compact cards, PromptDetailModal for full view + actions |
 
 ## Phase 5B — Search & Discovery
 
