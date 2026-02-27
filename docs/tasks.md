@@ -15,7 +15,7 @@
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 5A.1 | Fix mobile modal Save button visibility (keyboard overlap) | ⬜ | Sticky footer in modals so Save stays visible above keyboard |
+| 5A.1 | Fix mobile modal Save button visibility (keyboard overlap) | ✅ | Modals use `bottom-4` + `100dvh` on mobile with sticky footer; button stays above keyboard |
 | 5A.2 | Add success toasts for all CRUD operations | ⬜ | Consistent feedback: "Idea saved", "Resource added", etc. |
 | 5A.3 | Wire `generate-tags` edge function into add flows | ⬜ | Auto-suggest tags when adding ideas, prompts, resources |
 | 5A.4 | Auto-populate resource title/description from metadata | ⬜ | `fetch-url-metadata` already returns ogTitle + ogDescription; wire into AddResourceModal |
