@@ -108,6 +108,8 @@ const CommunityPage = () => {
               ? "Follow builders to see their shared prompts and resources here."
               : "Be the first to publish a prompt or resource to the community."
           }
+          actionLabel={feedTab === "following" ? "Browse builders" : "Publish artifact"}
+          onAction={feedTab === "following" ? () => navigate("/community/builders") : () => setPublishOpen(true)}
         />
       ) : (
         <>

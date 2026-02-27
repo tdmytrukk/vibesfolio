@@ -147,8 +147,10 @@ const PromptsPage = () => {
         ) : (
           <EmptyState
             icon={<Sparkles />}
-            title="Your prompt cards will appear here"
-            subtitle='Tap "+ New prompt" to save your first one—marketing, code, product, design.'
+            title="Save your first prompt"
+            subtitle="Marketing, code, product, design—keep them all here."
+            actionLabel="New prompt"
+            onAction={() => setAddModalOpen(true)}
           />
         )
       ) : (

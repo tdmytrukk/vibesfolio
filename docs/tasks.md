@@ -20,7 +20,7 @@
 | 5A.3 | Wire `generate-tags` edge function into add flows | ⬜ | Auto-suggest tags when adding ideas, prompts, resources |
 | 5A.4 | Auto-populate resource title/description from metadata | ⬜ | `fetch-url-metadata` already returns ogTitle + ogDescription; wire into AddResourceModal |
 | 5A.5 | Add `updated_at` triggers for ideas, project_tasks, project_missions | ⬜ | DB migration — match the builds trigger pattern |
-| 5A.6 | Empty state improvements across all pages | ⬜ | Contextual CTAs: "Save your first prompt", "Start a project", etc. |
+| 5A.6 | Empty state improvements across all pages | ✅ | Added action buttons to EmptyState component; contextual CTAs on all 5 pages |
 
 ## Phase 5B — Search & Discovery
 
