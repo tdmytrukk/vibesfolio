@@ -80,8 +80,18 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
                 </div>
               )}
 
+              {/* Summary */}
+              {prompt.summary && (
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3 italic">
+                  {prompt.summary}
+                </p>
+              )}
+
               {/* Full content */}
               <div className="rounded-lg bg-secondary/40 p-4 mb-4">
+                <label className="block text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-2">
+                  Full prompt
+                </label>
                 <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                   {prompt.content}
                 </p>
