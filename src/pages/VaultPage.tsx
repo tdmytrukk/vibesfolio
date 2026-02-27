@@ -74,20 +74,6 @@ const VaultPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-6"
-      >
-        <div className="flex items-end justify-between gap-4 mb-1">
-          <h2 className="font-heading text-3xl text-foreground">Resource Vault</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Your vault stays tidy—one link at a time.
-        </p>
-      </motion.div>
 
       {/* Filters */}
       <div className="mb-6 space-y-3">
