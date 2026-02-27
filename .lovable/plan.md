@@ -1,53 +1,38 @@
 
 
-## Prompts Page → Compact Grid Redesign
+Giiiirl, I see the issues clearly from the screenshots and code. Here's the plan:
 
-**Current state**: Full-width vertical list, each card shows title + tags + full content preview + expand/collapse + action bar. Very tall cards — only ~2 visible per screen.
+## Problems Identified
 
-**Resource cards for reference**: Use a `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4` layout with compact cards (image/fallback + title + tags + 2-line description). Actions appear on hover/click into a detail modal.
+1. **Wasted top space on mobile**: The mobile header (line 110) has `py-4` padding just for the avatar, plus the content area adds another `pt-4` (line 142). That's ~64px of dead space before any content appears.
 
-### Proposed Design
+2. **Tags not limited**: The Prompts page renders ALL tags without any row limit (line 82-108). On mobile with many tags, this pushes content way down.
 
-**Layout**: `grid grid-cols-2 md:grid-cols-3 gap-3`
-- 2 columns on mobile, 3 on desktop
-- No cover images needed — prompts are text-first
+3. **Uneven bottom nav spacing**: The bottom nav uses `justify-around` with `px-3` on each item (line 146-161). The `justify-around` distributes space based on container width, but `px-3` padding on variable-width labels creates visual unevenness.
 
-**Card anatomy** (compact):
-```text
-┌──────────────────────┐
-│ Title (1-2 lines)    │  ← font-medium text-sm line-clamp-2
-│ ┌─────┐ ┌──────┐     │  ← tag chips (max 3 shown, +N overflow)
-│ │ tag │ │ tag  │     │
-│ └─────┘ └──────┘     │
-│ Short description…   │  ← text-xs line-clamp-2, muted
-│                      │
-│ 📋 Copy    ···       │  ← minimal footer: copy + overflow menu
-└──────────────────────┘
-```
+## Implementation Steps
 
-**Key changes**:
+### 1. Reduce mobile top spacing (AppShell.tsx)
 
-1. **Grid layout** replaces vertical stack — `grid grid-cols-2 md:grid-cols-3 gap-3`
-2. **Remove inline expand/collapse** — tapping the card opens a detail modal instead (like resources)
-3. **Truncate everything** — title `line-clamp-2`, description `line-clamp-2`, max 3 tags shown
-4. **Slim action bar** — only "Copy" button visible inline; Edit, Delete, Share move to a detail modal or dropdown menu (···)
-5. **Create a PromptDetailModal** — opens on card click, shows full content, all tags, and all actions (edit, delete, share, copy)
-6. **Shared badge** stays as a small indicator on the card
+- Change mobile header from `py-4` to `py-2` (line 110)
+- Change content area from `pt-4` to `pt-1` on mobile (line 142): `px-5 pt-1 md:px-8 md:pt-0`
 
-### Implementation Steps
+### 2. Limit tags to 2 rows on mobile (PromptsPage.tsx)
 
-1. **Create `src/components/PromptDetailModal.tsx`** — full-screen/sheet modal showing complete prompt content, all tags, copy/edit/delete/share actions
-2. **Rewrite prompt card markup in `PromptsPage.tsx`**:
-   - Switch container to `grid grid-cols-2 md:grid-cols-3 gap-3`
-   - Compact card: title (line-clamp-2) + tags (max 3) + description (line-clamp-2) + copy button
-   - Card click → open detail modal
-   - Remove expand/collapse state and logic
-3. **Move edit/delete/share actions** into the detail modal
-4. **Update `docs/tasks.md`** to track this redesign
+- Sort `displayTags` by frequency (count how many prompts use each tag, descending)
+- On mobile, cap visible tags to ~10 (roughly 2 rows) with a "Show all" toggle
+- Add `max-h` with overflow-hidden on the tag container, or use a simple slice approach:
+  - Compute tag frequency from prompts data
+  - Sort tags by frequency descending
+  - Show first 10 tags on mobile (via `useIsMobile` hook), all on desktop
+  - Add a small "+N more" button to expand if needed
 
-### Technical Notes
-- Reuses existing `card-glass` styling for consistency
-- `PromptDetailModal` follows the same pattern as `ResourceDetailModal`
-- `expandedIds` state and `toggleExpand` removed entirely
-- Copy button stays inline since it's the primary action (one-tap UX)
+### 3. Fix bottom nav even spacing (AppShell.tsx)
+
+- Change from `justify-around` to `justify-evenly` on the bottom nav (line 146)
+- Remove per-item `px-3` padding and use `flex-1 text-center` on each nav item instead, ensuring equal width distribution regardless of label length
+
+### Files to modify:
+- `src/components/AppShell.tsx` — top spacing + bottom nav fix
+- `src/pages/PromptsPage.tsx` — tag limiting + frequency sorting
 
