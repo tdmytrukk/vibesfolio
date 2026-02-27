@@ -76,14 +76,6 @@ const BuildersPage = () => {
         >
           <ArrowLeft size={16} />
         </Button>
-        <div>
-          <h2 className="font-heading text-3xl text-foreground">
-            Builders
-          </h2>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Browse and follow builders in the community.
-          </p>
-        </div>
       </div>
 
       {/* Search */}

@@ -83,20 +83,6 @@ const PromptsPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-6"
-      >
-        <div className="flex items-end justify-between gap-4 mb-1">
-          <h2 className="font-heading text-3xl text-foreground">Prompt Library</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Your go-to prompts, saved and ready.
-        </p>
-      </motion.div>
 
       {/* Search & filters */}
       <div className="mb-6 space-y-3">

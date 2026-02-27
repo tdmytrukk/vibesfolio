@@ -25,17 +25,6 @@ const InboxPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-8"
-      >
-        <h2 className="font-heading text-3xl text-foreground mb-1">Ideas</h2>
-        <p className="text-sm text-muted-foreground">
-          Capture fast. Organize later.
-        </p>
-      </motion.div>
 
       {loading ? (
         <div className="space-y-3">

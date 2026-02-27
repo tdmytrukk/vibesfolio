@@ -66,16 +66,7 @@ const CommunityPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-heading text-3xl text-foreground">
-            Community
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Share your favorite prompts and resources with fellow builders.
-          </p>
-        </div>
+      <div className="flex justify-end">
         <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
           <Users size={15} />
           Builders
