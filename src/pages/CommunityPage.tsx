@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArtifactCard from "@/components/ArtifactCard";
 import PublishArtifactModal from "@/components/PublishArtifactModal";
 import CopyToProjectModal from "@/components/CopyToProjectModal";
+import FloatingActionButton from "@/components/FloatingActionButton";
 import EmptyState from "@/components/EmptyState";
 import { usePublicArtifacts, type PublicArtifact } from "@/hooks/usePublicArtifacts";
 import { useSavedArtifacts } from "@/hooks/useSavedArtifacts";
@@ -63,16 +64,10 @@ const CommunityPage = () => {
             Field intelligence from builders. Review. Adapt. Execute.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
-            <Users size={15} />
-            Builders
-          </Button>
-          <Button onClick={() => setPublishOpen(true)} size="sm" className="gap-1.5">
-            <Plus size={15} />
-            Publish
-          </Button>
-        </div>
+        <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
+          <Users size={15} />
+          Builders
+        </Button>
       </div>
 
       {/* Search & Tabs */}
@@ -174,6 +169,7 @@ const CommunityPage = () => {
         onOpenChange={(open) => !open && setCopyArtifact(null)}
         artifact={copyArtifact}
       />
+      <FloatingActionButton onClick={() => setPublishOpen(true)} label="Publish" />
     </div>
   );
 };
