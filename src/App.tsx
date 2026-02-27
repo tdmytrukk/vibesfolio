@@ -15,6 +15,7 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProfilePage from "@/pages/ProfilePage";
 import CommunityPage from "@/pages/CommunityPage";
 import BuildersPage from "@/pages/BuildersPage";
+import LandingPage from "@/pages/LandingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/log" replace />;
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -34,15 +42,15 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
+            <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
             <Route
               path="/*"
               element={
                 <ProtectedRoute>
                   <AppShell>
                     <Routes>
-                      <Route path="/" element={<Navigate to="/vault" replace />} />
+                      <Route path="/" element={<Navigate to="/log" replace />} />
                       <Route path="/ideas" element={<InboxPage />} />
                       <Route path="/prompts" element={<PromptsPage />} />
                       <Route path="/vault" element={<VaultPage />} />
