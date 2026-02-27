@@ -1,33 +1,25 @@
+## Plan: Hide Projects Tab & Defer to "Build Later"
 
+The Projects module (Build Log + Cockpit) gets removed from navigation and routing. The default authenticated landing becomes `/resources`. Four areas need changes:
 
-## Repositioning Vibesfolio
+### 1. `src/components/AppShell.tsx` — Remove "Projects" from nav
 
-The new positioning shifts from "personal productivity platform for solo makers" to **"a space for vibe-builders and AI learners to capture ideas, prompts, and resources that help you build products and learn AI better."**
+- Remove the `{ to: "/log", label: "Projects", icon: Rocket }` entry from `navItems`
+- Remove the `Rocket` import if unused elsewhere
 
-This affects copy across multiple files — landing page, SEO meta tags, and documentation.
+### 2. `src/App.tsx` — Update routing
 
-### Files to Update
+- Remove `/log` and `/log/:buildId` routes
+- Remove `BuildLogPage` and `CockpitPage` imports
+- Change the authenticated default redirect from `/log` to `/ideas`
+- Change `PublicOnlyRoute` redirect from `/log` to `/ideas`
 
-**1. `src/pages/LandingPage.tsx`** — Landing page copy
-- **Pill badge**: "Built for solo makers ✦" → "Built for vibe-builders & AI learners ✦"
-- **Headline**: "Your calm workspace / from spark to ship" → "Your space for ideas, prompts & resources" / "to build better with AI"
-- **Subheading**: Rewrite to emphasize capturing ideas, saving prompts, curating resources, and learning AI — not "build lifecycle"
-- **Feature cards**: Reorder to lead with Idea Inbox, Prompt Library, Resource Vault (the core trio). Keep Build Cockpit and Community but adjust descriptions to tie back to AI learning
-- **Bottom CTA heading**: "Ready to build with intention?" → "Ready to build smarter with AI?"
-- **Bottom CTA subtitle**: Reframe around vibe-builders and AI learners
-- **Footer tagline**: "Built with intention" → "Built for builders"
+### 3. `src/pages/LandingPage.tsx` — Remove "Build Cockpit" feature card
 
-**2. `index.html`** — SEO & social meta tags
-- `<title>`: "Vibesfolio — Your Space for Ideas, Prompts & Resources"
-- `<meta name="description">`: Rewrite around vibe-builders, AI learners, capturing ideas/prompts/resources
-- All `og:title`, `og:description`, `twitter:title`, `twitter:description` updated to match
+- Remove the Rocket/Build Cockpit entry from the `features` array
+- Adjust grid: first row 3 cards, second row 1 card (Community) centered
 
-**3. `docs/masterplan.md`** — Source-of-truth positioning
-- Update Vision, Core Purpose, Value Proposition, and Target Users sections to reflect the new positioning
-- Keep feature pillars and architecture unchanged (they still apply)
+### 4. `docs/tasks.md` — Add "Build Later" section
 
-**4. `docs/design.md`** — Branding tagline
-- Line 209: Tagline "Your builder journal" → "Your space for ideas, prompts & resources"
-
-### No structural or layout changes needed — this is purely a copy/positioning update across 4 files.
-
+- Move all Projects-related tasks (Cockpit, Build Log, Shipping Log, Debriefs, Missions) to a new "Deferred — Build Later" section
+- Note the decision and date
