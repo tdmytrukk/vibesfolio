@@ -30,13 +30,24 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
 
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("No authorization header provided");
+    if (!authHeader) {
+      logStep("No auth header, returning default");
+      return new Response(JSON.stringify({
+        subscribed: false, trial_active: false, trial_days_left: 0,
+        trial_ends_at: null, can_write: false,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+    }
 
     const token = authHeader.replace("Bearer ", "");
     const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
+    if (userError || !userData.user?.email) {
+      logStep("Auth failed, returning default", { error: userError?.message });
+      return new Response(JSON.stringify({
+        subscribed: false, trial_active: false, trial_days_left: 0,
+        trial_ends_at: null, can_write: false,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+    }
     const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Get trial_started_at from profile
