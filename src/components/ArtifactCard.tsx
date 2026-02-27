@@ -73,7 +73,7 @@ const ArtifactCard = ({
           )}
         </div>
 
-        <h3 className="font-heading text-sm font-semibold text-foreground leading-tight mb-1.5">
+        <h3 className="text-sm font-semibold text-foreground leading-tight mb-1.5">
           {artifact.title}
         </h3>
 
@@ -210,7 +210,7 @@ const ArtifactCard = ({
           )}
         </div>
 
-        <h3 className="font-heading text-sm font-semibold text-foreground leading-tight mb-1.5 line-clamp-2">
+        <h3 className="text-sm font-semibold text-foreground leading-tight mb-1.5 line-clamp-2">
           {artifact.title}
         </h3>
 
