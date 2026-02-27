@@ -271,7 +271,7 @@ const ProfilePage = () => {
             <div>
               <h2 className="font-heading text-base text-foreground">Profile Visibility</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {isPublic ? "Your profile is visible in the Builders directory." : "Your profile is hidden. Make it public to appear in Builders."}
+                {isPublic ? "Others can follow your profile and see the prompts & resources you share publicly." : "Your profile is hidden. Go public so others can follow you and discover your shared prompts & resources."}
               </p>
             </div>
           </div>
