@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { Plus, Search, Radio } from "lucide-react";
+import { Plus, Search, Radio, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +17,7 @@ const ITEMS_PER_PAGE = 12;
 
 const CommunityPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { artifacts, myArtifacts, loading, publishArtifact } = usePublicArtifacts();
   const { isSaved, saveArtifact, unsaveArtifact } = useSavedArtifacts();
   const { isFollowing, follow, unfollow, followingIds } = useFollows();
@@ -61,10 +63,16 @@ const CommunityPage = () => {
             Field intelligence from builders. Review. Adapt. Execute.
           </p>
         </div>
-        <Button onClick={() => setPublishOpen(true)} size="sm" className="gap-1.5">
-          <Plus size={15} />
-          Publish
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
+            <Users size={15} />
+            Builders
+          </Button>
+          <Button onClick={() => setPublishOpen(true)} size="sm" className="gap-1.5">
+            <Plus size={15} />
+            Publish
+          </Button>
+        </div>
       </div>
 
       {/* Search & Tabs */}
