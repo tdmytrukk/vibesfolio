@@ -2,28 +2,28 @@
 
 ## Vision
 
-Vibesfolio is a **personal productivity platform for solo makers** — a soft-focus workspace designed to reduce mental noise and help builders maintain momentum. It's the calm command center where ideas become shipped products.
+Vibesfolio is **a space for vibe-builders and AI learners** to capture ideas, save prompts, and curate resources that help you build products and learn AI better. It's a calm, beautiful workspace where everything you need to grow as a builder lives in one place.
 
 ## Core Purpose
 
-Solo builders (indie hackers, vibe-coders, freelance creators) juggle ideas, prompts, resources, and active projects across scattered tools. Vibesfolio consolidates the full build lifecycle — from spark to ship — into a single, intentional workspace that feels like a personal journal rather than a project management tool.
+Vibe-builders and AI learners collect ideas, prompts, tutorials, and tools across scattered tabs, chats, and bookmarks. Vibesfolio brings it all together — a single space to capture what inspires you, save what works, and organize the resources that make you a better builder.
 
 ## Target Users
 
 | Persona | Description | Pain Points |
 |---------|-------------|-------------|
-| **Indie Hacker** | Ships solo SaaS products using AI-assisted tools like Lovable, Cursor, Replit | Loses track of ideas; context-switches between too many tabs; no structured reflection |
-| **Vibe-Coder** | Builds with AI prompts as primary workflow | Reuses prompts but can't find old ones; no prompt library; no way to share what works |
-| **Creative Freelancer** | Manages multiple client/side projects | Needs lightweight project tracking without heavyweight PM tools; wants resource bookmarking |
+| **Vibe-Coder** | Builds with AI prompts as primary workflow using tools like Lovable, Cursor, Replit | Reuses prompts but can't find old ones; no prompt library; no way to share what works |
+| **AI Learner** | Exploring AI tools, collecting tutorials and resources to level up | Bookmarks scattered everywhere; no organized space for learning materials |
+| **Indie Builder** | Ships solo products, manages ideas and side projects | Loses track of ideas; context-switches between too many tabs; needs lightweight tracking |
 
 ## Value Proposition
 
-> "Your builder journal — capture ideas, curate resources, save prompts, and track every build from idea to shipped, all in one beautiful workspace."
+> "Your space for ideas, prompts & resources — capture what inspires you, save what works, and build better with AI."
 
 **Key differentiators:**
-- **Not a PM tool** — no Gantt charts, no sprints, no team overhead. Built for one person.
+- **Built for builders** — not a PM tool, not a note app. Purpose-built for people who build with AI.
 - **Aesthetic-first** — the UI itself reduces stress (soft gradients, glass effects, paper texture).
-- **Build lifecycle coverage** — Ideas → Resources → Prompts → Projects → Ship Log → Reflection.
+- **Core trio** — Ideas, Prompts, and Resources as first-class citizens, not afterthoughts.
 - **Community layer** — share artifacts (prompts, resources) publicly; follow other builders.
 
 ## Primary Value Loop

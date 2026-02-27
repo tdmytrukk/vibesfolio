@@ -206,7 +206,7 @@ Mobile:  [Projects] [Ideas] [Prompts] [Resources] [Community]  (bottom tabs)
 ## Branding
 
 - **Name**: Vibesfolio
-- **Tagline**: "Your builder journal"
+- **Tagline**: "Your space for ideas, prompts & resources"
 - **Logo treatment**: Text-only in nav, `font-heading` (DM Serif Display), `text-sm`, tracking-tight
 - **Favicon**: Standard (public/favicon.ico)
 - **No external logo asset currently** — text mark only
