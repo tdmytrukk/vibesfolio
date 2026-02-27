@@ -7,6 +7,7 @@ export interface BuilderProfile {
   display_name: string | null;
   avatar_url: string | null;
   email: string | null;
+  is_public: boolean;
   artifact_count?: number;
 }
 
@@ -19,10 +20,11 @@ export function useBuilders() {
     if (!user) return;
     setLoading(true);
 
-    // Fetch all profiles except current user
+    // Only fetch public profiles (excluding current user)
     const { data: profiles, error } = await supabase
       .from("profiles")
-      .select("user_id, display_name, avatar_url, email")
+      .select("user_id, display_name, avatar_url, email, is_public")
+      .eq("is_public", true)
       .neq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -47,7 +49,6 @@ export function useBuilders() {
       artifact_count: countMap.get(p.user_id) || 0,
     }));
 
-    // Sort: builders with artifacts first
     enriched.sort((a, b) => (b.artifact_count || 0) - (a.artifact_count || 0));
 
     setBuilders(enriched);

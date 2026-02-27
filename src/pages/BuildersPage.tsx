@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, UserPlus, UserCheck, Radio, ArrowLeft } from "lucide-react";
+import { Search, UserPlus, UserCheck, Radio, ArrowLeft, Clock, UserX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,14 @@ import { toast } from "@/hooks/use-toast";
 const BuildersPage = () => {
   const navigate = useNavigate();
   const { builders, loading } = useBuilders();
-  const { isFollowing, follow, unfollow } = useFollows();
+  const {
+    isFollowing,
+    hasPendingRequest,
+    follow,
+    unfollow,
+    sendFollowRequest,
+    cancelFollowRequest,
+  } = useFollows();
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -25,14 +32,36 @@ const BuildersPage = () => {
     );
   }, [builders, search]);
 
-  const handleFollow = async (userId: string) => {
+  const handleFollowAction = async (builder: typeof builders[0]) => {
+    const userId = builder.user_id;
+
     if (isFollowing(userId)) {
       await unfollow(userId);
       toast({ title: "Unfollowed." });
-    } else {
+    } else if (hasPendingRequest(userId)) {
+      await cancelFollowRequest(userId);
+      toast({ title: "Request cancelled." });
+    } else if (builder.is_public) {
+      // Public profile: direct follow
       await follow(userId);
       toast({ title: "Following." });
+    } else {
+      // Private profile: send request
+      const ok = await sendFollowRequest(userId);
+      if (ok) toast({ title: "Follow request sent." });
+      else toast({ title: "Request already sent.", variant: "destructive" });
     }
+  };
+
+  const getButtonState = (builder: typeof builders[0]) => {
+    const userId = builder.user_id;
+    if (isFollowing(userId)) {
+      return { label: "Following", icon: <UserCheck size={13} />, variant: "secondary" as const };
+    }
+    if (hasPendingRequest(userId)) {
+      return { label: "Requested", icon: <Clock size={13} />, variant: "outline" as const };
+    }
+    return { label: "Follow", icon: <UserPlus size={13} />, variant: "outline" as const };
   };
 
   return (
@@ -79,12 +108,12 @@ const BuildersPage = () => {
         <EmptyState
           icon={<Radio size={40} strokeWidth={1.2} />}
           title="No builders found"
-          subtitle={search ? "Try a different search term." : "No other builders have joined yet."}
+          subtitle={search ? "Try a different search term." : "No public builders have joined yet."}
         />
       ) : (
         <div className="space-y-2">
           {filtered.map((builder) => {
-            const following = isFollowing(builder.user_id);
+            const btnState = getButtonState(builder);
             return (
               <div
                 key={builder.user_id}
@@ -119,22 +148,13 @@ const BuildersPage = () => {
 
                 {/* Follow button */}
                 <Button
-                  variant={following ? "secondary" : "outline"}
+                  variant={btnState.variant}
                   size="sm"
                   className="h-8 gap-1.5 text-xs shrink-0"
-                  onClick={() => handleFollow(builder.user_id)}
+                  onClick={() => handleFollowAction(builder)}
                 >
-                  {following ? (
-                    <>
-                      <UserCheck size={13} />
-                      Following
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus size={13} />
-                      Follow
-                    </>
-                  )}
+                  {btnState.icon}
+                  {btnState.label}
                 </Button>
               </div>
             );

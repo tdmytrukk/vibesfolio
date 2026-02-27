@@ -4,9 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useFollows } from "@/hooks/useFollows";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,16 +20,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell } from "lucide-react";
 
 const ProfilePage = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Profile state
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
 
@@ -50,12 +54,13 @@ const ProfilePage = () => {
     const loadProfile = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("display_name, avatar_url")
+        .select("display_name, avatar_url, is_public")
         .eq("user_id", user.id)
         .single();
       if (data) {
         setDisplayName(data.display_name || "");
         setAvatarUrl(data.avatar_url || null);
+        setIsPublic((data as any).is_public ?? false);
       }
     };
     loadProfile();
@@ -233,6 +238,97 @@ const ProfilePage = () => {
           </div>
         </div>
       </motion.section>
+
+      {/* Profile Visibility */}
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.02 }}
+        className="card-glass p-4 mb-3"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {isPublic ? <Eye size={16} className="text-foreground" /> : <EyeOff size={16} className="text-muted-foreground" />}
+            <div>
+              <h2 className="font-heading text-base text-foreground">Profile Visibility</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {isPublic ? "Your profile is visible in the Builders directory." : "Your profile is hidden. Make it public to appear in Builders."}
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={isPublic}
+            onCheckedChange={async (checked) => {
+              if (!user) return;
+              setIsPublic(checked);
+              const { error } = await supabase
+                .from("profiles")
+                .update({ is_public: checked } as any)
+                .eq("user_id", user.id);
+              if (error) {
+                setIsPublic(!checked);
+                toast({ title: "Failed to update visibility", variant: "destructive" });
+              } else {
+                toast({ title: checked ? "Profile is now public" : "Profile is now private" });
+              }
+            }}
+          />
+        </div>
+      </motion.section>
+
+      {/* Incoming Follow Requests */}
+      {incomingRequests.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.02 }}
+          className="card-glass p-4 mb-3 space-y-3"
+        >
+          <div className="flex items-center gap-2 text-foreground">
+            <Bell size={16} />
+            <h2 className="font-heading text-base">Follow Requests</h2>
+            <span className="text-xs bg-primary text-primary-foreground rounded-full px-2 py-0.5">{incomingRequests.length}</span>
+          </div>
+          <div className="space-y-2">
+            {incomingRequests.map((req) => (
+              <div key={req.id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/30">
+                {req.requester_avatar ? (
+                  <img src={req.requester_avatar} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground shrink-0">
+                    {(req.requester_name || "B").charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <p className="flex-1 text-sm text-foreground truncate">{req.requester_name}</p>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                    onClick={async () => {
+                      await acceptRequest(req.id, req.requester_id);
+                      toast({ title: `Accepted ${req.requester_name}'s request.` });
+                    }}
+                  >
+                    <UserCheck size={12} /> Accept
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs gap-1 text-muted-foreground hover:text-destructive"
+                    onClick={async () => {
+                      await declineRequest(req.id);
+                      toast({ title: "Request declined." });
+                    }}
+                  >
+                    <UserX size={12} /> Decline
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+      )}
 
       {/* Two-column grid on desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

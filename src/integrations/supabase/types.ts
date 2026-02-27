@@ -111,6 +111,33 @@ export type Database = {
           },
         ]
       }
+      follow_requests: {
+        Row: {
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          target_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          target_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          target_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
@@ -172,6 +199,7 @@ export type Database = {
           display_name: string | null
           email: string | null
           id: string
+          is_public: boolean
           user_id: string
         }
         Insert: {
@@ -180,6 +208,7 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          is_public?: boolean
           user_id: string
         }
         Update: {
@@ -188,6 +217,7 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          is_public?: boolean
           user_id?: string
         }
         Relationships: []
