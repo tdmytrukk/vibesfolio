@@ -82,7 +82,7 @@ const LandingPage = () => {
               to="/auth"
               className="rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-2"
             >
-              Start Building Free
+              Get Started
               <ArrowRight size={16} />
             </Link>
             <a
@@ -147,7 +147,7 @@ const LandingPage = () => {
           className="card-glass p-10 md:p-14"
         >
           <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-            Ready to build smarter with AI?
+            Your ideas deserve a home
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
             Join vibe-builders and AI learners who use Vibesfolio to capture what matters and ship what counts.
@@ -156,7 +156,7 @@ const LandingPage = () => {
             to="/auth"
             className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
           >
-            Create Your Free Account
+            Start Your Free Space
             <ArrowRight size={16} />
           </Link>
         </motion.div>
