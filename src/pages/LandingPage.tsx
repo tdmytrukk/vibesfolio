@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lightbulb, Sparkles, Archive, Rocket, Radio, ArrowRight } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, Radio, ArrowRight } from "lucide-react";
 
 const features = [
   {
@@ -17,11 +17,6 @@ const features = [
     icon: Archive,
     title: "Resource Vault",
     desc: "Bookmark the tools, tutorials, and links that level up your AI skills — all in one place.",
-  },
-  {
-    icon: Rocket,
-    title: "Build Cockpit",
-    desc: "Turn ideas into projects — track tasks, log decisions, and ship what you're learning.",
   },
   {
     icon: Radio,
@@ -121,7 +116,7 @@ const LandingPage = () => {
             </motion.div>
           ))}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4 max-w-3xl mx-auto">
+        <div className="flex justify-center mt-4">
           {features.slice(3).map((f, i) => (
             <motion.div
               key={f.title}
@@ -130,7 +125,7 @@ const LandingPage = () => {
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
               variants={fadeUp}
-              className="card-glass p-6 flex flex-col gap-3"
+              className="card-glass p-6 flex flex-col gap-3 w-full max-w-sm"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                 <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
