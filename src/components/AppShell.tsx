@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, Rocket, LogOut, User, Radio } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, LogOut, User, Radio } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
 import {
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { to: "/log", label: "Projects", icon: Rocket },
   { to: "/ideas", label: "Ideas", icon: Lightbulb },
   { to: "/prompts", label: "Prompts", icon: Sparkles },
   { to: "/vault", label: "Resources", icon: Archive },

@@ -8,8 +8,6 @@ import AppShell from "@/components/AppShell";
 import InboxPage from "@/pages/InboxPage";
 import PromptsPage from "@/pages/PromptsPage";
 import VaultPage from "@/pages/VaultPage";
-import BuildLogPage from "@/pages/BuildLogPage";
-import CockpitPage from "@/pages/CockpitPage";
 import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProfilePage from "@/pages/ProfilePage";
@@ -30,7 +28,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/log" replace />;
+  if (user) return <Navigate to="/ideas" replace />;
   return <>{children}</>;
 };
 
@@ -50,12 +48,10 @@ const App = () => (
                 <ProtectedRoute>
                   <AppShell>
                     <Routes>
-                      <Route path="/" element={<Navigate to="/log" replace />} />
+                      <Route path="/" element={<Navigate to="/ideas" replace />} />
                       <Route path="/ideas" element={<InboxPage />} />
                       <Route path="/prompts" element={<PromptsPage />} />
                       <Route path="/vault" element={<VaultPage />} />
-                      <Route path="/log" element={<BuildLogPage />} />
-                      <Route path="/log/:buildId" element={<CockpitPage />} />
                       <Route path="/community" element={<CommunityPage />} />
                       <Route path="/community/builders" element={<BuildersPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
