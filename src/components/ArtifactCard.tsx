@@ -157,42 +157,54 @@ const ArtifactCard = ({
     ? (() => { try { return new URL(artifact.resource_url).hostname.replace("www.", ""); } catch { return null; } })()
     : null;
 
+  const faviconUrl = resourceDomain
+    ? `https://www.google.com/s2/favicons?domain=${resourceDomain}&sz=64`
+    : null;
 
   return (
     <div className="group card-glass p-0 overflow-hidden break-inside-avoid transition-all duration-200 hover:shadow-md">
-      {/* Cover / fallback */}
+      {/* Cover image or fallback */}
       {artifact.resource_url ? (
         <a href={artifact.resource_url} target="_blank" rel="noopener noreferrer" className="block">
           {artifact.cover_image_url && !imgError ? (
-            <div className="relative w-full aspect-[16/9] overflow-hidden bg-muted">
+            <div className="relative w-full overflow-hidden bg-muted">
               <img
                 src={artifact.cover_image_url}
                 alt={artifact.title}
-                className="w-full h-full object-cover"
+                className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                style={{ maxHeight: "220px" }}
+                loading="lazy"
                 onError={() => setImgError(true)}
               />
-              {resourceDomain && (
-                <span className="absolute bottom-2 left-3 text-[10px] font-medium text-background/70 drop-shadow-sm">{resourceDomain}</span>
-              )}
             </div>
           ) : (
-            <div className="relative w-full bg-gradient-to-br from-chip-mint to-chip-sky flex items-center justify-center py-10 px-4">
-              <ExternalLink size={28} className="text-foreground/20" />
+            <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br from-chip-mint to-chip-sky">
+              {faviconUrl ? (
+                <img src={faviconUrl} alt="" className="w-10 h-10 rounded-lg" />
+              ) : (
+                <ExternalLink size={28} className="text-foreground/30" />
+              )}
               {resourceDomain && (
-                <span className="absolute bottom-2 left-3 text-[10px] font-medium text-foreground/40">{resourceDomain}</span>
+                <span className="text-xs font-medium text-foreground/40">{resourceDomain}</span>
               )}
             </div>
           )}
         </a>
       ) : (
-        <div className="w-full bg-gradient-to-br from-chip-peach to-chip-lavender flex items-center justify-center py-8">
-          <ExternalLink size={24} className="text-foreground/20" />
+        <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br from-chip-peach to-chip-lavender">
+          <ExternalLink size={24} className="text-foreground/30" />
         </div>
       )}
 
       <div className="p-4">
+        <div className="flex items-center gap-2 mb-1.5">
+          {faviconUrl && (
+            <img src={faviconUrl} alt="" className="w-3.5 h-3.5 rounded-sm" />
+          )}
+          <span className="text-[11px] text-muted-foreground truncate">{resourceDomain}</span>
+        </div>
         <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider font-semibold text-emerald-600 dark:text-emerald-400">Resource</span>
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">Resource</span>
           {artifact.resource_category && (
             <span className="text-[9px] text-muted-foreground">· {artifact.resource_category}</span>
           )}
