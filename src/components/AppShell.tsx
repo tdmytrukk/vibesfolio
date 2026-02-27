@@ -107,7 +107,7 @@ const AppShell = ({ children }: AppShellProps) => {
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
-        <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-4 md:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-2 md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <button
@@ -139,18 +139,18 @@ const AppShell = ({ children }: AppShellProps) => {
           </DropdownMenu>
         </header>
 
-        <div className="px-5 pt-4 md:px-8 md:pt-0">{children}</div>
+        <div className="px-5 pt-1 md:px-8 md:pt-0">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-around border-t border-white/30 dark:border-white/10 py-2 pb-[env(safe-area-inset-bottom)] md:hidden" style={{ background: 'linear-gradient(135deg, hsla(0,0%,100%,0.4) 0%, hsla(270,30%,96%,0.3) 50%, hsla(0,0%,100%,0.35) 100%)', backdropFilter: 'blur(40px) saturate(1.8)', WebkitBackdropFilter: 'blur(40px) saturate(1.8)', boxShadow: '0 -4px 24px -4px hsla(240,10%,10%,0.06), inset 0 1px 2px 0 hsla(0,0%,100%,0.4)' }}>
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-evenly border-t border-white/30 dark:border-white/10 py-2 pb-[env(safe-area-inset-bottom)] md:hidden" style={{ background: 'linear-gradient(135deg, hsla(0,0%,100%,0.4) 0%, hsla(270,30%,96%,0.3) 50%, hsla(0,0%,100%,0.35) 100%)', backdropFilter: 'blur(40px) saturate(1.8)', WebkitBackdropFilter: 'blur(40px) saturate(1.8)', boxShadow: '0 -4px 24px -4px hsla(240,10%,10%,0.06), inset 0 1px 2px 0 hsla(0,0%,100%,0.4)' }}>
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (
             <NavLink
               key={item.to}
               to={item.to}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 text-[11px] font-medium transition-colors ${
+              className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 text-[11px] font-medium transition-colors ${
                 isActive ? "text-foreground" : "text-muted-foreground"
               }`}
             >

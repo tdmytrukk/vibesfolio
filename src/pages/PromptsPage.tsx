@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, Search, Sparkles, Globe } from "lucide-react";
+import { Copy, Check, Search, Sparkles, Globe, ChevronDown } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
 import TagChip from "@/components/TagChip";
@@ -20,6 +21,7 @@ const PromptsPage = () => {
       .map((a) => [a.title, a.id])
   );
 
+  const isMobile = useIsMobile();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -27,6 +29,7 @@ const PromptsPage = () => {
   const [deleteTarget, setDeleteTarget] = useState<Prompt | null>(null);
   const [editTarget, setEditTarget] = useState<Prompt | null>(null);
   const [detailPrompt, setDetailPrompt] = useState<Prompt | null>(null);
+  const [showAllTags, setShowAllTags] = useState(false);
 
   // Filter prompts
   const filtered = prompts.filter((p) => {
@@ -62,7 +65,18 @@ const PromptsPage = () => {
   };
 
   const hasFilters = searchQuery || selectedTags.length > 0;
-  const displayTags = allTags.length > 0 ? allTags : ["starter", "debug", "design", "mega"];
+
+  // Sort tags by frequency (most used first), then limit on mobile
+  const sortedTags = useMemo(() => {
+    const raw = allTags.length > 0 ? allTags : ["starter", "debug", "design", "mega"];
+    const freq = new Map<string, number>();
+    prompts.forEach((p) => p.tags.forEach((t) => freq.set(t, (freq.get(t) || 0) + 1)));
+    return [...raw].sort((a, b) => (freq.get(b) || 0) - (freq.get(a) || 0));
+  }, [allTags, prompts]);
+
+  const TAG_MOBILE_LIMIT = 10;
+  const displayTags = isMobile && !showAllTags ? sortedTags.slice(0, TAG_MOBILE_LIMIT) : sortedTags;
+  const hiddenTagCount = sortedTags.length - TAG_MOBILE_LIMIT;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -97,6 +111,22 @@ const PromptsPage = () => {
               </button>
             );
           })}
+          {isMobile && hiddenTagCount > 0 && !showAllTags && (
+            <button
+              onClick={() => setShowAllTags(true)}
+              className="flex items-center gap-0.5 rounded-pill px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-secondary/50 border border-border/30 transition-colors"
+            >
+              +{hiddenTagCount} <ChevronDown size={12} />
+            </button>
+          )}
+          {isMobile && showAllTags && sortedTags.length > TAG_MOBILE_LIMIT && (
+            <button
+              onClick={() => setShowAllTags(false)}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Show less
+            </button>
+          )}
           {hasFilters && (
             <button
               onClick={clearFilters}
