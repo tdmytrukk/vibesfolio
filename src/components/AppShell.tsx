@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, Rocket, LogOut, User } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, Rocket, LogOut, User, Radio } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ const navItems = [
   { to: "/ideas", label: "Ideas", icon: Lightbulb },
   { to: "/prompts", label: "Prompts", icon: Sparkles },
   { to: "/vault", label: "Resources", icon: Archive },
+  { to: "/community", label: "Community", icon: Radio },
 ];
 
 interface AppShellProps {
