@@ -14,6 +14,7 @@ import AuthPage from "@/pages/AuthPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import ProfilePage from "@/pages/ProfilePage";
 import CommunityPage from "@/pages/CommunityPage";
+import BuildersPage from "@/pages/BuildersPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
                       <Route path="/log" element={<BuildLogPage />} />
                       <Route path="/log/:buildId" element={<CockpitPage />} />
                       <Route path="/community" element={<CommunityPage />} />
+                      <Route path="/community/builders" element={<BuildersPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
