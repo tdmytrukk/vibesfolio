@@ -36,7 +36,9 @@ const InboxPage = () => {
         <EmptyState
           icon={<Lightbulb />}
           title="Drop your first spark"
-          subtitle="Messy is welcome. Tap New Idea to capture one—title is all you need."
+          subtitle="Messy is welcome—title is all you need."
+          actionLabel="New idea"
+          onAction={() => setAddOpen(true)}
         />
       ) : (
         <div className="space-y-3">

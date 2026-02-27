@@ -131,6 +131,8 @@ const BuildLogPage = () => {
             icon={<Rocket />}
             title="Start with one build"
             subtitle="Every shipped project starts here. Keep it messy."
+            actionLabel="New project"
+            onAction={() => setAddModalOpen(true)}
           />
         )
       ) : (

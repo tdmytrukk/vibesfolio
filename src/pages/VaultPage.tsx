@@ -131,7 +131,9 @@ const VaultPage = () => {
           <EmptyState
             icon={<Archive />}
             title="Your bookmarks go here"
-            subtitle='Tap "+ New resource" to save tools, articles, and inspiration—all in one place.'
+            subtitle="Save tools, articles, and inspiration—all in one place."
+            actionLabel="Save first resource"
+            onAction={() => setAddModalOpen(true)}
           />
         )
       ) : (
