@@ -29,6 +29,7 @@ Deno.serve(async (req) => {
 
     let ogImage: string | null = null;
     let ogTitle: string | null = null;
+    let ogDescription: string | null = null;
 
     try {
       const controller = new AbortController();
@@ -69,6 +70,19 @@ Deno.serve(async (req) => {
           ogTitle = titleMatch[1].trim();
         }
       }
+
+      // Extract og:description or meta description
+      const ogDescMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i)
+        || html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:description["']/i);
+      if (ogDescMatch) {
+        ogDescription = ogDescMatch[1];
+      } else {
+        const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i)
+          || html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["']/i);
+        if (descMatch) {
+          ogDescription = descMatch[1];
+        }
+      }
     } catch (fetchError) {
       console.log('Could not fetch OG data, using fallbacks:', fetchError);
     }
@@ -79,6 +93,7 @@ Deno.serve(async (req) => {
         domain,
         ogImage,
         ogTitle,
+        ogDescription,
         faviconUrl,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
