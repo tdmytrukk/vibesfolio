@@ -17,16 +17,18 @@ export function usePrompts() {
   const { user } = useAuth();
 
   const fetchPrompts = useCallback(async () => {
+    if (!user) return;
     const { data, error } = await supabase
       .from("prompts")
       .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (!error && data) {
       setPrompts(data as Prompt[]);
     }
     setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchPrompts();

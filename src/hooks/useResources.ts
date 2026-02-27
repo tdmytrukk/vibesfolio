@@ -27,16 +27,18 @@ export function useResources() {
   const { user } = useAuth();
 
   const fetchResources = useCallback(async () => {
+    if (!user) return;
     const { data, error } = await supabase
       .from("resources")
       .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (!error && data) {
       setResources(data as Resource[]);
     }
     setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchResources();

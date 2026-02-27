@@ -28,16 +28,18 @@ export function useBuilds() {
   const { user } = useAuth();
 
   const fetchBuilds = useCallback(async () => {
+    if (!user) return;
     const { data, error } = await supabase
       .from("builds")
       .select("*")
+      .eq("user_id", user.id)
       .order("updated_at", { ascending: false });
 
     if (!error && data) {
       setBuilds(data as Build[]);
     }
     setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchBuilds();

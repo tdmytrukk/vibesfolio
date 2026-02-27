@@ -18,16 +18,18 @@ export function useIdeas() {
   const { user } = useAuth();
 
   const fetchIdeas = useCallback(async () => {
+    if (!user) return;
     const { data, error } = await supabase
       .from("ideas")
       .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (!error && data) {
       setIdeas(data as Idea[]);
     }
     setLoading(false);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchIdeas();
