@@ -103,97 +103,103 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags, editingPrompt }: 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-x-4 top-[10%] z-50 mx-auto max-w-lg card-glass p-6 max-h-[80vh] overflow-y-auto"
+            className="fixed inset-x-4 bottom-4 md:bottom-auto md:top-[10%] z-50 mx-auto max-w-lg card-glass flex flex-col max-h-[calc(100dvh-2rem)]"
             role="dialog"
             aria-label={isEdit ? "Edit prompt" : "Add new prompt"}
           >
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-heading text-xl text-foreground">{isEdit ? "Edit Prompt" : "New Prompt"}</h2>
-              <button
-                onClick={onClose}
-                className="rounded-full p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Title */}
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">Title *</label>
-            <input
-              type="text"
-              placeholder="e.g. Landing page hero copy"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4"
-              autoFocus
-            />
-
-            {/* Content */}
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">Content *</label>
-            <textarea
-              placeholder="Paste or write your prompt here…"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={6}
-              className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4 resize-none leading-relaxed"
-            />
-
-            {/* Tags */}
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-medium text-muted-foreground">Tags</label>
-              <button
-                type="button"
-                onClick={autoGenerateTags}
-                disabled={generating || !content.trim()}
-                className="inline-flex items-center gap-1 rounded-pill bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground hover:opacity-80 transition-opacity disabled:opacity-40"
-              >
-                {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                Auto-tag
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 rounded-pill bg-chip-lavender px-3 py-1 text-xs font-medium text-foreground/80"
+            <div className="p-6 pb-0">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-heading text-xl text-foreground">{isEdit ? "Edit Prompt" : "New Prompt"}</h2>
+                <button
+                  onClick={onClose}
+                  className="rounded-full p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
+                  aria-label="Close"
                 >
-                  {tag}
-                  <button onClick={() => removeTag(tag)} className="ml-0.5 hover:text-foreground" aria-label={`Remove tag ${tag}`}>
-                    <X size={12} />
-                  </button>
-                </span>
-              ))}
+                  <X size={18} />
+                </button>
+              </div>
             </div>
-            <input
-              type="text"
-              placeholder="Type to add tags…"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-2"
-            />
-            {suggestions.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-5">
-                {suggestions.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => addTag(s)}
-                    className="rounded-pill bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+
+            <div className="flex-1 overflow-y-auto px-6">
+              {/* Title */}
+              <label className="block text-xs font-medium text-muted-foreground mb-1.5">Title *</label>
+              <input
+                type="text"
+                placeholder="e.g. Landing page hero copy"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4"
+                autoFocus
+              />
+
+              {/* Content */}
+              <label className="block text-xs font-medium text-muted-foreground mb-1.5">Content *</label>
+              <textarea
+                placeholder="Paste or write your prompt here…"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={6}
+                className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4 resize-none leading-relaxed"
+              />
+
+              {/* Tags */}
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-medium text-muted-foreground">Tags</label>
+                <button
+                  type="button"
+                  onClick={autoGenerateTags}
+                  disabled={generating || !content.trim()}
+                  className="inline-flex items-center gap-1 rounded-pill bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground hover:opacity-80 transition-opacity disabled:opacity-40"
+                >
+                  {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  Auto-tag
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 rounded-pill bg-chip-lavender px-3 py-1 text-xs font-medium text-foreground/80"
                   >
-                    + {s}
-                  </button>
+                    {tag}
+                    <button onClick={() => removeTag(tag)} className="ml-0.5 hover:text-foreground" aria-label={`Remove tag ${tag}`}>
+                      <X size={12} />
+                    </button>
+                  </span>
                 ))}
               </div>
-            )}
+              <input
+                type="text"
+                placeholder="Type to add tags…"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-2"
+              />
+              {suggestions.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => addTag(s)}
+                      className="rounded-pill bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                    >
+                      + {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            <button
-              onClick={handleSubmit}
-              disabled={!title.trim() || !content.trim()}
-              className="w-full rounded-pill bg-primary py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40"
-            >
-              {isEdit ? "Update Prompt" : "Save Prompt"}
-            </button>
+            <div className="p-6 pt-4">
+              <button
+                onClick={handleSubmit}
+                disabled={!title.trim() || !content.trim()}
+                className="w-full rounded-pill bg-primary py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40"
+              >
+                {isEdit ? "Update Prompt" : "Save Prompt"}
+              </button>
+            </div>
           </motion.div>
         </>
       )}
