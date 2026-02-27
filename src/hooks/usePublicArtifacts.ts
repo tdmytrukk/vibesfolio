@@ -184,6 +184,7 @@ export function usePublicArtifacts() {
 
     if (error) return false;
     await fetchMyArtifacts();
+    await fetchFeed();
     return true;
   };
 
