@@ -54,6 +54,7 @@
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | 5E.1 | AI tag suggestions on save (ideas, prompts, resources) | ⬜ | Uses existing `generate-tags` edge function + Lovable AI gateway |
+| 5E.1b | AI-generated prompt summaries | ✅ | `generate-summary` edge function; summary shown on cards, full content on copy |
 | 5E.2 | AI-powered prompt refinement | ⬜ | "Improve this prompt" button → AI rewrites with better structure |
 | 5E.3 | Smart next-step suggestions in Cockpit | ⬜ | Based on current tasks + recent debrief, suggest next mission |
 | 5E.4 | Auto-categorize resources | ⬜ | AI determines tool/article/video/other from URL metadata |

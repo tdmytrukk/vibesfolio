@@ -6,6 +6,7 @@ export interface Prompt {
   id: string;
   title: string;
   content: string;
+  summary: string | null;
   tags: string[];
   created_at: string;
 }
@@ -31,11 +32,31 @@ export function usePrompts() {
     fetchPrompts();
   }, [fetchPrompts]);
 
+  const generateSummary = async (promptId: string, title: string, content: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-summary", {
+        body: { prompt_id: promptId, title, content },
+      });
+      if (error) throw error;
+      const summary = data?.summary as string | null;
+      if (summary) {
+        setPrompts((prev) =>
+          prev.map((p) => (p.id === promptId ? { ...p, summary } : p))
+        );
+      }
+      return summary;
+    } catch (err) {
+      console.error("Failed to generate summary:", err);
+      return null;
+    }
+  };
+
   const addPrompt = async (prompt: { title: string; content: string; tags: string[] }) => {
     const optimistic: Prompt = {
       id: crypto.randomUUID(),
       title: prompt.title,
       content: prompt.content,
+      summary: null,
       tags: prompt.tags,
       created_at: new Date().toISOString(),
     };
@@ -51,8 +72,13 @@ export function usePrompts() {
       setPrompts((prev) => prev.filter((p) => p.id !== optimistic.id));
       return null;
     }
-    setPrompts((prev) => prev.map((p) => (p.id === optimistic.id ? (data as Prompt) : p)));
-    return data as Prompt;
+    const saved = data as Prompt;
+    setPrompts((prev) => prev.map((p) => (p.id === optimistic.id ? saved : p)));
+
+    // Generate summary in the background
+    generateSummary(saved.id, saved.title, saved.content);
+
+    return saved;
   };
 
   const updatePrompt = async (id: string, updates: { title: string; content: string; tags: string[] }) => {
@@ -68,6 +94,10 @@ export function usePrompts() {
       setPrompts(backup);
       return false;
     }
+
+    // Re-generate summary since content may have changed
+    generateSummary(id, updates.title, updates.content);
+
     return true;
   };
 
@@ -85,5 +115,5 @@ export function usePrompts() {
 
   const allTags = Array.from(new Set(prompts.flatMap((p) => p.tags)));
 
-  return { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags, refetch: fetchPrompts };
+  return { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags, refetch: fetchPrompts, generateSummary };
 }
