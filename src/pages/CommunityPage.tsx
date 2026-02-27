@@ -73,7 +73,7 @@ const CommunityPage = () => {
             Community
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Field intelligence from builders. Review. Adapt. Execute.
+            Share your favorite prompts and resources with fellow builders.
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
