@@ -1,6 +1,7 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Lightbulb, Sparkles, Archive, Rocket, LogOut, User, Radio } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFollows } from "@/hooks/useFollows";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +32,10 @@ const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
+  const { incomingRequests } = useFollows();
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
+  const pendingCount = incomingRequests.length;
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
@@ -72,10 +75,15 @@ const AppShell = ({ children }: AppShellProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground text-xs font-medium hover:bg-muted transition-colors mr-1"
+              className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground text-xs font-medium hover:bg-muted transition-colors mr-1"
               aria-label="Profile"
             >
               {userInitial}
+              {pendingCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1">
+                  {pendingCount}
+                </span>
+              )}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
@@ -97,11 +105,16 @@ const AppShell = ({ children }: AppShellProps) => {
         <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-4 md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium"
+               <button
+                className="relative flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium"
                 aria-label="Profile"
               >
                 {userInitial}
+                {pendingCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1">
+                    {pendingCount}
+                  </span>
+                )}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
