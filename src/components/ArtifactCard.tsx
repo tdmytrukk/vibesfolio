@@ -29,6 +29,7 @@ const ArtifactCard = ({
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const isOwn = user?.id === artifact.user_id;
   const isPrompt = artifact.artifact_type === "prompt";
 
@@ -156,17 +157,32 @@ const ArtifactCard = ({
     ? (() => { try { return new URL(artifact.resource_url).hostname.replace("www.", ""); } catch { return null; } })()
     : null;
 
+
   return (
     <div className="group card-glass p-0 overflow-hidden break-inside-avoid transition-all duration-200 hover:shadow-md">
       {/* Cover / fallback */}
       {artifact.resource_url ? (
         <a href={artifact.resource_url} target="_blank" rel="noopener noreferrer" className="block">
-          <div className="relative w-full bg-gradient-to-br from-chip-mint to-chip-sky flex items-center justify-center py-10 px-4">
-            <ExternalLink size={28} className="text-foreground/20" />
-            {resourceDomain && (
-              <span className="absolute bottom-2 left-3 text-[10px] font-medium text-foreground/40">{resourceDomain}</span>
-            )}
-          </div>
+          {artifact.cover_image_url && !imgError ? (
+            <div className="relative w-full aspect-[16/9] overflow-hidden bg-muted">
+              <img
+                src={artifact.cover_image_url}
+                alt={artifact.title}
+                className="w-full h-full object-cover"
+                onError={() => setImgError(true)}
+              />
+              {resourceDomain && (
+                <span className="absolute bottom-2 left-3 text-[10px] font-medium text-background/70 drop-shadow-sm">{resourceDomain}</span>
+              )}
+            </div>
+          ) : (
+            <div className="relative w-full bg-gradient-to-br from-chip-mint to-chip-sky flex items-center justify-center py-10 px-4">
+              <ExternalLink size={28} className="text-foreground/20" />
+              {resourceDomain && (
+                <span className="absolute bottom-2 left-3 text-[10px] font-medium text-foreground/40">{resourceDomain}</span>
+              )}
+            </div>
+          )}
         </a>
       ) : (
         <div className="w-full bg-gradient-to-br from-chip-peach to-chip-lavender flex items-center justify-center py-8">

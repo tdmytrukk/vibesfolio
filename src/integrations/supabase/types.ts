@@ -334,6 +334,7 @@ export type Database = {
       public_artifacts: {
         Row: {
           artifact_type: string
+          cover_image_url: string | null
           created_at: string
           description: string | null
           id: string
@@ -353,6 +354,7 @@ export type Database = {
         }
         Insert: {
           artifact_type: string
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -372,6 +374,7 @@ export type Database = {
         }
         Update: {
           artifact_type?: string
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           id?: string

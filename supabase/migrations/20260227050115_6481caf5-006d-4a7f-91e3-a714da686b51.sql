@@ -1,0 +1,1 @@
+ALTER TABLE public.public_artifacts ADD COLUMN cover_image_url text DEFAULT NULL;

@@ -16,6 +16,7 @@ export interface PublicArtifact {
   resource_category: string | null;
   resource_note: string | null;
   resource_when_to_use: string | null;
+  cover_image_url: string | null;
   tags: string[];
   is_public: boolean;
   created_at: string;
@@ -109,6 +110,18 @@ export function usePublicArtifacts() {
     fetchMyArtifacts();
   }, [fetchFeed, fetchMyArtifacts]);
 
+  const fetchUrlMetadata = async (url: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("fetch-url-metadata", {
+        body: { url },
+      });
+      if (error || !data?.success) return null;
+      return data as { domain: string; ogImage: string | null; ogTitle: string | null; faviconUrl: string };
+    } catch {
+      return null;
+    }
+  };
+
   const publishArtifact = async (artifact: {
     artifact_type: "prompt" | "resource";
     title: string;
@@ -125,6 +138,14 @@ export function usePublicArtifacts() {
     is_public?: boolean;
   }) => {
     if (!user) return null;
+
+    // Fetch cover image for resource artifacts
+    let coverImageUrl: string | null = null;
+    if (artifact.artifact_type === "resource" && artifact.resource_url) {
+      const meta = await fetchUrlMetadata(artifact.resource_url);
+      if (meta?.ogImage) coverImageUrl = meta.ogImage;
+    }
+
     const { data, error } = await supabase
       .from("public_artifacts")
       .insert({
@@ -132,7 +153,8 @@ export function usePublicArtifacts() {
         user_id: user.id,
         tags: artifact.tags || [],
         is_public: artifact.is_public ?? true,
-      })
+        cover_image_url: coverImageUrl,
+      } as any)
       .select()
       .single();
 
