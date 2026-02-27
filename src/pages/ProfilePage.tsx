@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown } from "lucide-react";
 import UpgradeModal from "@/components/UpgradeModal";
+import ChangePasswordModal from "@/components/ChangePasswordModal";
 import { useSubscription, PLANS } from "@/hooks/useSubscription";
 
 const ProfilePage = () => {
@@ -31,6 +32,7 @@ const ProfilePage = () => {
   const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
   const { startCheckout, openCustomerPortal, checkSubscription } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Profile state
@@ -40,10 +42,6 @@ const ProfilePage = () => {
   const [profileLoading, setProfileLoading] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
 
-  // Change password state
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordLoading, setPasswordLoading] = useState(false);
 
   // Delete account state
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -143,29 +141,6 @@ const ProfilePage = () => {
     }
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast({ title: "Passwords don't match", variant: "destructive" });
-      return;
-    }
-    if (newPassword.length < 6) {
-      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
-      return;
-    }
-    setPasswordLoading(true);
-    try {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) throw error;
-      toast({ title: "Password updated successfully" });
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (err: any) {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
-    } finally {
-      setPasswordLoading(false);
-    }
-  };
 
   const handleConnectGoogle = async () => {
     setGoogleLoading(true);
@@ -362,29 +337,10 @@ const ProfilePage = () => {
             <KeyRound size={16} />
             <h2 className="font-heading text-base">Change Password</h2>
           </div>
-          <form onSubmit={handleChangePassword} className="space-y-2">
-            <Input
-              type="password"
-              placeholder="New password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              minLength={6}
-              className="h-9 text-sm"
-            />
-            <Input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-              className="h-9 text-sm"
-            />
-            <Button type="submit" disabled={passwordLoading} size="sm" className="w-full">
-              {passwordLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Update Password"}
-            </Button>
-          </form>
+          <p className="text-xs text-muted-foreground">Update your account password.</p>
+          <Button size="sm" variant="outline" className="w-full" onClick={() => setPasswordModalOpen(true)}>
+            Change Password
+          </Button>
         </motion.section>
 
         {/* Connected Accounts */}
@@ -544,6 +500,7 @@ const ProfilePage = () => {
         onCheckout={startCheckout}
         trialDaysLeft={subscription.trial_days_left}
       />
+      <ChangePasswordModal open={passwordModalOpen} onOpenChange={setPasswordModalOpen} />
     </div>
   );
 };
