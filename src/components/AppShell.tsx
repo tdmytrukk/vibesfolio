@@ -33,7 +33,7 @@ const glassStyle = {
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user, profile, subscription } = useAuth();
+  const { signOut, user, profile, subscription, subscriptionLoading } = useAuth();
   const { incomingRequests } = useFollows();
   const { startCheckout } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
@@ -41,7 +41,7 @@ const AppShell = ({ children }: AppShellProps) => {
   const userInitial = (profile?.display_name || user?.email || "U").charAt(0).toUpperCase();
   const avatarUrl = profile?.avatar_url;
   const pendingCount = incomingRequests.length;
-  const showTrialBanner = !subscription.subscribed && subscription.trial_active && subscription.trial_days_left <= 7;
+  const showTrialBanner = !subscriptionLoading && !subscription.subscribed && subscription.trial_active && subscription.trial_days_left <= 7;
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
@@ -122,7 +122,7 @@ const AppShell = ({ children }: AppShellProps) => {
         </div>
       )}
 
-      {!subscription.can_write && !subscription.subscribed && (
+      {!subscriptionLoading && !subscription.can_write && !subscription.subscribed && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-destructive/90 backdrop-blur-sm text-center py-1.5 px-4">
           <button
             onClick={() => setUpgradeOpen(true)}
