@@ -1,38 +1,33 @@
 
 
-Giiiirl, I see the issues clearly from the screenshots and code. Here's the plan:
+## Repositioning Vibesfolio
 
-## Problems Identified
+The new positioning shifts from "personal productivity platform for solo makers" to **"a space for vibe-builders and AI learners to capture ideas, prompts, and resources that help you build products and learn AI better."**
 
-1. **Wasted top space on mobile**: The mobile header (line 110) has `py-4` padding just for the avatar, plus the content area adds another `pt-4` (line 142). That's ~64px of dead space before any content appears.
+This affects copy across multiple files — landing page, SEO meta tags, and documentation.
 
-2. **Tags not limited**: The Prompts page renders ALL tags without any row limit (line 82-108). On mobile with many tags, this pushes content way down.
+### Files to Update
 
-3. **Uneven bottom nav spacing**: The bottom nav uses `justify-around` with `px-3` on each item (line 146-161). The `justify-around` distributes space based on container width, but `px-3` padding on variable-width labels creates visual unevenness.
+**1. `src/pages/LandingPage.tsx`** — Landing page copy
+- **Pill badge**: "Built for solo makers ✦" → "Built for vibe-builders & AI learners ✦"
+- **Headline**: "Your calm workspace / from spark to ship" → "Your space for ideas, prompts & resources" / "to build better with AI"
+- **Subheading**: Rewrite to emphasize capturing ideas, saving prompts, curating resources, and learning AI — not "build lifecycle"
+- **Feature cards**: Reorder to lead with Idea Inbox, Prompt Library, Resource Vault (the core trio). Keep Build Cockpit and Community but adjust descriptions to tie back to AI learning
+- **Bottom CTA heading**: "Ready to build with intention?" → "Ready to build smarter with AI?"
+- **Bottom CTA subtitle**: Reframe around vibe-builders and AI learners
+- **Footer tagline**: "Built with intention" → "Built for builders"
 
-## Implementation Steps
+**2. `index.html`** — SEO & social meta tags
+- `<title>`: "Vibesfolio — Your Space for Ideas, Prompts & Resources"
+- `<meta name="description">`: Rewrite around vibe-builders, AI learners, capturing ideas/prompts/resources
+- All `og:title`, `og:description`, `twitter:title`, `twitter:description` updated to match
 
-### 1. Reduce mobile top spacing (AppShell.tsx)
+**3. `docs/masterplan.md`** — Source-of-truth positioning
+- Update Vision, Core Purpose, Value Proposition, and Target Users sections to reflect the new positioning
+- Keep feature pillars and architecture unchanged (they still apply)
 
-- Change mobile header from `py-4` to `py-2` (line 110)
-- Change content area from `pt-4` to `pt-1` on mobile (line 142): `px-5 pt-1 md:px-8 md:pt-0`
+**4. `docs/design.md`** — Branding tagline
+- Line 209: Tagline "Your builder journal" → "Your space for ideas, prompts & resources"
 
-### 2. Limit tags to 2 rows on mobile (PromptsPage.tsx)
-
-- Sort `displayTags` by frequency (count how many prompts use each tag, descending)
-- On mobile, cap visible tags to ~10 (roughly 2 rows) with a "Show all" toggle
-- Add `max-h` with overflow-hidden on the tag container, or use a simple slice approach:
-  - Compute tag frequency from prompts data
-  - Sort tags by frequency descending
-  - Show first 10 tags on mobile (via `useIsMobile` hook), all on desktop
-  - Add a small "+N more" button to expand if needed
-
-### 3. Fix bottom nav even spacing (AppShell.tsx)
-
-- Change from `justify-around` to `justify-evenly` on the bottom nav (line 146)
-- Remove per-item `px-3` padding and use `flex-1 text-center` on each nav item instead, ensuring equal width distribution regardless of label length
-
-### Files to modify:
-- `src/components/AppShell.tsx` — top spacing + bottom nav fix
-- `src/pages/PromptsPage.tsx` — tag limiting + frequency sorting
+### No structural or layout changes needed — this is purely a copy/positioning update across 4 files.
 
