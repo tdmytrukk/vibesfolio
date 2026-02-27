@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, LogOut, User, Radio } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
+import UpgradeModal from "@/components/UpgradeModal";
+import { useSubscription } from "@/hooks/useSubscription";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,12 +33,15 @@ const glassStyle = {
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user, profile } = useAuth();
+  const { signOut, user, profile, subscription } = useAuth();
   const { incomingRequests } = useFollows();
+  const { startCheckout } = useSubscription();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const userInitial = (profile?.display_name || user?.email || "U").charAt(0).toUpperCase();
   const avatarUrl = profile?.avatar_url;
   const pendingCount = incomingRequests.length;
+  const showTrialBanner = !subscription.subscribed && subscription.trial_active && subscription.trial_days_left <= 7;
 
   return (
     <div className="bg-gradient-app bg-noise relative min-h-screen">
@@ -103,6 +109,30 @@ const AppShell = ({ children }: AppShellProps) => {
         </DropdownMenu>
       </header>
 
+      {/* Trial banner */}
+      {showTrialBanner && (
+        <div className="fixed top-0 left-0 right-0 z-50 md:top-auto md:bottom-0 bg-accent/90 backdrop-blur-sm text-center py-1.5 px-4">
+          <button
+            onClick={() => setUpgradeOpen(true)}
+            className="text-xs font-medium text-accent-foreground hover:underline"
+          >
+            <Crown size={12} className="inline mr-1 -mt-0.5" />
+            {subscription.trial_days_left} day{subscription.trial_days_left !== 1 ? "s" : ""} left in trial — Upgrade to Pro
+          </button>
+        </div>
+      )}
+
+      {!subscription.can_write && !subscription.subscribed && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-destructive/90 backdrop-blur-sm text-center py-1.5 px-4">
+          <button
+            onClick={() => setUpgradeOpen(true)}
+            className="text-xs font-medium text-destructive-foreground hover:underline"
+          >
+            Your trial has ended — Upgrade to keep creating
+          </button>
+        </div>
+      )}
+
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
@@ -159,6 +189,13 @@ const AppShell = ({ children }: AppShellProps) => {
           );
         })}
       </nav>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        onCheckout={startCheckout}
+        trialDaysLeft={subscription.trial_days_left}
+      />
     </div>
   );
 };
