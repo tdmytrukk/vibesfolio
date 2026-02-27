@@ -35,7 +35,7 @@ const categoryIcons: Record<ResourceCategory, React.ReactNode> = {
 };
 
 const VaultPage = () => {
-  const { resources, loading, addResource, updateResource, deleteResource } = useResources();
+  const { resources, loading, addResource, updateResource, deleteResource, fetchUrlMetadata } = useResources();
   const { myArtifacts } = usePublicArtifacts();
   
   const sharedResourceMap = new Map(
@@ -288,7 +288,7 @@ const VaultPage = () => {
         onUpdate={updateResource}
         onDelete={handleDeleteFromDetail}
       />
-      <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={addResource} />
+      <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={addResource} onFetchMetadata={fetchUrlMetadata} />
       <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New resource" />
     </div>
   );

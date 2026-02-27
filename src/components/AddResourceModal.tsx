@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Upload, FileText, Image, File } from "lucide-react";
+import { X, Plus, Upload, FileText, Image, File, Loader2 } from "lucide-react";
 import { ResourceCategory } from "@/hooks/useResources";
 
 interface AddResourceModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (resource: { title: string; url: string; category: ResourceCategory; description?: string; tags?: string[]; file?: File }) => void;
+  onFetchMetadata?: (url: string) => Promise<{ domain: string; ogImage: string | null; ogTitle: string | null; ogDescription: string | null; faviconUrl: string } | null>;
 }
 
 const categories: { value: ResourceCategory; label: string; emoji: string }[] = [
@@ -24,7 +25,7 @@ const presetTags = [
 
 const emojiOptions = ["🏷️", "🎯", "🔥", "⭐", "💎", "🌈", "🎨", "⚡", "🧩", "📌", "🛡️", "🎵"];
 
-const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
+const AddResourceModal = ({ open, onClose, onSave, onFetchMetadata }: AddResourceModalProps) => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [category, setCategory] = useState<ResourceCategory>("tools");
@@ -35,17 +36,53 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
   const [customTagName, setCustomTagName] = useState("");
   const [customTagEmoji, setCustomTagEmoji] = useState("🏷️");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fetchingMeta, setFetchingMeta] = useState(false);
+  const [metaFetched, setMetaFetched] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const lastFetchedUrl = useRef("");
 
   const validateUrl = (val: string) => {
-    if (!val.trim()) { setUrlError(""); return; }
+    if (!val.trim()) { setUrlError(""); return false; }
     try {
       let test = val.trim();
       if (!test.startsWith("http://") && !test.startsWith("https://")) test = `https://${test}`;
       new URL(test);
       setUrlError("");
-    } catch { setUrlError("Please enter a valid URL"); }
+      return true;
+    } catch { setUrlError("Please enter a valid URL"); return false; }
   };
+
+  const handleUrlBlur = useCallback(async () => {
+    const trimmed = url.trim();
+    if (!trimmed || !onFetchMetadata || fetchingMeta) return;
+    if (!validateUrl(trimmed)) return;
+    
+    let normalized = trimmed;
+    if (!normalized.startsWith("http://") && !normalized.startsWith("https://")) {
+      normalized = `https://${normalized}`;
+    }
+    
+    // Don't re-fetch the same URL
+    if (normalized === lastFetchedUrl.current) return;
+    lastFetchedUrl.current = normalized;
+
+    setFetchingMeta(true);
+    try {
+      const meta = await onFetchMetadata(normalized);
+      if (meta) {
+        // Only auto-fill if user hasn't manually typed something
+        if (!title.trim() && meta.ogTitle) {
+          setTitle(meta.ogTitle);
+        }
+        if (!description.trim() && meta.ogDescription) {
+          setDescription(meta.ogDescription);
+        }
+        setMetaFetched(true);
+      }
+    } finally {
+      setFetchingMeta(false);
+    }
+  }, [url, title, description, onFetchMetadata, fetchingMeta]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -70,6 +107,13 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
     return <File size={14} />;
   };
 
+  const resetForm = () => {
+    setTitle(""); setUrl(""); setCategory("tools"); setDescription("");
+    setUrlError(""); setSelectedTags([]); setShowCustomTag(false); setSelectedFile(null);
+    setFetchingMeta(false); setMetaFetched(false);
+    lastFetchedUrl.current = "";
+  };
+
   const handleSubmit = () => {
     if (!title.trim() || (!url.trim() && !selectedFile) || urlError) return;
     onSave({
@@ -80,8 +124,7 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
       tags: selectedTags.length > 0 ? selectedTags : undefined,
       file: selectedFile || undefined,
     });
-    setTitle(""); setUrl(""); setCategory("tools"); setDescription("");
-    setUrlError(""); setSelectedTags([]); setShowCustomTag(false); setSelectedFile(null);
+    resetForm();
     onClose();
   };
 
@@ -110,18 +153,27 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
               </button>
             </div>
 
+            {/* URL — moved above Title so auto-fill flows naturally */}
+            <label className="block text-xs font-medium text-muted-foreground mb-1.5">URL *</label>
+            <div className="relative">
+              <input type="url" placeholder="https://tailwindcss.com" value={url}
+                onChange={(e) => { setUrl(e.target.value); validateUrl(e.target.value); setMetaFetched(false); }}
+                onBlur={handleUrlBlur}
+                className={`w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 ${urlError ? "ring-2 ring-destructive/40" : ""}`} />
+              {fetchingMeta && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <Loader2 size={16} className="animate-spin text-muted-foreground" />
+                </div>
+              )}
+            </div>
+            {urlError && <p className="text-xs text-destructive mt-1 mb-3">{urlError}</p>}
+            {!urlError && metaFetched && <p className="text-[11px] text-muted-foreground mt-1 mb-3">✨ Title & description auto-filled from page</p>}
+            {!urlError && !metaFetched && <div className="mb-4" />}
+
             {/* Title */}
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">Title *</label>
-            <input type="text" placeholder="e.g. Tailwind CSS Docs" value={title} onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4" autoFocus />
-
-            {/* URL */}
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">URL *</label>
-            <input type="url" placeholder="https://tailwindcss.com" value={url}
-              onChange={(e) => { setUrl(e.target.value); validateUrl(e.target.value); }}
-              className={`w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 ${urlError ? "ring-2 ring-destructive/40" : ""}`} />
-            {urlError && <p className="text-xs text-destructive mt-1 mb-3">{urlError}</p>}
-            {!urlError && <div className="mb-4" />}
+            <input type="text" placeholder={fetchingMeta ? "Fetching title…" : "e.g. Tailwind CSS Docs"} value={title} onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4" />
 
             {/* Category */}
             <label className="block text-xs font-medium text-muted-foreground mb-2">Category *</label>
@@ -149,7 +201,6 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
                   {tag}
                 </button>
               ))}
-              {/* Show custom tags that aren't presets */}
               {selectedTags.filter((t) => !presetTags.includes(t)).map((tag) => (
                 <button key={tag} onClick={() => toggleTag(tag)}
                   className="rounded-pill px-3 py-1.5 text-xs font-medium bg-accent text-accent-foreground border border-accent transition-all duration-200">
@@ -231,9 +282,9 @@ const AddResourceModal = ({ open, onClose, onSave }: AddResourceModalProps) => {
             <textarea placeholder="Why you saved this…" value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
               className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-5 resize-none" />
 
-            <button onClick={handleSubmit} disabled={!title.trim() || (!url.trim() && !selectedFile) || !!urlError}
+            <button onClick={handleSubmit} disabled={!title.trim() || (!url.trim() && !selectedFile) || !!urlError || fetchingMeta}
               className="w-full rounded-pill bg-primary py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-40">
-              Save Resource
+              {fetchingMeta ? "Fetching metadata…" : "Save Resource"}
             </button>
           </motion.div>
         </>
