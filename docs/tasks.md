@@ -71,6 +71,7 @@
 | 6.5 | Pro tier with gating | ⬜ | Stripe integration; limit free tier artifacts; unlock AI features |
 | 6.6 | Prompt effectiveness tracking | ⬜ | Rate prompts after use; community sorting by effectiveness |
 | 6.7 | Dark mode toggle in UI | ⬜ | CSS tokens exist; add toggle in profile/nav |
+| 6.8 | Repositioning: copy update across landing, SEO, docs | ✅ | Shifted to "vibe-builders & AI learners" positioning; updated LandingPage, index.html, masterplan.md, design.md |
 
 ---
 

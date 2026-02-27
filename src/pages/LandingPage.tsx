@@ -6,27 +6,27 @@ const features = [
   {
     icon: Lightbulb,
     title: "Idea Inbox",
-    desc: "Capture raw ideas in seconds — tag, annotate, and never lose a spark again.",
+    desc: "Capture ideas the moment they hit — tag, annotate, and build your personal idea bank.",
   },
   {
     icon: Sparkles,
     title: "Prompt Library",
-    desc: "Save, tag, and reuse your best AI prompts. AI-generated summaries included.",
+    desc: "Save and organize your best AI prompts. Find what works, reuse it, and learn faster.",
   },
   {
     icon: Archive,
     title: "Resource Vault",
-    desc: "Bookmark links with auto-fetched metadata — titles, images, favicons. All organized.",
+    desc: "Bookmark the tools, tutorials, and links that level up your AI skills — all in one place.",
   },
   {
     icon: Rocket,
     title: "Build Cockpit",
-    desc: "Track projects from idea to shipped — tasks, decisions, shipping log, and session debriefs.",
+    desc: "Turn ideas into projects — track tasks, log decisions, and ship what you're learning.",
   },
   {
     icon: Radio,
     title: "Community",
-    desc: "Share prompts & resources publicly. Follow other builders and discover what works.",
+    desc: "Share prompts & resources with other builders. Discover what's working for the community.",
   },
 ];
 
@@ -71,16 +71,16 @@ const LandingPage = () => {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <span className="inline-block rounded-pill bg-secondary px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-            Built for solo makers ✦
+            Built for vibe-builders & AI learners ✦
           </span>
           <h1 className="font-heading text-4xl md:text-6xl text-foreground leading-tight tracking-tight mb-5">
-            Your calm workspace
+            Your space for ideas,
             <br />
-            <span className="text-muted-foreground">from spark to ship</span>
+            <span className="text-muted-foreground">prompts & resources</span>
           </h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
-            Capture ideas, curate resources, save AI prompts, and track every build
-            — all in one beautiful, distraction-free workspace.
+            Save your best AI prompts, capture ideas, and curate the resources
+            that help you build better products and learn AI faster.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -152,10 +152,10 @@ const LandingPage = () => {
           className="card-glass p-10 md:p-14"
         >
           <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-            Ready to build with intention?
+            Ready to build smarter with AI?
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Join solo makers who use Vibesfolio to stay focused, ship faster, and actually enjoy the process.
+            Join vibe-builders and AI learners who use Vibesfolio to capture what matters and ship what counts.
           </p>
           <Link
             to="/auth"
@@ -170,7 +170,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-8 text-center">
         <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Vibesfolio · Built with intention
+          © {new Date().getFullYear()} Vibesfolio · Built for builders
         </p>
       </footer>
     </div>
