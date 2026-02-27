@@ -31,10 +31,11 @@ const glassStyle = {
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user } = useAuth();
+  const { signOut, user, profile } = useAuth();
   const { incomingRequests } = useFollows();
 
-  const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
+  const userInitial = (profile?.display_name || user?.email || "U").charAt(0).toUpperCase();
+  const avatarUrl = profile?.avatar_url;
   const pendingCount = incomingRequests.length;
 
   return (
@@ -75,10 +76,14 @@ const AppShell = ({ children }: AppShellProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground text-xs font-medium hover:bg-muted transition-colors mr-1"
+              className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground text-xs font-medium hover:bg-muted transition-colors mr-1 overflow-hidden"
               aria-label="Profile"
             >
-              {userInitial}
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
+              ) : (
+                userInitial
+              )}
               {pendingCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1">
                   {pendingCount}
@@ -106,10 +111,14 @@ const AppShell = ({ children }: AppShellProps) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <button
-                className="relative flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground text-sm font-medium overflow-hidden"
                 aria-label="Profile"
               >
-                {userInitial}
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  userInitial
+                )}
                 {pendingCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1">
                     {pendingCount}
