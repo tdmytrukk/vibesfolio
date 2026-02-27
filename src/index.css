@@ -127,7 +127,7 @@
   content: '';
   position: fixed;
   inset: 0;
-  opacity: 0.18;
+  opacity: 0.45;
   pointer-events: none;
   z-index: 0;
   background-image: url("/images/paper-texture.png");
