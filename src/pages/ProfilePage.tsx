@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -18,11 +18,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2 } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check } from "lucide-react";
 
 const ProfilePage = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Profile state
+  const [displayName, setDisplayName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
 
   // Change password state
   const [newPassword, setNewPassword] = useState("");
@@ -36,6 +43,81 @@ const ProfilePage = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const isGoogleLinked = user?.app_metadata?.providers?.includes("google") ?? false;
+
+  // Load profile
+  useEffect(() => {
+    if (!user) return;
+    const loadProfile = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("user_id", user.id)
+        .single();
+      if (data) {
+        setDisplayName(data.display_name || "");
+        setAvatarUrl(data.avatar_url || null);
+      }
+    };
+    loadProfile();
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    setProfileLoading(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ display_name: displayName })
+        .eq("user_id", user.id);
+      if (error) throw error;
+      toast({ title: "Profile updated" });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Please select an image file", variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "Image must be under 2MB", variant: "destructive" });
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${user.id}/avatar.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+      const newUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: newUrl })
+        .eq("user_id", user.id);
+      if (updateError) throw updateError;
+
+      setAvatarUrl(newUrl);
+      toast({ title: "Avatar updated" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,8 +159,6 @@ const ProfilePage = () => {
   const handleDeleteAccount = async () => {
     setDeleteLoading(true);
     try {
-      // Sign out first, then the account deletion would need a backend function
-      // For now we sign the user out and show instructions
       await signOut();
       toast({
         title: "Account deletion requested",
@@ -90,12 +170,69 @@ const ProfilePage = () => {
     }
   };
 
+  const userInitial = displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || "U";
+
   return (
     <div className="mx-auto max-w-3xl pb-8">
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
-        <h1 className="font-heading text-2xl text-foreground">Profile</h1>
-        <p className="text-xs text-muted-foreground">{user?.email}</p>
-      </motion.div>
+      {/* Profile header with avatar + name */}
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="card-glass p-4 mb-3"
+      >
+        <div className="flex items-center gap-4">
+          {/* Avatar */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="relative group flex-shrink-0"
+            disabled={avatarUploading}
+          >
+            <div className="h-16 w-16 rounded-full bg-muted overflow-hidden flex items-center justify-center text-xl font-medium text-muted-foreground">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+              ) : (
+                userInitial
+              )}
+            </div>
+            <div className="absolute inset-0 rounded-full bg-foreground/0 group-hover:bg-foreground/20 transition-colors flex items-center justify-center">
+              {avatarUploading ? (
+                <Loader2 className="h-5 w-5 animate-spin text-background" />
+              ) : (
+                <Camera size={16} className="text-background opacity-0 group-hover:opacity-100 transition-opacity" />
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarUpload}
+            />
+          </button>
+
+          {/* Name + email */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Display name"
+                className="h-9 text-sm font-medium border-transparent bg-transparent hover:bg-secondary/50 focus:bg-background transition-colors"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSaveProfile}
+                disabled={profileLoading}
+                className="h-9 px-2 flex-shrink-0"
+              >
+                {profileLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check size={16} />}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 px-3">{user?.email}</p>
+          </div>
+        </div>
+      </motion.section>
 
       {/* Two-column grid on desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
