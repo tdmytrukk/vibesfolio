@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Pencil, Share2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Pencil, Share2, Globe } from "lucide-react";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
+import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
 import AddPromptModal from "@/components/AddPromptModal";
@@ -11,6 +12,14 @@ import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
 
 const PromptsPage = () => {
   const { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags } = usePrompts();
+  const { myArtifacts, refetchMy } = usePublicArtifacts();
+  
+  // Build a map of prompt title -> artifact ID for shared status
+  const sharedPromptMap = new Map(
+    myArtifacts
+      .filter((a) => a.artifact_type === "prompt")
+      .map((a) => [a.title, a.id])
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -175,7 +184,15 @@ const PromptsPage = () => {
                 >
                   {/* Header row */}
                   <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="font-medium text-foreground text-[15px] leading-snug">{prompt.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-foreground text-[15px] leading-snug">{prompt.title}</h3>
+                      {sharedPromptMap.has(prompt.title) && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[10px] font-medium">
+                          <Globe size={10} />
+                          Shared
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] text-muted-foreground whitespace-nowrap pt-0.5 shrink-0">
                       {formatDate(prompt.created_at)}
                     </span>
@@ -227,10 +244,13 @@ const PromptsPage = () => {
                     <div className="flex items-center gap-1">
                       {/* Share */}
                       <ShareToCommunityToggle
+                        artifactId={sharedPromptMap.get(prompt.title) || null}
                         artifactType="prompt"
                         title={prompt.title}
                         promptContent={prompt.content}
                         tags={prompt.tags}
+                        onShared={() => refetchMy()}
+                        onUnshared={() => refetchMy()}
                       />
 
                       {/* Edit */}
