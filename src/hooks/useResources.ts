@@ -48,7 +48,7 @@ export function useResources() {
         body: { url },
       });
       if (error || !data?.success) return null;
-      return data as { domain: string; ogImage: string | null; ogTitle: string | null; faviconUrl: string };
+      return data as { domain: string; ogImage: string | null; ogTitle: string | null; ogDescription: string | null; faviconUrl: string };
     } catch {
       return null;
     }
