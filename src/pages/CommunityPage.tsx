@@ -103,9 +103,9 @@ const CommunityPage = () => {
 
       {/* Feed */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-48 rounded-xl bg-muted/30 animate-pulse" />
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`rounded-xl bg-muted/30 animate-pulse break-inside-avoid ${i % 3 === 0 ? 'h-32' : 'h-48'}`} />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -120,19 +120,20 @@ const CommunityPage = () => {
         />
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
             {paginated.map((artifact) => (
-              <ArtifactCard
-                key={artifact.id}
-                artifact={artifact}
-                isSaved={isSaved(artifact.id)}
-                onSave={saveArtifact}
-                onUnsave={unsaveArtifact}
-                onCopyToProject={(a) => setCopyArtifact(a)}
-                onFollow={follow}
-                onUnfollow={unfollow}
-                isFollowing={isFollowing(artifact.user_id)}
-              />
+              <div key={artifact.id} className="break-inside-avoid">
+                <ArtifactCard
+                  artifact={artifact}
+                  isSaved={isSaved(artifact.id)}
+                  onSave={saveArtifact}
+                  onUnsave={unsaveArtifact}
+                  onCopyToProject={(a) => setCopyArtifact(a)}
+                  onFollow={follow}
+                  onUnfollow={unfollow}
+                  isFollowing={isFollowing(artifact.user_id)}
+                />
+              </div>
             ))}
           </div>
 
