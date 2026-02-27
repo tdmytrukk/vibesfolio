@@ -123,9 +123,9 @@ const VaultPage = () => {
 
       {/* Grid */}
       {loading ? (
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="card-glass p-0 overflow-hidden break-inside-avoid animate-pulse">
+            <div key={i} className="card-glass p-0 overflow-hidden animate-pulse">
               <div className="bg-muted" style={{ height: `${140 + (i % 3) * 40}px` }} />
               <div className="p-4">
                 <div className="h-3 bg-muted rounded w-3/4 mb-2" />
@@ -149,7 +149,7 @@ const VaultPage = () => {
           />
         )
       ) : (
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <AnimatePresence initial={false}>
             {filtered.map((resource, i) => {
               const hasCover = resource.cover_image_url && !imgErrors.has(resource.id);
@@ -164,7 +164,7 @@ const VaultPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                   transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-0 overflow-hidden break-inside-avoid cursor-pointer group relative"
+                  className="card-glass p-0 overflow-hidden cursor-pointer group relative"
                   onClick={() => setDetailResource(resource)}
                 >
                   {/* Cover image or fallback */}
