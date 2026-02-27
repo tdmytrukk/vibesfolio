@@ -30,10 +30,22 @@ const CommunityPage = () => {
   const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
-    let items = artifacts.filter((a) => a.user_id !== user?.id);
+    let items = [...artifacts];
+
+    // Merge in own artifacts that aren't already in the public feed
+    const publicIds = new Set(artifacts.map((a) => a.id));
+    const ownToAdd = myArtifacts
+      .filter((a) => a.is_public && !publicIds.has(a.id))
+      .map((a) => ({ ...a, creator_name: "You", creator_avatar: null }));
+    items = [...ownToAdd, ...items];
+
+    // Mark own artifacts
+    items = items.map((a) =>
+      a.user_id === user?.id ? { ...a, creator_name: "You" } : a
+    );
 
     if (feedTab === "following") {
-      items = items.filter((a) => followingIds.has(a.user_id));
+      items = items.filter((a) => a.user_id === user?.id || followingIds.has(a.user_id));
     }
 
     if (search.trim()) {
@@ -47,7 +59,7 @@ const CommunityPage = () => {
     }
 
     return items;
-  }, [artifacts, feedTab, search, followingIds, user?.id]);
+  }, [artifacts, myArtifacts, feedTab, search, followingIds, user?.id]);
 
   const paginated = filtered.slice(0, page * ITEMS_PER_PAGE);
   const hasMore = paginated.length < filtered.length;
@@ -134,29 +146,6 @@ const CommunityPage = () => {
         </>
       )}
 
-      {/* My Published Artifacts */}
-      {myArtifacts.length > 0 && (
-        <div className="mt-10">
-          <h2 className="font-heading text-lg font-semibold text-foreground mb-4">
-            Your Published Artifacts
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {myArtifacts.map((artifact) => (
-              <ArtifactCard
-                key={artifact.id}
-                artifact={{ ...artifact, creator_name: "You" }}
-                isSaved={false}
-                onSave={async () => false}
-                onUnsave={async () => false}
-                onCopyToProject={() => {}}
-                onFollow={async () => false}
-                onUnfollow={async () => false}
-                isFollowing={false}
-              />
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Modals */}
       <PublishArtifactModal
