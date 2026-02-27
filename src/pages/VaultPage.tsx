@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
+import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
+import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
 import AddResourceModal from "@/components/AddResourceModal";
@@ -35,6 +36,13 @@ const categoryIcons: Record<ResourceCategory, React.ReactNode> = {
 
 const VaultPage = () => {
   const { resources, loading, addResource, updateResource, deleteResource } = useResources();
+  const { myArtifacts } = usePublicArtifacts();
+  
+  const sharedResourceMap = new Map(
+    myArtifacts
+      .filter((a) => a.artifact_type === "resource")
+      .map((a) => [a.title, a.id])
+  );
   const [selectedCategory, setSelectedCategory] = useState<ResourceCategory | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -186,9 +194,17 @@ const VaultPage = () => {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="font-medium text-foreground text-sm leading-snug mb-1.5 line-clamp-2">
-                      {resource.title}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <h3 className="font-medium text-foreground text-sm leading-snug line-clamp-2">
+                        {resource.title}
+                      </h3>
+                      {sharedResourceMap.has(resource.title) && (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-medium shrink-0">
+                          <Globe size={9} />
+                          Shared
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 mb-2">
                       {resource.favicon_url && (
                         <img src={resource.favicon_url} alt="" className="w-3.5 h-3.5 rounded-sm" />
