@@ -1,27 +1,22 @@
+## Update Landing Page CTA Copy
 
+The landing page feature list already doesn't include Build Cockpit — it only shows Idea Inbox, Prompt Library, Resource Vault, and Community. No removal needed there.
 
-## Change Password → Modal with Old Password Verification
+The CTAs will be updated to better match the "calm workspace for capturing and organizing" positioning:
 
-### What changes
+### Changes in `src/pages/LandingPage.tsx`
 
-1. **Replace inline password form with a button** — In the profile page's two-column grid, the "Change Password" card will show just an icon, title, description, and a "Change Password" button (no input fields visible).
+**Hero CTA button** (line 84):
 
-2. **Create a `ChangePasswordModal` component** — A Dialog modal with three fields:
-   - Current password (required)
-   - New password (required, min 6 chars)
-   - Confirm new password (required, must match)
+- "Start Building Free" → "Get Started"
 
-3. **Old password verification flow** — Supabase doesn't have a direct "verify old password" API. The approach:
-   - Re-authenticate the user by calling `supabase.auth.signInWithPassword({ email, password: oldPassword })` with their current email + the old password they entered.
-   - If it succeeds, proceed with `supabase.auth.updateUser({ password: newPassword })`.
-   - If it fails, show "Current password is incorrect."
+**Hero secondary button** (line 92):
 
-4. **Clean up ProfilePage state** — Remove `newPassword`, `confirmPassword`, `passwordLoading`, and `handleChangePassword` from ProfilePage since all that logic moves into the modal.
+- "See Features" → stays (fine as-is)
 
-### Files affected
-- **`src/components/ChangePasswordModal.tsx`** — New modal component with all three fields + verification logic
-- **`src/pages/ProfilePage.tsx`** — Replace the form section with a button that opens the modal; remove password-related state
+**Bottom CTA section** (lines 149-159):
 
-### Technical detail
-The old-password check uses `signInWithPassword` which re-validates credentials without disrupting the current session. On success, `updateUser` sets the new password. Both calls use the existing Supabase client.
+- Headline: "Ready to build smarter with AI?" → "Your ideas deserve a home"
+- Button: "Create Your Free Account" → "Start Your Free Space"
 
+Single file changed: `src/pages/LandingPage.tsx` — copy-only edits across 4 strings.
