@@ -56,9 +56,9 @@ const CommunityPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground tracking-tight">
+          <h2 className="font-heading text-3xl text-foreground">
             Community
-          </h1>
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
             Field intelligence from builders. Review. Adapt. Execute.
           </p>
