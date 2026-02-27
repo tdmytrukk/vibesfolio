@@ -185,5 +185,5 @@ export function useResources() {
     return true;
   };
 
-  return { resources, loading, addResource, updateResource, deleteResource, refetch: fetchResources };
+  return { resources, loading, addResource, updateResource, deleteResource, fetchUrlMetadata, refetch: fetchResources };
 }
