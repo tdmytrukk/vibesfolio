@@ -1,5 +1,5 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, Rocket, LogOut } from "lucide-react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Lightbulb, Sparkles, Archive, Rocket, LogOut, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ const glassStyle = {
 
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { signOut, user } = useAuth();
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U";
@@ -77,6 +78,10 @@ const AppShell = ({ children }: AppShellProps) => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem onClick={() => navigate("/profile")} className="gap-2">
+              <User size={14} />
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={signOut} className="gap-2">
               <LogOut size={14} />
               Log out
@@ -99,6 +104,10 @@ const AppShell = ({ children }: AppShellProps) => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => navigate("/profile")} className="gap-2">
+                <User size={14} />
+                Profile
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={signOut} className="gap-2">
                 <LogOut size={14} />
                 Log out
