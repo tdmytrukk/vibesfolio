@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Bookmark, BookmarkCheck, Copy, UserPlus, UserCheck, ExternalLink } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Bookmark, BookmarkCheck, Copy, UserPlus, UserCheck, ExternalLink, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -31,6 +30,7 @@ const ArtifactCard = ({
   const [saving, setSaving] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const isOwn = user?.id === artifact.user_id;
+  const isPrompt = artifact.artifact_type === "prompt";
 
   const handleSave = async () => {
     setSaving(true);
@@ -59,163 +59,192 @@ const ArtifactCard = ({
     }
   };
 
-  return (
-    <div className="group rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 transition-all duration-200 hover:shadow-md hover:border-border">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
-            <Badge
-              variant="outline"
-              className={`text-[10px] uppercase tracking-wider font-medium ${
-                artifact.artifact_type === "prompt"
-                  ? "border-primary/40 text-primary"
-                  : "border-emerald-500/40 text-emerald-600 dark:text-emerald-400"
-              }`}
+  // --- PROMPT CARD (compact) ---
+  if (isPrompt) {
+    return (
+      <div className="group card-glass p-4 break-inside-avoid transition-all duration-200 hover:shadow-md">
+        {/* Type badge */}
+        <div className="flex items-center gap-1.5 mb-2">
+          <Sparkles size={12} className="text-primary" />
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">Prompt</span>
+          {artifact.recommended_model && (
+            <span className="text-[9px] text-muted-foreground font-mono ml-auto">{artifact.recommended_model}</span>
+          )}
+        </div>
+
+        <h3 className="font-heading text-sm font-semibold text-foreground leading-tight mb-1.5">
+          {artifact.title}
+        </h3>
+
+        {artifact.description && (
+          <p className="text-[11px] text-muted-foreground leading-relaxed mb-2 line-clamp-2">
+            {artifact.description}
+          </p>
+        )}
+
+        {/* Prompt preview */}
+        {artifact.prompt_content && (
+          <div className="mb-2">
+            <button
+              onClick={() => setShowPrompt(!showPrompt)}
+              className="text-[11px] text-primary/80 hover:text-primary font-medium"
             >
-              {artifact.artifact_type}
-            </Badge>
-            {artifact.recommended_model && (
-              <span className="text-[10px] text-muted-foreground font-mono">
-                {artifact.recommended_model}
-              </span>
+              {showPrompt ? "Hide prompt" : "View prompt"}
+            </button>
+            {showPrompt && (
+              <div className="relative group/code mt-1">
+                <pre className="bg-muted/60 rounded-lg p-2.5 text-[10px] font-mono text-foreground/90 leading-relaxed max-h-36 overflow-y-auto whitespace-pre-wrap">
+                  {artifact.prompt_content}
+                </pre>
+                <button
+                  onClick={copyPromptText}
+                  className="absolute top-1.5 right-1.5 p-1 rounded-md bg-background/80 border border-border/50 opacity-0 group-hover/code:opacity-100 transition-opacity"
+                  title="Copy prompt"
+                >
+                  <Copy size={11} />
+                </button>
+              </div>
             )}
           </div>
-          <h3 className="font-heading text-sm font-semibold text-foreground leading-tight truncate">
-            {artifact.title}
-          </h3>
-        </div>
-      </div>
+        )}
 
-      {/* Description */}
-      {artifact.description && (
-        <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">
-          {artifact.description}
-        </p>
-      )}
-
-      {/* Prompt use case */}
-      {artifact.prompt_use_case && (
-        <p className="text-[11px] text-muted-foreground/80 mb-3 italic">
-          Use case: {artifact.prompt_use_case}
-        </p>
-      )}
-
-      {/* Prompt content preview */}
-      {artifact.artifact_type === "prompt" && artifact.prompt_content && (
-        <div className="mb-3">
-          <button
-            onClick={() => setShowPrompt(!showPrompt)}
-            className="text-[11px] text-primary/80 hover:text-primary font-medium mb-1"
-          >
-            {showPrompt ? "Hide prompt" : "View prompt"}
-          </button>
-          {showPrompt && (
-            <div className="relative group/code">
-              <pre className="bg-muted/60 rounded-lg p-3 text-[11px] font-mono text-foreground/90 leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
-                {artifact.prompt_content}
-              </pre>
-              <button
-                onClick={copyPromptText}
-                className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 border border-border/50 opacity-0 group-hover/code:opacity-100 transition-opacity"
-                title="Copy prompt"
-              >
-                <Copy size={12} />
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Resource URL */}
-      {artifact.artifact_type === "resource" && artifact.resource_url && (
-        <a
-          href={artifact.resource_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-[11px] text-primary/80 hover:text-primary mb-3 truncate"
-        >
-          <ExternalLink size={11} />
-          <span className="truncate">{artifact.resource_url}</span>
-        </a>
-      )}
-
-      {/* Resource note */}
-      {artifact.resource_note && (
-        <p className="text-[11px] text-muted-foreground/80 mb-3">
-          {artifact.resource_note}
-        </p>
-      )}
-
-      {/* Tags */}
-      {artifact.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-4">
-          {artifact.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2 py-0.5 rounded-full bg-muted/50 text-[10px] text-muted-foreground font-medium"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-border/40">
-        <div className="flex items-center gap-2">
-          {artifact.creator_avatar ? (
-            <img
-              src={artifact.creator_avatar}
-              alt=""
-              className="w-5 h-5 rounded-full"
-            />
-          ) : (
-            <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
-              {(artifact.creator_name || "B").charAt(0).toUpperCase()}
-            </div>
-          )}
-          <span className="text-[11px] text-muted-foreground">
-            {artifact.creator_name || "Builder"}
-          </span>
-          {!isOwn && (
-            <button
-              onClick={handleFollow}
-              className={`ml-1 p-1 rounded transition-colors ${
-                isFollowing
-                  ? "text-primary"
-                  : "text-muted-foreground/60 hover:text-muted-foreground"
-              }`}
-              title={isFollowing ? "Unfollow" : "Follow"}
-            >
-              {isFollowing ? <UserCheck size={12} /> : <UserPlus size={12} />}
-            </button>
-          )}
-        </div>
-
-        {!isOwn && (
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-[11px] gap-1"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {isSaved ? <BookmarkCheck size={13} className="text-primary" /> : <Bookmark size={13} />}
-              {isSaved ? "Saved" : "Save"}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-[11px] gap-1"
-              onClick={() => onCopyToProject(artifact)}
-            >
-              <Copy size={13} />
-              Copy
-            </Button>
+        {/* Tags */}
+        {artifact.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {artifact.tags.slice(0, 3).map((tag) => (
+              <span key={tag} className="px-1.5 py-0.5 rounded-full bg-muted/50 text-[9px] text-muted-foreground font-medium">
+                {tag}
+              </span>
+            ))}
           </div>
         )}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/30">
+          <div className="flex items-center gap-1.5">
+            {artifact.creator_avatar ? (
+              <img src={artifact.creator_avatar} alt="" className="w-4 h-4 rounded-full" />
+            ) : (
+              <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center text-[8px] font-medium text-muted-foreground">
+                {(artifact.creator_name || "B").charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span className="text-[10px] text-muted-foreground">{artifact.creator_name || "Builder"}</span>
+            {!isOwn && (
+              <button onClick={handleFollow} className={`p-0.5 rounded transition-colors ${isFollowing ? "text-primary" : "text-muted-foreground/60 hover:text-muted-foreground"}`}>
+                {isFollowing ? <UserCheck size={10} /> : <UserPlus size={10} />}
+              </button>
+            )}
+          </div>
+          {!isOwn && (
+            <div className="flex items-center gap-0.5">
+              <Button variant="ghost" size="sm" className="h-6 px-1.5 text-[10px] gap-0.5" onClick={handleSave} disabled={saving}>
+                {isSaved ? <BookmarkCheck size={11} className="text-primary" /> : <Bookmark size={11} />}
+              </Button>
+              <Button variant="ghost" size="sm" className="h-6 px-1.5 text-[10px] gap-0.5" onClick={() => onCopyToProject(artifact)}>
+                <Copy size={11} />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // --- RESOURCE CARD (rich, with image) ---
+  const resourceDomain = artifact.resource_url
+    ? (() => { try { return new URL(artifact.resource_url).hostname.replace("www.", ""); } catch { return null; } })()
+    : null;
+
+  return (
+    <div className="group card-glass p-0 overflow-hidden break-inside-avoid transition-all duration-200 hover:shadow-md">
+      {/* Cover / fallback */}
+      {artifact.resource_url ? (
+        <a href={artifact.resource_url} target="_blank" rel="noopener noreferrer" className="block">
+          <div className="relative w-full bg-gradient-to-br from-chip-mint to-chip-sky flex items-center justify-center py-10 px-4">
+            <ExternalLink size={28} className="text-foreground/20" />
+            {resourceDomain && (
+              <span className="absolute bottom-2 left-3 text-[10px] font-medium text-foreground/40">{resourceDomain}</span>
+            )}
+          </div>
+        </a>
+      ) : (
+        <div className="w-full bg-gradient-to-br from-chip-peach to-chip-lavender flex items-center justify-center py-8">
+          <ExternalLink size={24} className="text-foreground/20" />
+        </div>
+      )}
+
+      <div className="p-4">
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-emerald-600 dark:text-emerald-400">Resource</span>
+          {artifact.resource_category && (
+            <span className="text-[9px] text-muted-foreground">· {artifact.resource_category}</span>
+          )}
+        </div>
+
+        <h3 className="font-heading text-sm font-semibold text-foreground leading-tight mb-1.5 line-clamp-2">
+          {artifact.title}
+        </h3>
+
+        {artifact.description && (
+          <p className="text-[11px] text-muted-foreground leading-relaxed mb-2 line-clamp-3">
+            {artifact.description}
+          </p>
+        )}
+
+        {artifact.resource_note && (
+          <p className="text-[11px] text-muted-foreground/80 mb-2 italic line-clamp-2">
+            {artifact.resource_note}
+          </p>
+        )}
+
+        {artifact.resource_when_to_use && (
+          <p className="text-[10px] text-muted-foreground/70 mb-2">
+            <span className="font-medium">When to use:</span> {artifact.resource_when_to_use}
+          </p>
+        )}
+
+        {/* Tags */}
+        {artifact.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {artifact.tags.map((tag) => (
+              <span key={tag} className="px-2 py-0.5 rounded-full bg-muted/50 text-[10px] text-muted-foreground font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2.5 border-t border-border/30">
+          <div className="flex items-center gap-2">
+            {artifact.creator_avatar ? (
+              <img src={artifact.creator_avatar} alt="" className="w-5 h-5 rounded-full" />
+            ) : (
+              <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
+                {(artifact.creator_name || "B").charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span className="text-[11px] text-muted-foreground">{artifact.creator_name || "Builder"}</span>
+            {!isOwn && (
+              <button onClick={handleFollow} className={`ml-0.5 p-1 rounded transition-colors ${isFollowing ? "text-primary" : "text-muted-foreground/60 hover:text-muted-foreground"}`}>
+                {isFollowing ? <UserCheck size={12} /> : <UserPlus size={12} />}
+              </button>
+            )}
+          </div>
+          {!isOwn && (
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px] gap-1" onClick={handleSave} disabled={saving}>
+                {isSaved ? <BookmarkCheck size={13} className="text-primary" /> : <Bookmark size={13} />}
+                {isSaved ? "Saved" : "Save"}
+              </Button>
+              <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px] gap-1" onClick={() => onCopyToProject(artifact)}>
+                <Copy size={13} />
+                Copy
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
