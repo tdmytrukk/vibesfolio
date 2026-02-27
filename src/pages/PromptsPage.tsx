@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Pencil } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Trash2, Check, Search, X, Sparkles, Pencil, Share2 } from "lucide-react";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import TagChip from "@/components/TagChip";
 import EmptyState from "@/components/EmptyState";
 import AddPromptModal from "@/components/AddPromptModal";
 import DeletePromptDialog from "@/components/DeletePromptDialog";
 import FloatingActionButton from "@/components/FloatingActionButton";
+import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
 
 const PromptsPage = () => {
   const { prompts, loading, addPrompt, updatePrompt, deletePrompt, allTags } = usePrompts();
@@ -224,6 +225,14 @@ const PromptsPage = () => {
                     </button>
 
                     <div className="flex items-center gap-1">
+                      {/* Share */}
+                      <ShareToCommunityToggle
+                        artifactType="prompt"
+                        title={prompt.title}
+                        promptContent={prompt.content}
+                        tags={prompt.tags}
+                      />
+
                       {/* Edit */}
                       <button
                         onClick={() => setEditTarget(prompt)}

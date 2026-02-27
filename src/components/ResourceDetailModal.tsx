@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
 import { Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
+import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
 
 const categories: { value: ResourceCategory; label: string; emoji: string }[] = [
   { value: "inspiration", label: "Inspiration", emoji: "✨" },
@@ -213,6 +214,15 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
                   {copied ? <Check size={14} /> : <Copy size={14} />}
                   {copied ? "Copied!" : "Copy"}
                 </button>
+
+                <ShareToCommunityToggle
+                  artifactType="resource"
+                  title={resource.title}
+                  resourceUrl={resource.url}
+                  resourceCategory={resource.category}
+                  description={resource.description || undefined}
+                  tags={resource.tags}
+                />
 
                 <div className="flex-1" />
 
