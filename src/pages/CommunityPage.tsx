@@ -19,7 +19,7 @@ const ITEMS_PER_PAGE = 12;
 const CommunityPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { artifacts, myArtifacts, loading, publishArtifact } = usePublicArtifacts();
+  const { artifacts, loading, publishArtifact } = usePublicArtifacts();
   const { isSaved, saveArtifact, unsaveArtifact } = useSavedArtifacts();
   const { isFollowing, follow, unfollow, followingIds } = useFollows();
 
@@ -31,13 +31,6 @@ const CommunityPage = () => {
 
   const filtered = useMemo(() => {
     let items = [...artifacts];
-
-    // Merge in own artifacts that aren't already in the public feed
-    const publicIds = new Set(artifacts.map((a) => a.id));
-    const ownToAdd = myArtifacts
-      .filter((a) => a.is_public && !publicIds.has(a.id))
-      .map((a) => ({ ...a, creator_name: "You", creator_avatar: null }));
-    items = [...ownToAdd, ...items];
 
     // Mark own artifacts
     items = items.map((a) =>
@@ -59,7 +52,7 @@ const CommunityPage = () => {
     }
 
     return items;
-  }, [artifacts, myArtifacts, feedTab, search, followingIds, user?.id]);
+  }, [artifacts, feedTab, search, followingIds, user?.id]);
 
   const paginated = filtered.slice(0, page * ITEMS_PER_PAGE);
   const hasMore = paginated.length < filtered.length;
