@@ -1,5 +1,9 @@
-import { Plus } from "lucide-react";
+import { useState } from "react";
+import { Plus, Crown } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import UpgradeModal from "@/components/UpgradeModal";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface FloatingActionButtonProps {
   onClick: () => void;
@@ -7,6 +11,20 @@ interface FloatingActionButtonProps {
 }
 
 const FloatingActionButton = ({ onClick, label = "Add new" }: FloatingActionButtonProps) => {
+  const { subscription } = useAuth();
+  const { startCheckout } = useSubscription();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  const handleClick = () => {
+    if (!subscription.can_write) {
+      setUpgradeOpen(true);
+    } else {
+      onClick();
+    }
+  };
+
+  const showLock = !subscription.can_write;
+
   return (
     <>
       {/* Mobile: above bottom nav */}
@@ -16,7 +34,7 @@ const FloatingActionButton = ({ onClick, label = "Add new" }: FloatingActionButt
         transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.15 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
-        onClick={onClick}
+        onClick={handleClick}
         aria-label={label}
         className="fab-glass fixed z-40 flex h-16 w-16 items-center justify-center rounded-full md:hidden"
         style={{
@@ -24,7 +42,11 @@ const FloatingActionButton = ({ onClick, label = "Add new" }: FloatingActionButt
           right: "20px",
         }}
       >
-        <Plus size={28} strokeWidth={2.5} className="text-foreground/80" />
+        {showLock ? (
+          <Crown size={24} strokeWidth={2.5} className="text-foreground/80" />
+        ) : (
+          <Plus size={28} strokeWidth={2.5} className="text-foreground/80" />
+        )}
       </motion.button>
 
       {/* Desktop: bottom-right corner */}
@@ -34,7 +56,7 @@ const FloatingActionButton = ({ onClick, label = "Add new" }: FloatingActionButt
         transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.15 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
-        onClick={onClick}
+        onClick={handleClick}
         aria-label={label}
         className="fab-glass fixed z-40 hidden md:flex h-16 w-16 items-center justify-center rounded-full"
         style={{
@@ -42,8 +64,19 @@ const FloatingActionButton = ({ onClick, label = "Add new" }: FloatingActionButt
           right: "32px",
         }}
       >
-        <Plus size={28} strokeWidth={2.5} className="text-foreground/80" />
+        {showLock ? (
+          <Crown size={24} strokeWidth={2.5} className="text-foreground/80" />
+        ) : (
+          <Plus size={28} strokeWidth={2.5} className="text-foreground/80" />
+        )}
       </motion.button>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        onCheckout={startCheckout}
+        trialDaysLeft={subscription.trial_days_left}
+      />
     </>
   );
 };

@@ -200,6 +200,7 @@ export type Database = {
           email: string | null
           id: string
           is_public: boolean
+          trial_started_at: string
           user_id: string
         }
         Insert: {
@@ -209,6 +210,7 @@ export type Database = {
           email?: string | null
           id?: string
           is_public?: boolean
+          trial_started_at?: string
           user_id: string
         }
         Update: {
@@ -218,6 +220,7 @@ export type Database = {
           email?: string | null
           id?: string
           is_public?: boolean
+          trial_started_at?: string
           user_id?: string
         }
         Relationships: []

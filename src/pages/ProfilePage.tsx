@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -20,12 +21,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown } from "lucide-react";
+import UpgradeModal from "@/components/UpgradeModal";
+import { useSubscription, PLANS } from "@/hooks/useSubscription";
 
 const ProfilePage = () => {
-  const { user, signOut, refreshProfile } = useAuth();
+  const { user, signOut, refreshProfile, subscription } = useAuth();
   const { toast } = useToast();
   const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
+  const { startCheckout, openCustomerPortal, checkSubscription } = useSubscription();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Profile state
@@ -45,8 +50,21 @@ const ProfilePage = () => {
 
   // Google connect state
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const isGoogleLinked = user?.app_metadata?.providers?.includes("google") ?? false;
+
+  // Handle checkout success/cancel redirect
+  useEffect(() => {
+    const checkout = searchParams.get("checkout");
+    if (checkout === "success") {
+      toast({ title: "Subscription activated! 🎉", description: "Welcome to Pro." });
+      checkSubscription();
+      setSearchParams({}, { replace: true });
+    } else if (checkout === "canceled") {
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams]);
 
   // Load profile
   useEffect(() => {
@@ -425,13 +443,57 @@ const ProfilePage = () => {
             <CreditCard size={16} />
             <h2 className="font-heading text-base">Subscription</h2>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">Free Plan</p>
-              <p className="text-xs text-muted-foreground">Management coming soon</p>
+          {subscription.subscribed ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                    <Crown size={14} className="text-accent-foreground" />
+                    Pro {subscription.plan_interval === "year" ? "Yearly" : "Monthly"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Renews {subscription.subscription_end ? new Date(subscription.subscription_end).toLocaleDateString() : "—"}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={async () => {
+                    try {
+                      await openCustomerPortal();
+                    } catch (err: any) {
+                      toast({ title: "Error", description: err.message, variant: "destructive" });
+                    }
+                  }}
+                >
+                  Manage
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" size="sm" disabled className="h-8 text-xs">Manage</Button>
-          </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {subscription.trial_active ? "Free Trial" : "Trial Ended"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {subscription.trial_active
+                      ? `${subscription.trial_days_left} day${subscription.trial_days_left !== 1 ? "s" : ""} left`
+                      : "Upgrade to keep creating"}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={() => setUpgradeOpen(true)}
+                >
+                  Upgrade
+                </Button>
+              </div>
+            </div>
+          )}
         </motion.section>
 
         {/* Danger Zone */}
@@ -475,6 +537,13 @@ const ProfilePage = () => {
           </AlertDialog>
         </motion.section>
       </div>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        onCheckout={startCheckout}
+        trialDaysLeft={subscription.trial_days_left}
+      />
     </div>
   );
 };
