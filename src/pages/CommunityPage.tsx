@@ -87,7 +87,7 @@ const CommunityPage = () => {
 
       {/* Feed */}
       {loading ? (
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+        <div className="columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className={`rounded-xl bg-muted/30 animate-pulse break-inside-avoid ${i % 3 === 0 ? 'h-32' : 'h-48'}`} />
           ))}
@@ -106,7 +106,7 @@ const CommunityPage = () => {
         />
       ) : (
         <>
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+          <div className="columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
             {paginated.map((artifact) => (
               <div key={artifact.id} className="break-inside-avoid">
                 <ArtifactCard

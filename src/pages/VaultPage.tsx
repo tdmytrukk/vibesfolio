@@ -109,7 +109,7 @@ const VaultPage = () => {
 
       {/* Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="card-glass p-0 overflow-hidden animate-pulse">
               <div className="bg-muted" style={{ height: `${140 + (i % 3) * 40}px` }} />
@@ -137,7 +137,7 @@ const VaultPage = () => {
           />
         )
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           <AnimatePresence initial={false}>
             {filtered.map((resource, i) => {
               const hasCover = resource.cover_image_url && !imgErrors.has(resource.id);
