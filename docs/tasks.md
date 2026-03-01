@@ -41,12 +41,6 @@
 | 5C.3 | Change default landing for new users | ✅ | WelcomeTour overlays on /ideas for new users |
 | 5C.4 | Seed sample data option | ✅ | "Load example data" inserts 3 ideas, 2 prompts, 2 resources |
 
-## Phase 5D — Analytics & Insights
-
-| # | Task | Status | Notes |
-|---|------|--------|-------|
-| 5D.1 | Personal stats dashboard | ⬜ | Ideas captured, resources saved, prompts created |
-| 5D.2 | Streak / consistency tracking | ⬜ | "You've added content 5 days in a row" |
 
 ## Multi-Section Prompts (from plan.md)
 
@@ -104,7 +98,7 @@
 
 **Start with 5A (Critical Polish)** — fixes real bugs and wires up existing-but-unused features. High impact, low effort.
 
-Then: **5B (Search)** → **5C (Onboarding)** → **5E (AI)** → **5D (Analytics)** → **Phase 6**
+Then: **5B (Search)** → **5C (Onboarding)** → **5E (AI)** → **Phase 6**
 
 ---
 
