@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Initial project setup
+- **2026-03-01**: Phase 5A complete — added success toasts for all CRUD ops (ideas, prompts, resources) via sonner (`src/pages/InboxPage.tsx`, `src/pages/PromptsPage.tsx`, `src/pages/VaultPage.tsx`); added `updated_at` triggers for `project_tasks` and `project_missions` tables (DB migration); confirmed generate-tags and fetch-url-metadata already wired
 - **2026-03-01**: Created `docs/rules.md` — project rules & decisions file (`docs/rules.md`)
 - **2026-03-01**: Built Documentation Center at `/docs` with sidebar layout and 6 pages: Overview, Architecture, Components, Data Flow, API, Dependencies (`src/components/DocsLayout.tsx`, `src/pages/docs/*.tsx`, `src/App.tsx`)
 - **2026-02-27**: Public landing page at `/` with hero section, feature highlights, and sign-up CTA (`src/pages/LandingPage.tsx`, `src/App.tsx`)
