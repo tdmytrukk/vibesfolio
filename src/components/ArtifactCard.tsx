@@ -26,21 +26,21 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
   return (
     <button
       onClick={() => onClick(artifact)}
-      className="group w-full text-left rounded-2xl bg-card/80 backdrop-blur-sm border border-border/20 overflow-hidden transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group w-full text-left rounded-2xl bg-card/80 backdrop-blur-sm border border-border/20 overflow-hidden transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex flex-col"
       aria-label={`View ${artifact.title}`}
     >
-      {/* Hero Image */}
-      <div className="relative w-full h-[180px] overflow-hidden bg-muted/30">
+      {/* Hero Image — fixed 16:9, flush to top, no padding */}
+      <div className="relative w-full aspect-video overflow-hidden bg-muted/30 shrink-0">
         {hasImage ? (
           <img
             src={artifact.cover_image_url!}
             alt={artifact.title}
-            className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
             loading="lazy"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-muted/40 via-muted/20 to-muted/40">
+          <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-muted/40 via-muted/20 to-muted/40">
             {isPrompt ? (
               <Sparkles size={28} className="text-primary/30" />
             ) : (
@@ -62,22 +62,20 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-2">
-        {/* Title */}
+      {/* Content — padding only here */}
+      <div className="p-4 space-y-2 flex-1 flex flex-col">
         <h3 className="text-[15px] sm:text-base font-semibold text-foreground leading-snug line-clamp-2">
           {artifact.title}
         </h3>
 
-        {/* Tagline / Description */}
         {artifact.description && (
           <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">
             {artifact.description}
           </p>
         )}
 
-        {/* Meta Row */}
-        <div className="flex items-center justify-between pt-2">
+        {/* Meta Row — pushed to bottom */}
+        <div className="flex items-center justify-between pt-2 mt-auto">
           <div className="flex items-center gap-2 min-w-0">
             {artifact.creator_avatar ? (
               <img
