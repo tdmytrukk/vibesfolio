@@ -212,7 +212,12 @@ const PromptsPage = () => {
                     </div>
                   )}
 
-                  {/* Summary or content preview */}
+                  {/* Section count + summary/content preview */}
+                  {prompt.sections.length > 1 && (
+                    <p className="text-[10px] font-medium text-primary/70 mb-0.5">
+                      {prompt.sections.length} sections
+                    </p>
+                  )}
                   <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1">
                     {prompt.summary || prompt.content}
                   </p>
@@ -266,7 +271,12 @@ const PromptsPage = () => {
           }
         }}
         existingTags={allTags}
-        editingPrompt={editTarget}
+        editingPrompt={editTarget ? {
+          title: editTarget.title,
+          content: editTarget.content,
+          tags: editTarget.tags,
+          sections: editTarget.sections?.map(s => ({ name: s.name, content: s.content, position: s.position })),
+        } : null}
       />
 
       {/* Delete confirmation */}

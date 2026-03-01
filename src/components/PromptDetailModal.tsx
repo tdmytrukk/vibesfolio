@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Copy, Check, Trash2, Pencil, Save } from "lucide-react";
+import { X, Copy, Check, Trash2, Pencil } from "lucide-react";
 import { Prompt } from "@/hooks/usePrompts";
 import TagChip from "@/components/TagChip";
 import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
@@ -16,14 +16,24 @@ interface Props {
 }
 
 const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId, onShared, onUnshared }: Props) => {
-  const [copied, setCopied] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
-  const handleCopy = useCallback(async () => {
+  const handleCopyAll = useCallback(async () => {
     if (!prompt) return;
-    await navigator.clipboard.writeText(prompt.content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    const text = prompt.sections.length > 0
+      ? prompt.sections.map((s) => `## ${s.name}\n${s.content}`).join("\n\n")
+      : prompt.content;
+    await navigator.clipboard.writeText(text);
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1500);
   }, [prompt]);
+
+  const handleCopySection = useCallback(async (sectionId: string, content: string) => {
+    await navigator.clipboard.writeText(content);
+    setCopiedSection(sectionId);
+    setTimeout(() => setCopiedSection(null), 1500);
+  }, []);
 
   const handleEdit = () => {
     if (!prompt) return;
@@ -36,6 +46,8 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
     onDelete(prompt);
     onClose();
   };
+
+  const hasSections = prompt && prompt.sections.length > 0;
 
   return (
     <AnimatePresence>
@@ -87,28 +99,68 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
                 </p>
               )}
 
-              {/* Full content */}
-              <div className="rounded-lg bg-secondary/40 p-4 mb-4">
-                <label className="block text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-2">
-                  Full prompt
-                </label>
-                <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                  {prompt.content}
-                </p>
-              </div>
+              {/* Sections */}
+              {hasSections ? (
+                <div className="space-y-3 mb-4">
+                  {prompt.sections
+                    .sort((a, b) => a.position - b.position)
+                    .map((section) => {
+                      const isCopied = copiedSection === section.id;
+                      return (
+                        <div
+                          key={section.id}
+                          className="rounded-lg bg-secondary/40 p-4"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/15 text-primary text-[10px] font-bold">
+                                {section.position}
+                              </span>
+                              <span className="text-sm font-semibold text-foreground">{section.name}</span>
+                            </div>
+                            <button
+                              onClick={() => handleCopySection(section.id, section.content)}
+                              className={`flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-medium transition-all duration-200 ${
+                                isCopied
+                                  ? "bg-status-shipped text-foreground"
+                                  : "bg-secondary text-secondary-foreground hover:bg-muted"
+                              }`}
+                              aria-label={`Copy section ${section.position}`}
+                            >
+                              {isCopied ? <Check size={11} /> : <Copy size={11} />}
+                              {isCopied ? "Copied!" : "Copy"}
+                            </button>
+                          </div>
+                          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                            {section.content}
+                          </p>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                <div className="rounded-lg bg-secondary/40 p-4 mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-2">
+                    Full prompt
+                  </label>
+                  <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                    {prompt.content}
+                  </p>
+                </div>
+              )}
 
               {/* Actions */}
               <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/30">
                 <button
-                  onClick={handleCopy}
+                  onClick={handleCopyAll}
                   className={`flex items-center gap-1.5 rounded-pill px-4 py-2.5 text-xs font-medium transition-all duration-200 ${
-                    copied
+                    copiedAll
                       ? "bg-status-shipped text-foreground"
                       : "bg-primary text-primary-foreground hover:opacity-90"
                   }`}
                 >
-                  {copied ? <Check size={14} /> : <Copy size={14} />}
-                  {copied ? "Copied!" : "Copy"}
+                  {copiedAll ? <Check size={14} /> : <Copy size={14} />}
+                  {copiedAll ? "Copied!" : hasSections ? "Copy All" : "Copy"}
                 </button>
 
                 <ShareToCommunityToggle

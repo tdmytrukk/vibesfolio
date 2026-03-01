@@ -307,6 +307,41 @@ export type Database = {
           },
         ]
       }
+      prompt_sections: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          name: string
+          position: number
+          prompt_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          prompt_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          prompt_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_sections_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prompts: {
         Row: {
           content: string
