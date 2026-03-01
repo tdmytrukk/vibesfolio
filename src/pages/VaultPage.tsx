@@ -35,6 +35,14 @@ const categoryIcons: Record<ResourceCategory, React.ReactNode> = {
   other: <Pin size={28} className="text-foreground/30" />,
 };
 
+const categoryEmoji: Record<ResourceCategory, string> = {
+  inspiration: "✨",
+  templates: "📐",
+  tools: "🔧",
+  learning: "📖",
+  other: "📌",
+};
+
 const VaultPage = () => {
   const { resources, loading, addResource, updateResource, deleteResource, fetchUrlMetadata } = useResources();
   const { myArtifacts } = usePublicArtifacts();
@@ -202,10 +210,9 @@ const VaultPage = () => {
                       )}
                       <span className="text-[11px] text-muted-foreground truncate">{resource.domain}</span>
                     </div>
-                    <TagChip
-                      label={resource.category}
-                      colorIndex={categoryConfig.findIndex((c) => c.value === resource.category)}
-                    />
+                    <span className="text-[11px] text-muted-foreground font-medium capitalize">
+                      {categoryEmoji[resource.category]} {resource.category}
+                    </span>
                     {resource.tags && resource.tags.length > 0 && (
                       <div className="flex gap-1 flex-wrap mt-2">
                         {resource.tags.map((tag, ti) => (
