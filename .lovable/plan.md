@@ -1,55 +1,49 @@
 
 
-## Problem
+# Community Page — Mobile-First Tightening
 
-The category label (e.g. "inspiration") and the user-defined tags (e.g. "React", "Design") both use the same `TagChip` component with identical styling. The only difference is a slight size tweak via className overrides. This makes it hard to scan a card and distinguish metadata type from topic tags.
+## Problems Identified
 
-## Proposed Redesign
+1. **Wasted space at top**: The "Builders" button row takes a full line, then search + tabs stack vertically with `space-y-6` gaps — too much vertical breathing room on mobile
+2. **Cards too elongated**: The fallback/image area (`py-10`) is very tall, making cards feel stretched. The cover image `maxHeight: 220px` is also generous for small screens
+3. **Card info is messy**: Domain line, type badge line, title, description, notes, "when to use", tags, footer — too many separate rows of tiny text, creating visual noise
+4. **Page-level spacing**: `space-y-6` between sections is desktop-generous; mobile needs tighter
 
-**Category** — rendered as a subtle, text-only label with an emoji or icon prefix. No background pill. Uppercase, small, muted — like a metadata label (similar to how "Resource" type badge already appears in ArtifactCard).
+## Plan
 
-**Tags** — keep the existing colored `TagChip` pills. They stay as-is.
+### 1. `CommunityPage.tsx` — Tighten mobile layout (desktop unchanged)
 
-This creates a clear visual hierarchy:
-```text
-┌─────────────────────────┐
-│  [cover image]          │
-│                         │
-│  Resource Title         │
-│  🔗 favicon  domain.com │
-│  ✨ Inspiration         │  ← category: text-only, small, with emoji
-│  [React] [Design]       │  ← tags: colored pills
-│  Description text...    │
-└─────────────────────────┘
-```
+- Move "Builders" button inline with the search/tabs row on mobile instead of its own row — use `flex` to place it next to tabs
+- Reduce `space-y-6` to `space-y-3 md:space-y-6` on the outer container
+- Reduce masonry gap on mobile: `gap-2 sm:gap-4`
+- Reduce space between cards: `space-y-2 sm:space-y-4`
 
-## Changes
+### 2. `ArtifactCard.tsx` — Compact resource cards on mobile
 
-### 1. `src/pages/VaultPage.tsx`
-Replace the `<TagChip>` used for category (lines 205-208) with an inline text label that includes the category emoji:
+**Resource card image area:**
+- Reduce fallback (no-image) padding from `py-10` to `py-6` on mobile via responsive classes (`py-6 sm:py-10`)
+- Cap cover image max-height lower on mobile (150px vs 220px) — use a CSS class approach or responsive inline style
+- Make favicon in fallback smaller on mobile (`w-8 h-8` vs `w-10 h-10`)
 
-```tsx
-<span className="text-[11px] text-muted-foreground font-medium capitalize">
-  {categoryEmoji} {resource.category}
-</span>
-```
+**Resource card info area:**
+- Reduce padding from `p-4` to `p-3 sm:p-4`
+- Combine the domain line and type badge line into a single row on mobile to save vertical space (e.g., `favicon + domain · RESOURCE · 🔧 Tools` all on one line)
+- Hide `resource_note` and `resource_when_to_use` on mobile (these secondary details make cards too long) — use `hidden sm:block`
+- Limit tags to 2 on mobile (currently unlimited for resources, 3 for prompts)
+- Tighten footer: reduce avatar size, reduce button padding
 
-Add a small emoji map at the top of the file:
-```ts
-const categoryEmoji: Record<ResourceCategory, string> = {
-  inspiration: "✨",
-  templates: "📐",
-  tools: "🔧",
-  learning: "📖",
-  other: "📌",
-};
-```
+**Prompt card:**
+- Already compact, minor tweaks: reduce `p-4` to `p-3 sm:p-4`
 
-### 2. No changes to `TagChip` component
-The `TagChip` stays as-is for regular tags — it's the right treatment for those.
+### 3. No desktop changes
 
-## Result
-- Category reads as a quiet metadata label, not a tag
-- Tags remain visually distinct colored pills
-- Clear hierarchy without adding visual weight
+All modifications use responsive prefixes (`sm:`, `md:`) so desktop layout remains identical. The `sm:` breakpoint (640px) gates the mobile-specific compacting.
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `src/pages/CommunityPage.tsx` | Tighter spacing, inline Builders button on mobile |
+| `src/components/ArtifactCard.tsx` | Compact card layout for mobile screens |
+| `docs/changelog.md` | Log the change |
 
