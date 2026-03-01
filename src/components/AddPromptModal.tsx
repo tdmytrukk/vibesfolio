@@ -154,7 +154,7 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags, editingPrompt }: 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-x-4 bottom-4 md:bottom-auto md:top-[6%] z-50 mx-auto max-w-lg card-glass flex flex-col max-h-[calc(100dvh-2rem)]"
+            className="fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] md:bottom-auto md:top-[6%] z-50 mx-auto max-w-lg card-glass flex flex-col max-h-[calc(100dvh-6rem)] md:max-h-[calc(100dvh-2rem)]"
             role="dialog"
             aria-label={isEdit ? "Edit prompt" : "Add new prompt"}
           >
