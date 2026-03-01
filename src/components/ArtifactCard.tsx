@@ -5,6 +5,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import type { PublicArtifact } from "@/hooks/usePublicArtifacts";
 
+const resourceCategoryEmoji: Record<string, string> = {
+  inspiration: "✨",
+  templates: "📐",
+  tools: "🔧",
+  learning: "📖",
+  other: "📌",
+};
+
 interface ArtifactCardProps {
   artifact: PublicArtifact & { is_following?: boolean };
   isSaved: boolean;
@@ -206,7 +214,9 @@ const ArtifactCard = ({
         <div className="flex items-center gap-1.5 mb-1.5">
           <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">Resource</span>
           {artifact.resource_category && (
-            <span className="text-[9px] text-muted-foreground">· {artifact.resource_category}</span>
+            <span className="text-[11px] text-muted-foreground font-medium capitalize">
+              · {resourceCategoryEmoji[artifact.resource_category] || "📌"} {artifact.resource_category}
+            </span>
           )}
         </div>
 
