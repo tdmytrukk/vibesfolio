@@ -17,7 +17,7 @@ interface TagChipProps {
 const TagChip = ({ label, colorIndex = 0, className }: TagChipProps) => (
   <span
     className={cn(
-      "inline-flex items-center rounded-pill px-3 py-1 text-xs font-medium text-foreground/80",
+      "inline-flex items-center rounded-pill px-3 py-1 text-xs font-medium text-foreground/75 tracking-wide transition-colors duration-150",
       chipColors[colorIndex % chipColors.length],
       className
     )}

@@ -80,7 +80,7 @@ const LandingPage = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-2"
+              className="rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all flex items-center gap-2 shadow-sm"
             >
               Get Started
               <ArrowRight size={16} />
@@ -106,7 +106,7 @@ const LandingPage = () => {
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
               variants={fadeUp}
-              className="card-glass p-6 flex flex-col gap-3"
+              className="card-glass p-6 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                 <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
@@ -125,7 +125,7 @@ const LandingPage = () => {
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
               variants={fadeUp}
-              className="card-glass p-6 flex flex-col gap-3 w-full max-w-sm"
+              className="card-glass p-6 flex flex-col gap-3 w-full max-w-sm hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                 <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
@@ -154,7 +154,7 @@ const LandingPage = () => {
           </p>
           <Link
             to="/auth"
-            className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all shadow-sm"
           >
             Start Your Free Space
             <ArrowRight size={16} />

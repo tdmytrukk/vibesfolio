@@ -157,8 +157,8 @@ const CockpitPage = () => {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex-1 rounded-md px-3 py-2 text-xs font-medium transition-all ${
-              activeTab === tab.key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+            className={`flex-1 rounded-md px-3 py-2 text-xs font-medium transition-all duration-200 ${
+              activeTab === tab.key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-background/50"
             }`}
           >
             {tab.label}
