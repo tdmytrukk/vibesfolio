@@ -1,29 +1,39 @@
 
 
-## Create XML Sitemap at `/sitemap.xml`
+## Add Dark Mode with Theme Selection
 
 ### Context
-This is an SPA (Vite + React Router). The sitemap needs to be a static file in `public/` so it's served at the root. There are no blog posts in the app, so we'll cover the public routes only.
-
-### Public routes (from App.tsx)
-- `/` — Landing page (priority 1.0)
-- `/auth` — Sign in/up (priority 0.8)
-- `/docs` — Docs home (priority 0.8)
-- `/docs/architecture` — (priority 0.6)
-- `/docs/components` — (priority 0.6)
-- `/docs/data-flow` — (priority 0.6)
-- `/docs/api` — (priority 0.6)
-- `/docs/dependencies` — (priority 0.6)
-
-All other routes (`/ideas`, `/prompts`, `/vault`, etc.) are behind `ProtectedRoute` and should not be in the sitemap.
+The app already has `next-themes` installed, `.dark` CSS variables fully defined in `index.css`, and dark-mode-aware styles on `.card-glass`, `.fab-glass`, and the AppShell nav. The missing piece is wiring up `next-themes` and giving users a way to pick their theme.
 
 ### Changes
 
-1. **Create `public/sitemap.xml`** — static XML sitemap with all public routes, `lastmod` set to today (2026-03-01), priorities as described above.
+**1. Wire up ThemeProvider (`src/App.tsx`)**
+- Wrap the app with `next-themes` `ThemeProvider` (attribute `class`, default `light`, storageKey `vibesfolio-theme`).
 
-2. **Update `public/robots.txt`** — add `Sitemap: https://vibesfolio.lovable.app/sitemap.xml` line.
+**2. Add theme selector to WelcomeTour (`src/components/WelcomeTour.tsx`)**
+- Before the final "Load example data / Start empty" step, add a Step 2 (shift existing step 2 to step 3) that lets users pick Light or Dark with small preview cards. Clicking one applies `setTheme()` immediately so they see it live. Total steps: 3.
 
-3. **Update docs** — changelog entry.
+**3. Add theme toggle to Profile page (`src/pages/ProfilePage.tsx`)**
+- New card section "Appearance" with Sun/Moon icons and a toggle/switch to flip between light and dark so users can change it anytime.
 
-No code changes, no database changes. Two static files only.
+**4. Fix dark-mode gradient background (`src/index.css`)**
+- The `--gradient-bg` variable is only defined for light mode. Add a dark override so `.bg-gradient-app` uses a dark gradient instead of the lavender-peach one.
+- Reduce or disable the paper texture overlay in dark mode (`.dark .bg-noise::before { opacity: 0.08; }`) so it doesn't look washed out.
+
+**5. Dark-mode-aware AppShell glass nav (`src/components/AppShell.tsx`)**
+- The inline `glassStyle` object and mobile nav use hardcoded light `hsla(0,0%,100%,...)` values. Add a `useTheme()` hook to swap in dark glass values, or convert to CSS classes that respect `.dark`.
+
+**6. Dark-mode auth page (`src/pages/AuthPage.tsx`)**
+- Already uses `bg-gradient-app bg-noise` and `card-glass`, so it will inherit correctly once the gradient and texture are fixed. No major changes needed.
+
+**7. Update docs**
+- `docs/changelog.md` — log the dark mode addition.
+- `docs/rules.md` — note that `next-themes` manages theme via `class` strategy, stored in `vibesfolio-theme` localStorage key.
+
+### Technical Details
+
+- **ThemeProvider config**: `attribute="class"`, `defaultTheme="light"`, `storageKey="vibesfolio-theme"`, `enableSystem={false}` (explicit user choice only).
+- **Dark gradient**: `--gradient-bg` in `.dark` set to something like `linear-gradient(160deg, hsl(240 10% 8%) 0%, hsl(260 12% 10%) 50%, hsl(220 10% 9%) 100%)`.
+- **AppShell glass**: Replace inline `style={glassStyle}` with a CSS utility class (e.g., `.nav-glass`) that has both light and `.dark .nav-glass` variants. This is cleaner than runtime theme checks.
+- No database changes. Theme preference is stored client-side via `next-themes` localStorage.
 
