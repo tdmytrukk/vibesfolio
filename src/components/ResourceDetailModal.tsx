@@ -13,18 +13,18 @@ const categories: { value: ResourceCategory; label: string; emoji: string }[] = 
   { value: "other", label: "Other", emoji: "📌" },
 ];
 
-const categoryColorIndex: Record<ResourceCategory, number> = {
-  inspiration: 0,
-  templates: 1,
-  tools: 2,
-  learning: 3,
-  other: 4,
+const categoryEmoji: Record<ResourceCategory, string> = {
+  inspiration: "✨",
+  templates: "📐",
+  tools: "🔧",
+  learning: "📖",
+  other: "📌",
 };
 
 interface Props {
   resource: Resource | null;
   onClose: () => void;
-  onUpdate: (id: string, updates: { title?: string; category?: ResourceCategory; description?: string | null }) => Promise<any>;
+  onUpdate: (id: string, updates: { title?: string; category?: ResourceCategory; description?: string | null; tags?: string[] }) => Promise<any>;
   onDelete: (id: string) => void;
 }
 
@@ -33,6 +33,8 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ResourceCategory>("other");
   const [description, setDescription] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -41,6 +43,8 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
       setTitle(resource.title);
       setCategory(resource.category);
       setDescription(resource.description || "");
+      setTags(resource.tags || []);
+      setTagInput("");
       setEditing(false);
     }
   }, [resource]);
@@ -59,6 +63,7 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
       title: title.trim(),
       category,
       description: description.trim() || null,
+      tags,
     });
     setSaving(false);
     setEditing(false);
@@ -68,6 +73,23 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
     if (!resource) return;
     onDelete(resource.id);
     onClose();
+  };
+
+  const addTag = (tag: string) => {
+    const cleaned = tag.trim().toLowerCase();
+    if (cleaned && !tags.includes(cleaned)) {
+      setTags((prev) => [...prev, cleaned]);
+    }
+    setTagInput("");
+  };
+
+  const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && tagInput.trim()) {
+      e.preventDefault();
+      addTag(tagInput);
+    }
   };
 
   return (
@@ -153,11 +175,45 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
                   ))}
                 </div>
               ) : (
-                <div className="mb-3 flex gap-1.5 flex-wrap">
-                  <TagChip label={resource.category} colorIndex={categoryColorIndex[resource.category]} />
-                  {resource.tags?.map((tag, i) => (
-                    <TagChip key={i} label={tag} colorIndex={i + 1} />
-                  ))}
+                <div className="mb-3">
+                  <span className="text-[11px] text-muted-foreground font-medium capitalize">
+                    {categoryEmoji[resource.category]} {resource.category}
+                  </span>
+                  {resource.tags && resource.tags.length > 0 && (
+                    <div className="flex gap-1.5 flex-wrap mt-2">
+                      {resource.tags.map((tag, i) => (
+                        <TagChip key={i} label={tag} colorIndex={i} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tags (edit mode) */}
+              {editing && (
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1.5">Tags</label>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 rounded-pill bg-chip-lavender px-3 py-1 text-xs font-medium text-foreground/80"
+                      >
+                        {tag}
+                        <button onClick={() => removeTag(tag)} className="ml-0.5 hover:text-foreground" aria-label={`Remove tag ${tag}`}>
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Type a tag and press Enter…"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20"
+                  />
                 </div>
               )}
 

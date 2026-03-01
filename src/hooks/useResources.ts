@@ -151,7 +151,7 @@ export function useResources() {
 
   const updateResource = async (
     id: string,
-    updates: { title?: string; url?: string; category?: ResourceCategory; description?: string | null }
+    updates: { title?: string; url?: string; category?: ResourceCategory; description?: string | null; tags?: string[] }
   ) => {
     const backup = resources;
     setResources((prev) =>
