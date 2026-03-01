@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Initial project setup
+- **2026-03-01**: Mobile-first Community page tightening — inlined Builders button with tabs, reduced page/card spacing via responsive prefixes, compacted resource card image areas (shorter fallback, lower max-height), combined domain+type badge into single meta line, hid `resource_note`/`resource_when_to_use` on mobile, limited tags to 2 on small screens, all desktop-safe via `sm:`/`md:` breakpoints (`src/pages/CommunityPage.tsx`, `src/components/ArtifactCard.tsx`)
 - **2026-03-01**: Multi-section prompts — new `prompt_sections` table, AddPromptModal dynamic section UI (single textarea → numbered list on 2+ sections), PromptDetailModal per-section copy buttons, drag-and-drop reordering via @dnd-kit, data migration for existing prompts (`src/hooks/usePrompts.ts`, `src/components/AddPromptModal.tsx`, `src/components/PromptDetailModal.tsx`, `src/pages/PromptsPage.tsx`, `src/components/CopyToProjectModal.tsx`)
 - **2026-03-01**: Phase 5C complete — 2-step onboarding welcome tour for new users with seed data option (`src/hooks/useOnboarding.ts`, `src/components/WelcomeTour.tsx`, `src/pages/InboxPage.tsx`)
 - **2026-03-01**: Phase 5A complete — added success toasts for all CRUD ops (ideas, prompts, resources) via sonner (`src/pages/InboxPage.tsx`, `src/pages/PromptsPage.tsx`, `src/pages/VaultPage.tsx`); added `updated_at` triggers for `project_tasks` and `project_missions` tables (DB migration); confirmed generate-tags and fetch-url-metadata already wired
