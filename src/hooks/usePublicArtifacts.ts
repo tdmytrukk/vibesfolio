@@ -29,6 +29,7 @@ export interface PublicArtifact {
 
 export function usePublicArtifacts() {
   const [artifacts, setArtifacts] = useState<PublicArtifact[]>([]);
+  const [allArtifacts, setAllArtifacts] = useState<PublicArtifact[]>([]);
   const [myArtifacts, setMyArtifacts] = useState<PublicArtifact[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -77,18 +78,24 @@ export function usePublicArtifacts() {
 
     const followingIds = new Set((followData || []).map((f: any) => f.following_id));
 
-    const enriched: PublicArtifact[] = publicData.map((a: any) => {
-      const profile = profileMap.get(a.user_id);
-      return {
-        ...a,
-        creator_name: profile?.display_name || "Builder",
-        creator_avatar: profile?.avatar_url || null,
-        is_saved: savedIds.has(a.id),
-        is_following: followingIds.has(a.user_id),
-      };
-    });
+    // Filter feed to only show artifacts from followed users + own
+    const allowedUserIds = new Set([user.id, ...followingIds]);
+    const visibleData = publicData.filter((a: any) => allowedUserIds.has(a.user_id));
 
-    setArtifacts(enriched);
+    const enrich = (items: any[]): PublicArtifact[] =>
+      items.map((a: any) => {
+        const profile = profileMap.get(a.user_id);
+        return {
+          ...a,
+          creator_name: profile?.display_name || "Builder",
+          creator_avatar: profile?.avatar_url || null,
+          is_saved: savedIds.has(a.id),
+          is_following: followingIds.has(a.user_id),
+        };
+      });
+
+    setAllArtifacts(enrich(publicData));
+    setArtifacts(enrich(visibleData));
     setLoading(false);
   }, [user]);
 
@@ -194,6 +201,7 @@ export function usePublicArtifacts() {
 
   return {
     artifacts,
+    allArtifacts,
     myArtifacts,
     loading,
     publishArtifact,

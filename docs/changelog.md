@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - **2026-02-27**: SEO meta tags — title, description, OG image, Twitter card, canonical URL (`index.html`, `public/images/og-image.png`)
 - **2026-03-01**: XML sitemap at `/sitemap.xml` with all public routes; updated `robots.txt` with Sitemap directive (`public/sitemap.xml`, `public/robots.txt`)
 - **2026-03-01**: Dark mode support — wired `next-themes` ThemeProvider, added theme picker to onboarding WelcomeTour (3 steps now), added Appearance toggle to ProfilePage, dark gradient + texture overlay, `.nav-glass`/`.mobile-nav-glass` CSS classes replacing inline styles, `color-scheme: dark` for native form/scrollbar styling (`src/App.tsx`, `src/index.css`, `src/components/WelcomeTour.tsx`, `src/pages/ProfilePage.tsx`, `src/components/AppShell.tsx`, `index.html`)
+- **2026-03-01**: Community feed privacy — feed now only shows artifacts from followed users + own; added "Discover" tab for browsing all public artifacts; renamed "Recently Added" → "Feed", "Following" → "Discover" (`src/hooks/usePublicArtifacts.ts`, `src/pages/CommunityPage.tsx`)
 
 ### Removed
 
