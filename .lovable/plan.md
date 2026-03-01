@@ -1,49 +1,44 @@
 
 
-# Community Page — Mobile-First Tightening
+## Problem
 
-## Problems Identified
+The community feed currently shows **all** public artifacts to **every** logged-in user. The desired behavior is that users should only see artifacts from people they follow (plus their own).
 
-1. **Wasted space at top**: The "Builders" button row takes a full line, then search + tabs stack vertically with `space-y-6` gaps — too much vertical breathing room on mobile
-2. **Cards too elongated**: The fallback/image area (`py-10`) is very tall, making cards feel stretched. The cover image `maxHeight: 220px` is also generous for small screens
-3. **Card info is messy**: Domain line, type badge line, title, description, notes, "when to use", tags, footer — too many separate rows of tiny text, creating visual noise
-4. **Page-level spacing**: `space-y-6` between sections is desktop-generous; mobile needs tighter
+## Current Flow
+
+`usePublicArtifacts.ts` → `fetchFeed()` queries `public_artifacts` with only `is_public = true` — no follow filtering. The follow data is fetched but only used for UI decoration, not for filtering the feed results.
 
 ## Plan
 
-### 1. `CommunityPage.tsx` — Tighten mobile layout (desktop unchanged)
+### 1. Filter the feed in `usePublicArtifacts.ts`
 
-- Move "Builders" button inline with the search/tabs row on mobile instead of its own row — use `flex` to place it next to tabs
-- Reduce `space-y-6` to `space-y-3 md:space-y-6` on the outer container
-- Reduce masonry gap on mobile: `gap-2 sm:gap-4`
-- Reduce space between cards: `space-y-2 sm:space-y-4`
+In `fetchFeed()`, after fetching both public artifacts and the user's follows, filter the results to only include:
+- Artifacts where `user_id` is the current user (your own shared items)
+- Artifacts where `user_id` is in the set of followed user IDs
 
-### 2. `ArtifactCard.tsx` — Compact resource cards on mobile
+This is a client-side filter applied before setting state. No database or RLS changes needed — the RLS policy correctly allows reading public artifacts, but the *app layer* should restrict the feed to followed users only.
 
-**Resource card image area:**
-- Reduce fallback (no-image) padding from `py-10` to `py-6` on mobile via responsive classes (`py-6 sm:py-10`)
-- Cap cover image max-height lower on mobile (150px vs 220px) — use a CSS class approach or responsive inline style
-- Make favicon in fallback smaller on mobile (`w-8 h-8` vs `w-10 h-10`)
+### 2. Update the "Recently Added" tab behavior
 
-**Resource card info area:**
-- Reduce padding from `p-4` to `p-3 sm:p-4`
-- Combine the domain line and type badge line into a single row on mobile to save vertical space (e.g., `favicon + domain · RESOURCE · 🔧 Tools` all on one line)
-- Hide `resource_note` and `resource_when_to_use` on mobile (these secondary details make cards too long) — use `hidden sm:block`
-- Limit tags to 2 on mobile (currently unlimited for resources, 3 for prompts)
-- Tighten footer: reduce avatar size, reduce button padding
+The "all" tab in `CommunityPage.tsx` currently shows everything. After this change, it will show artifacts from followed users + self — which aligns with the "Following" tab. We may want to:
+- Rename "Recently Added" to "Feed" or keep it as the single feed
+- Remove the separate "Following" tab since both now show the same thing, OR
+- Keep "Recently Added" as a discovery tab that still shows all public artifacts
 
-**Prompt card:**
-- Already compact, minor tweaks: reduce `p-4` to `p-3 sm:p-4`
+**Recommendation**: Keep the "Following" tab as the default/only feed (showing followed + own). Optionally keep a "Discover" tab for browsing all public artifacts if you want users to be able to find new builders to follow.
 
-### 3. No desktop changes
+### 3. Update documentation
 
-All modifications use responsive prefixes (`sm:`, `md:`) so desktop layout remains identical. The `sm:` breakpoint (640px) gates the mobile-specific compacting.
+Log the change in `docs/changelog.md` and update `docs/rules.md` with the privacy rule.
 
-### Files Changed
+### Technical Detail
 
-| File | Change |
-|------|--------|
-| `src/pages/CommunityPage.tsx` | Tighter spacing, inline Builders button on mobile |
-| `src/components/ArtifactCard.tsx` | Compact card layout for mobile screens |
-| `docs/changelog.md` | Log the change |
+In `fetchFeed()`, after fetching `followData`, build a `followingIds` set and filter `publicData` before enrichment:
+
+```
+const allowedUserIds = new Set([user.id, ...followingIds]);
+const visibleData = publicData.filter(a => allowedUserIds.has(a.user_id));
+```
+
+Then enrich only `visibleData` instead of all `publicData`.
 
