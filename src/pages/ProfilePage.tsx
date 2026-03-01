@@ -243,9 +243,9 @@ const ProfilePage = () => {
         transition={{ delay: 0.02 }}
         className="card-glass p-4 mb-3"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {isPublic ? <Eye size={16} className="text-foreground shrink-0" /> : <EyeOff size={16} className="text-muted-foreground shrink-0" />}
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-2">
+            {isPublic ? <Eye size={16} className="text-foreground shrink-0 mt-1" /> : <EyeOff size={16} className="text-muted-foreground shrink-0 mt-1" />}
             <div className="mr-4">
               <h2 className="font-heading text-base text-foreground">Profile Visibility</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
@@ -253,7 +253,7 @@ const ProfilePage = () => {
               </p>
             </div>
           </div>
-          <Switch
+          <Switch className="shrink-0 mt-0.5"
             checked={isPublic}
             onCheckedChange={async (checked) => {
               if (!user) return;
@@ -280,9 +280,9 @@ const ProfilePage = () => {
         transition={{ delay: 0.02 }}
         className="card-glass p-4 mb-3"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {theme === "dark" ? <Moon size={16} className="text-foreground" /> : <Sun size={16} className="text-foreground" />}
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-2">
+            {theme === "dark" ? <Moon size={16} className="text-foreground shrink-0 mt-1" /> : <Sun size={16} className="text-foreground shrink-0 mt-1" />}
             <div>
               <h2 className="font-heading text-base text-foreground">Appearance</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
@@ -290,7 +290,7 @@ const ProfilePage = () => {
               </p>
             </div>
           </div>
-          <Switch
+          <Switch className="shrink-0 mt-0.5"
             checked={theme === "dark"}
             onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
           />
