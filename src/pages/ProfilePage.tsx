@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown, Sun, Moon } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown, Sun, Moon, LogOut } from "lucide-react";
 import UpgradeModal from "@/components/UpgradeModal";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import { useSubscription, PLANS } from "@/hooks/useSubscription";
@@ -211,15 +211,26 @@ const ProfilePage = () => {
             />
           </button>
 
-          {/* Name + email */}
+          {/* Name + email + logout */}
           <div className="flex-1 min-w-0">
-            <Input
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              onBlur={handleSaveProfile}
-              placeholder="Display name"
-              className="h-9 text-sm font-medium border-transparent bg-transparent hover:bg-secondary/50 focus:bg-background transition-colors"
-            />
+            <div className="flex items-center gap-2">
+              <Input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                onBlur={handleSaveProfile}
+                placeholder="Display name"
+                className="h-9 text-sm font-medium border-transparent bg-transparent hover:bg-secondary/50 focus:bg-background transition-colors flex-1"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={signOut}
+                className="h-9 px-2 flex-shrink-0 text-muted-foreground hover:text-destructive"
+                aria-label="Log out"
+              >
+                <LogOut size={16} />
+              </Button>
+            </div>
             <p className="text-xs text-muted-foreground mt-0.5 px-3">{user?.email}</p>
           </div>
         </div>

@@ -128,7 +128,7 @@ const AppShell = ({ children }: AppShellProps) => {
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
-        <header className="sticky top-0 z-20 flex items-center justify-end px-5 py-2 md:hidden">
+        <header className={`sticky top-0 z-20 flex items-center justify-end px-5 py-2 md:hidden ${location.pathname === "/profile" ? "hidden" : ""}`}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <button
