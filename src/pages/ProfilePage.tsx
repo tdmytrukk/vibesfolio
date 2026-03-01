@@ -234,7 +234,7 @@ const ProfilePage = () => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {isPublic ? <Eye size={16} className="text-foreground" /> : <EyeOff size={16} className="text-muted-foreground" />}
+            {isPublic ? <Eye size={16} className="text-foreground shrink-0" /> : <EyeOff size={16} className="text-muted-foreground shrink-0" />}
             <div>
               <h2 className="font-heading text-base text-foreground">Profile Visibility</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
