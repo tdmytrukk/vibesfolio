@@ -46,6 +46,7 @@ This file is the single source of truth for all project-wide decisions. Update i
 - **Subscription**: 14-day free trial → read-only → $5/mo or $50/yr via Stripe
 - **Admin role**: Admins can read all data via RLS but frontend filters to own data only
 - **Builds module**: Deferred (decision 2026-02-27). Nav shows Ideas, Prompts, Resources, Community only.
+- **No personal analytics**: No stats dashboard or streak tracking (decision 2026-03-01). Not collecting usage metrics.
 
 ## Integrations
 

@@ -15,6 +15,10 @@ All notable changes to this project will be documented in this file.
 - **2026-02-27**: Public landing page at `/` with hero section, feature highlights, and sign-up CTA (`src/pages/LandingPage.tsx`, `src/App.tsx`)
 - **2026-02-27**: SEO meta tags — title, description, OG image, Twitter card, canonical URL (`index.html`, `public/images/og-image.png`)
 
+### Removed
+
+- **2026-03-01**: Dropped Phase 5D (Analytics & Insights) — tasks 5D.1 (personal stats dashboard) and 5D.2 (streak tracking) removed from roadmap; not collecting usage metrics (`docs/tasks.md`)
+
 ### Changed
 
 - **2026-02-27**: Authenticated users now redirect to `/log` (Projects) instead of `/vault`; unauthenticated users see landing page at `/` (`src/App.tsx`, `src/pages/AuthPage.tsx`)
