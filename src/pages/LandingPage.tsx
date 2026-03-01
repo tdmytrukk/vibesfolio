@@ -35,9 +35,6 @@ const fadeUp = {
 };
 
 const LandingPage = () => {
-  console.log("[LandingPage] Component rendering");
-  console.log("[LandingPage] Current URL:", window.location.href);
-  console.log("[LandingPage] Timestamp:", new Date().toISOString());
   return (
     <div className="bg-gradient-app bg-noise min-h-screen relative">
       {/* Nav */}

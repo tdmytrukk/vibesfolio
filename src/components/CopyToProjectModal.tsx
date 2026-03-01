@@ -34,10 +34,12 @@ const CopyToProjectModal = ({ open, onOpenChange, artifact }: CopyToProjectModal
     setCopying(true);
 
     if (artifact.artifact_type === "prompt") {
+      const content = artifact.prompt_content || "";
       const result = await addPrompt({
         title: artifact.title,
-        content: artifact.prompt_content || "",
+        content,
         tags: [...artifact.tags, `via:${artifact.creator_name || "community"}`],
+        sections: [{ name: artifact.title, content, position: 1 }],
       });
       if (result) {
         toast({ title: "Copied to your Prompts library." });
