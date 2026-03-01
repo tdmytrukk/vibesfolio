@@ -50,7 +50,7 @@ const LandingPage = () => {
             Sign in
           </Link>
           <Link
-            to="/auth"
+            to="/auth?mode=signup"
             className="rounded-pill bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
           >
             Get Started
@@ -79,7 +79,7 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/auth"
+              to="/auth?mode=signup"
               className="rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all flex items-center gap-2 shadow-sm"
             >
               Get Started
@@ -153,7 +153,7 @@ const LandingPage = () => {
             Join vibe-builders and AI learners who use Vibesfolio to capture what matters and ship what counts.
           </p>
           <Link
-            to="/auth"
+            to="/auth?mode=signup"
             className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all shadow-sm"
           >
             Start Your Free Space
