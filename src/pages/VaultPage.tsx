@@ -155,7 +155,7 @@ const VaultPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                   transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-0 overflow-hidden cursor-pointer group relative"
+                  className="card-glass p-0 overflow-hidden cursor-pointer group relative hover:-translate-y-0.5 transition-all duration-200"
                   onClick={() => setDetailResource(resource)}
                 >
                   {/* Cover image or fallback */}

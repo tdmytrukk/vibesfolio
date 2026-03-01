@@ -186,7 +186,7 @@ const PromptsPage = () => {
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                   transition={{ duration: 0.25, delay: i * 0.02 }}
                   onClick={() => setDetailPrompt(prompt)}
-                  className="card-glass p-3.5 cursor-pointer hover:ring-1 hover:ring-ring/20 transition-all flex flex-col"
+                  className="card-glass p-3.5 cursor-pointer hover:ring-1 hover:ring-ring/15 hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
                 >
                   {/* Title + shared badge */}
                   <div className="flex items-start gap-1.5 mb-1.5">
@@ -223,13 +223,13 @@ const PromptsPage = () => {
                   </p>
 
                   {/* Copy button */}
-                  <div className="mt-2.5 pt-2 border-t border-border/20">
+                  <div className="mt-auto pt-3 border-t border-border/15">
                     <button
                       onClick={(e) => handleCopy(e, prompt)}
-                      className={`flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11px] font-medium transition-all duration-200 ${
                         isCopied
                           ? "bg-status-shipped text-foreground"
-                          : "bg-secondary text-secondary-foreground hover:bg-muted"
+                          : "bg-secondary/80 text-secondary-foreground hover:bg-muted active:scale-[0.96]"
                       }`}
                       aria-label="Copy prompt"
                     >

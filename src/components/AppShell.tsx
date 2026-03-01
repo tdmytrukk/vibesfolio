@@ -66,7 +66,7 @@ const AppShell = ({ children }: AppShellProps) => {
                 className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-white/50 dark:bg-white/10 text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/30 dark:hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/25 dark:hover:bg-white/5 active:scale-[0.97]"
                 }`}
               >
                 <item.icon size={16} strokeWidth={isActive ? 2.2 : 1.6} />
