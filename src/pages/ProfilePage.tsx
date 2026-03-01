@@ -213,23 +213,13 @@ const ProfilePage = () => {
 
           {/* Name + email */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <Input
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Display name"
-                className="h-9 text-sm font-medium border-transparent bg-transparent hover:bg-secondary/50 focus:bg-background transition-colors"
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSaveProfile}
-                disabled={profileLoading}
-                className="h-9 px-2 flex-shrink-0"
-              >
-                {profileLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check size={16} />}
-              </Button>
-            </div>
+            <Input
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              onBlur={handleSaveProfile}
+              placeholder="Display name"
+              className="h-9 text-sm font-medium border-transparent bg-transparent hover:bg-secondary/50 focus:bg-background transition-colors"
+            />
             <p className="text-xs text-muted-foreground mt-0.5 px-3">{user?.email}</p>
           </div>
         </div>
