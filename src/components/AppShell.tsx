@@ -23,13 +23,6 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
-const glassStyle = {
-  background: 'linear-gradient(135deg, hsla(0,0%,100%,0.45) 0%, hsla(270,30%,96%,0.35) 50%, hsla(0,0%,100%,0.4) 100%)',
-  backdropFilter: 'blur(40px) saturate(1.8)',
-  WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
-  boxShadow: '0 8px 32px -4px hsla(240,10%,10%,0.08), inset 0 1px 2px 0 hsla(0,0%,100%,0.5)',
-};
-
 const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -47,8 +40,7 @@ const AppShell = ({ children }: AppShellProps) => {
     <div className="bg-gradient-app bg-noise relative min-h-screen">
       {/* Desktop floating top nav */}
       <header
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-30 hidden md:flex items-center gap-1 rounded-full border border-white/30 dark:border-white/10 px-2 py-1.5"
-        style={glassStyle}
+        className="nav-glass fixed top-4 left-1/2 -translate-x-1/2 z-30 hidden md:flex items-center gap-1 rounded-full border border-white/30 dark:border-white/10 px-2 py-1.5"
       >
         <span className="font-heading text-sm text-foreground tracking-tight pl-4 pr-3 select-none">
           Vibesfolio
@@ -172,7 +164,7 @@ const AppShell = ({ children }: AppShellProps) => {
       </main>
 
       {/* Mobile bottom tabs */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-evenly border-t border-white/30 dark:border-white/10 py-2 pb-[env(safe-area-inset-bottom)] md:hidden" style={{ background: 'linear-gradient(135deg, hsla(0,0%,100%,0.4) 0%, hsla(270,30%,96%,0.3) 50%, hsla(0,0%,100%,0.35) 100%)', backdropFilter: 'blur(40px) saturate(1.8)', WebkitBackdropFilter: 'blur(40px) saturate(1.8)', boxShadow: '0 -4px 24px -4px hsla(240,10%,10%,0.06), inset 0 1px 2px 0 hsla(0,0%,100%,0.4)' }}>
+      <nav className="mobile-nav-glass fixed inset-x-0 bottom-0 z-30 flex items-center justify-evenly border-t border-white/30 dark:border-white/10 py-2 pb-[env(safe-area-inset-bottom)] md:hidden">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lightbulb, FileText, Bookmark, Users, Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
+import { Lightbulb, FileText, Bookmark, Users, Sparkles, ArrowRight, ArrowLeft, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
 interface WelcomeTourProps {
@@ -27,10 +28,13 @@ const SEED_RESOURCES = [
   { title: "Refactoring UI — Design Tips", url: "https://www.refactoringui.com", category: "article", tags: ["design", "ui"] },
 ];
 
+const TOTAL_STEPS = 3;
+
 const WelcomeTour = ({ onComplete, onRefresh }: WelcomeTourProps) => {
   const [step, setStep] = useState(0);
   const [seeding, setSeeding] = useState(false);
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   const seedExampleData = async () => {
     if (!user) return;
@@ -69,7 +73,7 @@ const WelcomeTour = ({ onComplete, onRefresh }: WelcomeTourProps) => {
         className="card-glass w-full max-w-md p-8 relative overflow-hidden"
       >
         <AnimatePresence mode="wait" custom={step}>
-          {step === 0 ? (
+          {step === 0 && (
             <motion.div
               key="step-0"
               custom={1}
@@ -111,9 +115,86 @@ const WelcomeTour = ({ onComplete, onRefresh }: WelcomeTourProps) => {
                 Next <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>
-          ) : (
+          )}
+
+          {step === 1 && (
             <motion.div
               key="step-1"
+              custom={1}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25 }}
+            >
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent mb-4">
+                  {theme === "dark" ? <Moon className="w-6 h-6 text-accent-foreground" /> : <Sun className="w-6 h-6 text-accent-foreground" />}
+                </div>
+                <h2 className="text-2xl mb-2">Pick your vibe</h2>
+                <p className="text-sm text-muted-foreground">
+                  Choose a look. You can always change it later in Profile.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {/* Light card */}
+                <button
+                  onClick={() => setTheme("light")}
+                  className={`relative rounded-xl border-2 p-4 transition-all duration-200 ${
+                    theme === "light"
+                      ? "border-foreground shadow-md scale-[1.02]"
+                      : "border-border hover:border-foreground/30"
+                  }`}
+                  style={{ background: "linear-gradient(160deg, hsl(270 40% 92%), hsl(20 50% 93%))" }}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <Sun className="w-6 h-6 text-neutral-800" />
+                    <span className="text-sm font-medium text-neutral-800">Light</span>
+                  </div>
+                  <div className="mt-3 space-y-1.5">
+                    <div className="h-2 w-full rounded-full bg-white/70" />
+                    <div className="h-2 w-3/4 rounded-full bg-white/50" />
+                  </div>
+                </button>
+
+                {/* Dark card */}
+                <button
+                  onClick={() => setTheme("dark")}
+                  className={`relative rounded-xl border-2 p-4 transition-all duration-200 ${
+                    theme === "dark"
+                      ? "border-foreground shadow-md scale-[1.02]"
+                      : "border-border hover:border-foreground/30"
+                  }`}
+                  style={{ background: "linear-gradient(160deg, hsl(240 10% 8%), hsl(260 12% 10%))" }}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <Moon className="w-6 h-6 text-neutral-200" />
+                    <span className="text-sm font-medium text-neutral-200">Dark</span>
+                  </div>
+                  <div className="mt-3 space-y-1.5">
+                    <div className="h-2 w-full rounded-full bg-white/10" />
+                    <div className="h-2 w-3/4 rounded-full bg-white/5" />
+                  </div>
+                </button>
+              </div>
+
+              <Button onClick={() => setStep(2)} className="w-full gap-2">
+                Next <ArrowRight className="w-4 h-4" />
+              </Button>
+
+              <button
+                onClick={() => setStep(0)}
+                className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div
+              key="step-2"
               custom={1}
               variants={slideVariants}
               initial="enter"
@@ -156,7 +237,7 @@ const WelcomeTour = ({ onComplete, onRefresh }: WelcomeTourProps) => {
               </div>
 
               <button
-                onClick={() => setStep(0)}
+                onClick={() => setStep(1)}
                 className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -167,7 +248,7 @@ const WelcomeTour = ({ onComplete, onRefresh }: WelcomeTourProps) => {
 
         {/* Step dots */}
         <div className="flex justify-center gap-2 mt-6">
-          {[0, 1].map((i) => (
+          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
             <div
               key={i}
               className={`w-2 h-2 rounded-full transition-colors ${

@@ -40,6 +40,8 @@
     --card-shadow: 0 2px 24px -4px hsl(240 10% 10% / 0.06);
     --card-border: 0 0% 100% / 0.6;
 
+    /* Dark-mode glass overrides live under .dark below */
+
     /* Chip colors */
     --chip-lavender: 270 40% 92%;
     --chip-peach: 20 60% 92%;
@@ -96,6 +98,12 @@
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 240 8% 18%;
     --sidebar-ring: 0 0% 80%;
+
+    /* Dark custom tokens */
+    --gradient-bg: linear-gradient(160deg, hsl(240 10% 8%) 0%, hsl(260 12% 10%) 50%, hsl(220 10% 9%) 100%);
+    --card-glass: 240 10% 12% / 0.65;
+    --card-shadow: 0 2px 24px -4px hsl(0 0% 0% / 0.25);
+    --card-border: 0 0% 100% / 0.06;
   }
 }
 
@@ -134,6 +142,37 @@
   background-size: cover;
   background-position: center;
   mix-blend-mode: multiply;
+}
+
+.dark .bg-noise::before {
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* Glass nav */
+.nav-glass {
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.45) 0%, hsla(270,30%,96%,0.35) 50%, hsla(0,0%,100%,0.4) 100%);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow: 0 8px 32px -4px hsla(240,10%,10%,0.08), inset 0 1px 2px 0 hsla(0,0%,100%,0.5);
+}
+
+.dark .nav-glass {
+  background: linear-gradient(135deg, hsla(240,10%,14%,0.5) 0%, hsla(240,10%,10%,0.4) 50%, hsla(240,10%,16%,0.45) 100%);
+  box-shadow: 0 8px 32px -4px hsla(0,0%,0%,0.3), inset 0 1px 2px 0 hsla(0,0%,100%,0.04);
+}
+
+/* Mobile bottom nav glass */
+.mobile-nav-glass {
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.4) 0%, hsla(270,30%,96%,0.3) 50%, hsla(0,0%,100%,0.35) 100%);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow: 0 -4px 24px -4px hsla(240,10%,10%,0.06), inset 0 1px 2px 0 hsla(0,0%,100%,0.4);
+}
+
+.dark .mobile-nav-glass {
+  background: linear-gradient(135deg, hsla(240,10%,14%,0.5) 0%, hsla(240,10%,10%,0.4) 50%, hsla(240,10%,16%,0.45) 100%);
+  box-shadow: 0 -4px 24px -4px hsla(0,0%,0%,0.3), inset 0 1px 2px 0 hsla(0,0%,100%,0.04);
 }
 
 /* Glass card */
