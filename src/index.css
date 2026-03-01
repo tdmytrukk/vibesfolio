@@ -106,6 +106,13 @@
     --card-glass: 240 10% 12% / 0.65;
     --card-shadow: 0 2px 24px -4px hsl(0 0% 0% / 0.25);
     --card-border: 0 0% 100% / 0.06;
+
+    /* Dark chip colors */
+    --chip-lavender: 270 30% 25%;
+    --chip-peach: 20 40% 25%;
+    --chip-mint: 160 30% 22%;
+    --chip-sky: 210 35% 25%;
+    --chip-rose: 340 30% 25%;
   }
 }
 
