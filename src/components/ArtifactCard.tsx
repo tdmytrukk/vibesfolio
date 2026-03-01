@@ -30,7 +30,7 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
       aria-label={`View ${artifact.title}`}
     >
       {/* Hero Image */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden bg-muted/30">
+      <div className="relative w-full h-[180px] overflow-hidden bg-muted/30">
         {hasImage ? (
           <img
             src={artifact.cover_image_url!}
