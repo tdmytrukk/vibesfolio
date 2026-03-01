@@ -59,7 +59,7 @@ const CommunityPage = () => {
   const hasMore = paginated.length < filtered.length;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
+    <div className="max-w-2xl lg:max-w-6xl mx-auto space-y-5 sm:space-y-6">
       {/* Search bar */}
       <div className="relative">
         <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
@@ -121,7 +121,7 @@ const CommunityPage = () => {
         />
       ) : (
         <>
-          <div className="space-y-5 sm:space-y-6">
+          <div className="space-y-5 sm:space-y-6 lg:grid lg:grid-cols-3 xl:grid-cols-4 lg:gap-5 lg:space-y-0">
             {paginated.map((artifact) => (
               <ArtifactCard
                 key={artifact.id}
