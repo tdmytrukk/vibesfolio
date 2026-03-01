@@ -235,7 +235,7 @@ const ProfilePage = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isPublic ? <Eye size={16} className="text-foreground shrink-0" /> : <EyeOff size={16} className="text-muted-foreground shrink-0" />}
-            <div>
+            <div className="mr-4">
               <h2 className="font-heading text-base text-foreground">Profile Visibility</h2>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {isPublic ? "Others can follow your profile and see the prompts & resources you share publicly." : "Your profile is hidden. Go public so others can follow you and discover your shared prompts & resources."}
