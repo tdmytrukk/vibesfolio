@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lightbulb, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import EmptyState from "@/components/EmptyState";
 import TagChip from "@/components/TagChip";
 import AddIdeaModal from "@/components/AddIdeaModal";
@@ -80,13 +81,25 @@ const InboxPage = () => {
         </div>
       )}
 
-      <AddIdeaModal open={addOpen} onClose={() => setAddOpen(false)} onAdd={addIdea} />
+      <AddIdeaModal open={addOpen} onClose={() => setAddOpen(false)} onAdd={async (idea) => {
+        const result = await addIdea(idea);
+        if (result) toast.success("Idea captured ✨");
+        else toast.error("Failed to save idea");
+      }} />
       <IdeaDetailModal
         idea={selectedIdea}
         open={!!selectedIdea}
         onClose={() => setSelectedIdea(null)}
-        onSave={(id, updates) => updateIdea(id, updates)}
-        onDelete={(id) => deleteIdea(id)}
+        onSave={async (id, updates) => {
+          const ok = await updateIdea(id, updates);
+          if (ok) toast.success("Idea updated");
+          else toast.error("Failed to update idea");
+        }}
+        onDelete={async (id) => {
+          const ok = await deleteIdea(id);
+          if (ok) toast.success("Idea deleted");
+          else toast.error("Failed to delete idea");
+        }}
       />
       <FloatingActionButton onClick={() => setAddOpen(true)} label="New idea" />
     </div>

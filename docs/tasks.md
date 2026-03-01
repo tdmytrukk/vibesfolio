@@ -16,10 +16,10 @@
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | 5A.1 | Fix mobile modal Save button visibility (keyboard overlap) | ✅ | Modals use `bottom-4` + `100dvh` on mobile with sticky footer; button stays above keyboard |
-| 5A.2 | Add success toasts for all CRUD operations | ⬜ | Consistent feedback: "Idea saved", "Resource added", etc. |
-| 5A.3 | Wire `generate-tags` edge function into add flows | ⬜ | Auto-suggest tags when adding ideas, prompts, resources |
-| 5A.4 | Auto-populate resource title/description from metadata | ⬜ | `fetch-url-metadata` already returns ogTitle + ogDescription; wire into AddResourceModal |
-| 5A.5 | Add `updated_at` triggers for ideas, project_tasks, project_missions | ⬜ | DB migration — match the builds trigger pattern |
+| 5A.2 | Add success toasts for all CRUD operations | ✅ | Toasts on add/edit/delete for ideas, prompts, resources via sonner |
+| 5A.3 | Wire `generate-tags` edge function into add flows | ✅ | Already wired in AddPromptModal; ideas/resources don't have free-form tag input |
+| 5A.4 | Auto-populate resource title/description from metadata | ✅ | `handleUrlBlur` in AddResourceModal calls `fetchUrlMetadata`; auto-fills title + description |
+| 5A.5 | Add `updated_at` triggers for ideas, project_tasks, project_missions | ✅ | Ideas trigger already existed; added triggers for project_tasks & project_missions |
 | 5A.6 | Empty state improvements across all pages | ✅ | Added action buttons to EmptyState component; contextual CTAs on all 5 pages |
 | 5A.7 | Prompts page compact grid redesign | ✅ | 3-col grid (2 on mobile), compact cards, PromptDetailModal for full view + actions |
 | 5A.8 | Mobile layout optimization | ✅ | Reduced top spacing, frequency-sorted tags (2-row limit on mobile), even bottom nav spacing |
@@ -97,4 +97,4 @@ Then: **5B (Search)** → **5C (Onboarding)** → **5E (AI)** → **5D (Analytic
 
 ---
 
-*Last updated: 2026-02-27*
+*Last updated: 2026-03-01*

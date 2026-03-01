@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
+import { toast } from "sonner";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
 import TagChip from "@/components/TagChip";
@@ -67,7 +68,9 @@ const VaultPage = () => {
   }, []);
 
   const handleDeleteFromDetail = async (id: string) => {
-    await deleteResource(id);
+    const ok = await deleteResource(id);
+    if (ok) toast.success("Resource deleted");
+    else toast.error("Failed to delete resource");
   };
 
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
@@ -276,7 +279,11 @@ const VaultPage = () => {
         onUpdate={updateResource}
         onDelete={handleDeleteFromDetail}
       />
-      <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={addResource} onFetchMetadata={fetchUrlMetadata} />
+      <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={async (resource) => {
+        const result = await addResource(resource);
+        if (result) toast.success("Resource saved ✨");
+        else toast.error("Failed to save resource");
+      }} onFetchMetadata={fetchUrlMetadata} />
       <FloatingActionButton onClick={() => setAddModalOpen(true)} label="New resource" />
     </div>
   );

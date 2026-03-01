@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Check, Search, Sparkles, Globe, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
@@ -60,7 +61,9 @@ const PromptsPage = () => {
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
-    await deletePrompt(deleteTarget.id);
+    const ok = await deletePrompt(deleteTarget.id);
+    if (ok) toast.success("Prompt deleted");
+    else toast.error("Failed to delete prompt");
     setDeleteTarget(null);
   };
 
@@ -253,9 +256,13 @@ const PromptsPage = () => {
         onClose={() => { setAddModalOpen(false); setEditTarget(null); }}
         onSave={async (prompt) => {
           if (editTarget) {
-            await updatePrompt(editTarget.id, prompt);
+            const ok = await updatePrompt(editTarget.id, prompt);
+            if (ok) toast.success("Prompt updated");
+            else toast.error("Failed to update prompt");
           } else {
-            await addPrompt(prompt);
+            const result = await addPrompt(prompt);
+            if (result) toast.success("Prompt saved ✨");
+            else toast.error("Failed to save prompt");
           }
         }}
         existingTags={allTags}
