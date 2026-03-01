@@ -18,7 +18,8 @@ This file is the single source of truth for all project-wide decisions. Update i
 - **State management**: TanStack React Query for server state, React useState for local state
 - **Routing**: React Router v6 with nested routes
 - **Styling**: Tailwind semantic tokens via CSS custom properties in `index.css`. Never hardcode colors in components.
-- **Glass UI**: All cards use `.card-glass`, nav uses liquid glass pattern
+- **Theme**: `next-themes` manages dark mode via `class` strategy, stored in `vibesfolio-theme` localStorage key. Default theme is `light`. System preference is disabled (`enableSystem={false}`).
+- **Glass UI**: All cards use `.card-glass`, desktop nav uses `.nav-glass`, mobile nav uses `.mobile-nav-glass` (CSS classes in `index.css` with `.dark` variants)
 - **Fonts**: DM Serif Display (headings), Inter (body)
 
 ## Naming Conventions

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useTheme } from "next-themes";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown, Sun, Moon } from "lucide-react";
 import UpgradeModal from "@/components/UpgradeModal";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import { useSubscription, PLANS } from "@/hooks/useSubscription";
@@ -29,6 +30,7 @@ import { useSubscription, PLANS } from "@/hooks/useSubscription";
 const ProfilePage = () => {
   const { user, signOut, refreshProfile, subscription } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
   const { startCheckout, openCustomerPortal, checkSubscription } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
@@ -270,7 +272,30 @@ const ProfilePage = () => {
         </div>
       </motion.section>
 
-      {/* Incoming Follow Requests */}
+      {/* Appearance / Theme */}
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.02 }}
+        className="card-glass p-4 mb-3"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {theme === "dark" ? <Moon size={16} className="text-foreground" /> : <Sun size={16} className="text-foreground" />}
+            <div>
+              <h2 className="font-heading text-base text-foreground">Appearance</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {theme === "dark" ? "Dark mode is active." : "Light mode is active."}
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={theme === "dark"}
+            onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+          />
+        </div>
+      </motion.section>
+
       {incomingRequests.length > 0 && (
         <motion.section
           initial={{ opacity: 0, y: 10 }}
