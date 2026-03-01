@@ -183,48 +183,60 @@ const AddPromptModal = ({ open, onClose, onSave, existingTags, editingPrompt }: 
                 autoFocus
               />
 
-              {/* Sections */}
-              <label className="block text-xs font-medium text-muted-foreground mb-2">
-                Sections *
-              </label>
-
-              <div className="space-y-3 mb-4">
-                {sections.map((section, index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg bg-secondary/30 border border-border/30 p-3"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">
-                        {index + 1}
-                      </span>
-                      <input
-                        type="text"
-                        placeholder={`Section ${index + 1} name`}
-                        value={section.name}
-                        onChange={(e) => updateSection(index, "name", e.target.value)}
-                        className="flex-1 rounded-md bg-secondary/60 border-0 px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20"
-                      />
-                      {sections.length > 1 && (
-                        <button
-                          onClick={() => removeSection(index)}
-                          className="rounded-full p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                          aria-label={`Remove section ${index + 1}`}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
-                    </div>
-                    <textarea
-                      placeholder="Paste or write this section's prompt…"
-                      value={section.content}
-                      onChange={(e) => updateSection(index, "content", e.target.value)}
-                      rows={3}
-                      className="w-full rounded-md bg-secondary/60 border-0 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none leading-relaxed"
-                    />
+              {/* Content / Sections */}
+              {sections.length === 1 ? (
+                <>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1.5">Content *</label>
+                  <textarea
+                    placeholder="Paste or write your prompt here…"
+                    value={sections[0].content}
+                    onChange={(e) => updateSection(0, "content", e.target.value)}
+                    rows={6}
+                    className="w-full rounded-lg bg-secondary/60 border-0 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 mb-4 resize-none leading-relaxed"
+                  />
+                </>
+              ) : (
+                <>
+                  <label className="block text-xs font-medium text-muted-foreground mb-2">
+                    Sections *
+                  </label>
+                  <div className="space-y-3 mb-4">
+                    {sections.map((section, index) => (
+                      <div
+                        key={index}
+                        className="rounded-lg bg-secondary/30 border border-border/30 p-3"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">
+                            {index + 1}
+                          </span>
+                          <input
+                            type="text"
+                            placeholder={`Section ${index + 1} name`}
+                            value={section.name}
+                            onChange={(e) => updateSection(index, "name", e.target.value)}
+                            className="flex-1 rounded-md bg-secondary/60 border-0 px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20"
+                          />
+                          <button
+                            onClick={() => removeSection(index)}
+                            className="rounded-full p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                            aria-label={`Remove section ${index + 1}`}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                        <textarea
+                          placeholder="Paste or write this section's prompt…"
+                          value={section.content}
+                          onChange={(e) => updateSection(index, "content", e.target.value)}
+                          rows={3}
+                          className="w-full rounded-md bg-secondary/60 border-0 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none leading-relaxed"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
 
               <button
                 type="button"
