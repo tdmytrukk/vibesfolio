@@ -36,10 +36,10 @@
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 5C.1 | New user detection (first login with empty data) | ⬜ | Check if user has 0 ideas + 0 resources + 0 prompts |
-| 5C.2 | Welcome screen / guided tour | ⬜ | 3–4 step intro: "Capture ideas → Save prompts → Curate resources → Share" |
-| 5C.3 | Change default landing for new users | ⬜ | New users → onboarding. Returning users → `/ideas` |
-| 5C.4 | Seed sample data option | ⬜ | "Start with example data" to show features |
+| 5C.1 | New user detection (first login with empty data) | ✅ | useOnboarding hook checks counts of ideas+prompts+resources; localStorage flag |
+| 5C.2 | Welcome screen / guided tour | ✅ | 2-step WelcomeTour modal with Framer Motion; step 1 = core tabs, step 2 = community |
+| 5C.3 | Change default landing for new users | ✅ | WelcomeTour overlays on /ideas for new users |
+| 5C.4 | Seed sample data option | ✅ | "Load example data" inserts 3 ideas, 2 prompts, 2 resources |
 
 ## Phase 5D — Analytics & Insights
 

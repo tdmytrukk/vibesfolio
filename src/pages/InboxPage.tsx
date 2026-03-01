@@ -7,11 +7,14 @@ import TagChip from "@/components/TagChip";
 import AddIdeaModal from "@/components/AddIdeaModal";
 import IdeaDetailModal from "@/components/IdeaDetailModal";
 import FloatingActionButton from "@/components/FloatingActionButton";
+import WelcomeTour from "@/components/WelcomeTour";
 import { useIdeas, type Idea } from "@/hooks/useIdeas";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const InboxPage = () => {
-  const { ideas, loading, addIdea, updateIdea, deleteIdea } = useIdeas();
+  const { ideas, loading, addIdea, updateIdea, deleteIdea, refetch } = useIdeas();
+  const { isNewUser, loading: onboardingLoading, completeOnboarding } = useOnboarding();
   const [addOpen, setAddOpen] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
 
@@ -26,7 +29,9 @@ const InboxPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-
+      {isNewUser && !onboardingLoading && (
+        <WelcomeTour onComplete={completeOnboarding} onRefresh={refetch} />
+      )}
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
