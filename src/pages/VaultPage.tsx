@@ -168,18 +168,17 @@ const VaultPage = () => {
                 >
                   {/* Cover image or fallback */}
                   {hasCover ? (
-                    <div className="relative w-full overflow-hidden bg-muted">
+                    <div className="relative w-full overflow-hidden bg-muted h-40">
                       <img
                         src={resource.cover_image_url!}
                         alt=""
-                        className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                        style={{ maxHeight: "220px" }}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                         loading="lazy"
                         onError={() => setImgErrors((prev) => new Set(prev).add(resource.id))}
                       />
                     </div>
                   ) : (
-                    <div className={`flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br ${categoryGradients[resource.category]}`}>
+                    <div className={`flex flex-col items-center justify-center gap-2 h-40 px-4 bg-gradient-to-br ${categoryGradients[resource.category]}`}>
                       {resource.file_url ? (
                         <Paperclip size={28} className="text-foreground/30" />
                       ) : resource.favicon_url ? (
