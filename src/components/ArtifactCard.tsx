@@ -71,7 +71,7 @@ const ArtifactCard = ({
   // --- PROMPT CARD (compact) ---
   if (isPrompt) {
     return (
-      <div className="group card-glass p-4 break-inside-avoid transition-all duration-200 hover:shadow-md">
+      <div className="group card-glass p-3 sm:p-4 break-inside-avoid transition-all duration-200 hover:shadow-md">
         {/* Type badge */}
         <div className="flex items-center gap-1.5 mb-2">
           <Sparkles size={12} className="text-primary" />
@@ -179,16 +179,15 @@ const ArtifactCard = ({
               <img
                 src={artifact.cover_image_url}
                 alt={artifact.title}
-                className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                style={{ maxHeight: "220px" }}
+                className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] max-h-[150px] sm:max-h-[220px]"
                 loading="lazy"
                 onError={() => setImgError(true)}
               />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br from-chip-mint to-chip-sky">
+            <div className="flex flex-col items-center justify-center gap-2 py-6 sm:py-10 px-4 bg-gradient-to-br from-chip-mint to-chip-sky">
               {faviconUrl ? (
-                <img src={faviconUrl} alt="" className="w-10 h-10 rounded-lg" />
+                <img src={faviconUrl} alt="" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg" />
               ) : (
                 <ExternalLink size={28} className="text-foreground/30" />
               )}
@@ -199,20 +198,21 @@ const ArtifactCard = ({
           )}
         </a>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 bg-gradient-to-br from-chip-peach to-chip-lavender">
+        <div className="flex flex-col items-center justify-center gap-2 py-6 sm:py-10 px-4 bg-gradient-to-br from-chip-peach to-chip-lavender">
           <ExternalLink size={24} className="text-foreground/30" />
         </div>
       )}
 
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-1.5">
+      <div className="p-3 sm:p-4">
+        {/* Combined meta line: favicon + domain · TYPE · category */}
+        <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
           {faviconUrl && (
             <img src={faviconUrl} alt="" className="w-3.5 h-3.5 rounded-sm" />
           )}
-          <span className="text-[11px] text-muted-foreground truncate">{resourceDomain}</span>
-        </div>
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">Resource</span>
+          {resourceDomain && (
+            <span className="text-[11px] text-muted-foreground truncate">{resourceDomain}</span>
+          )}
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">· Resource</span>
           {artifact.resource_category && (
             <span className="text-[11px] text-muted-foreground font-medium capitalize">
               · {resourceCategoryEmoji[artifact.resource_category] || "📌"} {artifact.resource_category}
@@ -231,13 +231,13 @@ const ArtifactCard = ({
         )}
 
         {artifact.resource_note && (
-          <p className="text-[11px] text-muted-foreground/80 mb-2 italic line-clamp-2">
+          <p className="hidden sm:block text-[11px] text-muted-foreground/80 mb-2 italic line-clamp-2">
             {artifact.resource_note}
           </p>
         )}
 
         {artifact.resource_when_to_use && (
-          <p className="text-[10px] text-muted-foreground/70 mb-2">
+          <p className="hidden sm:block text-[10px] text-muted-foreground/70 mb-2">
             <span className="font-medium">When to use:</span> {artifact.resource_when_to_use}
           </p>
         )}
@@ -245,8 +245,8 @@ const ArtifactCard = ({
         {/* Tags */}
         {artifact.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
-            {artifact.tags.map((tag) => (
-              <span key={tag} className="px-2 py-0.5 rounded-full bg-muted/50 text-[10px] text-muted-foreground font-medium">
+            {artifact.tags.map((tag, i) => (
+              <span key={tag} className={`px-2 py-0.5 rounded-full bg-muted/50 text-[10px] text-muted-foreground font-medium ${i >= 2 ? 'hidden sm:inline-flex' : ''}`}>
                 {tag}
               </span>
             ))}

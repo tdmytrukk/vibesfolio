@@ -58,16 +58,9 @@ const CommunityPage = () => {
   const hasMore = paginated.length < filtered.length;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-end">
-        <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/community/builders")}>
-          <Users size={15} />
-          Builders
-        </Button>
-      </div>
-
-      {/* Search & Tabs */}
-      <div className="flex flex-col sm:flex-row gap-3">
+    <div className="max-w-4xl mx-auto space-y-3 sm:space-y-6">
+      {/* Search, Tabs & Builders — single row on mobile */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <div className="relative flex-1">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -77,17 +70,23 @@ const CommunityPage = () => {
             className="pl-9 h-9"
           />
         </div>
-        <Tabs value={feedTab} onValueChange={(v) => { setFeedTab(v); setPage(1); }} className="shrink-0">
-          <TabsList className="h-9">
-            <TabsTrigger value="all" className="text-xs">Recently Added</TabsTrigger>
-            <TabsTrigger value="following" className="text-xs">Following</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center gap-2">
+          <Tabs value={feedTab} onValueChange={(v) => { setFeedTab(v); setPage(1); }} className="shrink-0">
+            <TabsList className="h-9">
+              <TabsTrigger value="all" className="text-xs">Recently Added</TabsTrigger>
+              <TabsTrigger value="following" className="text-xs">Following</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button variant="outline" size="sm" className="gap-1.5 h-9 shrink-0" onClick={() => navigate("/community/builders")}>
+            <Users size={15} />
+            <span className="hidden sm:inline">Builders</span>
+          </Button>
+        </div>
       </div>
 
       {/* Feed */}
       {loading ? (
-        <div className="columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
+        <div className="columns-2 lg:columns-3 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className={`rounded-xl bg-muted/30 animate-pulse break-inside-avoid ${i % 3 === 0 ? 'h-32' : 'h-48'}`} />
           ))}
@@ -106,7 +105,7 @@ const CommunityPage = () => {
         />
       ) : (
         <>
-          <div className="columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
+          <div className="columns-2 lg:columns-3 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
             {paginated.map((artifact) => (
               <div key={artifact.id} className="break-inside-avoid">
                 <ArtifactCard
