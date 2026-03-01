@@ -48,6 +48,17 @@
 | 5D.1 | Personal stats dashboard | ⬜ | Ideas captured, resources saved, prompts created |
 | 5D.2 | Streak / consistency tracking | ⬜ | "You've added content 5 days in a row" |
 
+## Multi-Section Prompts (from plan.md)
+
+| # | Task | Status | Notes |
+|---|------|--------|-------|
+| MS.1 | `prompt_sections` table + RLS + data migration | ✅ | Child table with CASCADE delete; migrated existing content to single sections |
+| MS.2 | `usePrompts.ts` — fetch/add/update with sections | ✅ | Joins sections on fetch; inserts/replaces on save; generates summary from concatenated content |
+| MS.3 | AddPromptModal — dynamic section UI | ✅ | Single textarea for 1 section; numbered list with titles on 2+; drag-and-drop reorder via @dnd-kit |
+| MS.4 | PromptDetailModal — per-section copy buttons | ✅ | Numbered section cards with individual Copy + global Copy All |
+| MS.5 | PromptsPage — section count on cards | ✅ | Shows "N sections" badge on multi-section prompts |
+| MS.6 | CopyToProjectModal — section-aware | ✅ | Copies concatenated sections content |
+
 ## Phase 5E — AI Enhancements
 
 | # | Task | Status | Notes |

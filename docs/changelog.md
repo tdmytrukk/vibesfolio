@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Initial project setup
+- **2026-03-01**: Multi-section prompts — new `prompt_sections` table, AddPromptModal dynamic section UI (single textarea → numbered list on 2+ sections), PromptDetailModal per-section copy buttons, drag-and-drop reordering via @dnd-kit, data migration for existing prompts (`src/hooks/usePrompts.ts`, `src/components/AddPromptModal.tsx`, `src/components/PromptDetailModal.tsx`, `src/pages/PromptsPage.tsx`, `src/components/CopyToProjectModal.tsx`)
 - **2026-03-01**: Phase 5C complete — 2-step onboarding welcome tour for new users with seed data option (`src/hooks/useOnboarding.ts`, `src/components/WelcomeTour.tsx`, `src/pages/InboxPage.tsx`)
 - **2026-03-01**: Phase 5A complete — added success toasts for all CRUD ops (ideas, prompts, resources) via sonner (`src/pages/InboxPage.tsx`, `src/pages/PromptsPage.tsx`, `src/pages/VaultPage.tsx`); added `updated_at` triggers for `project_tasks` and `project_missions` tables (DB migration); confirmed generate-tags and fetch-url-metadata already wired
 - **2026-03-01**: Created `docs/rules.md` — project rules & decisions file (`docs/rules.md`)
