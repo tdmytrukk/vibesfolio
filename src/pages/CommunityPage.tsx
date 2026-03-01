@@ -20,9 +20,9 @@ const ITEMS_PER_PAGE = 12;
 const CommunityPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { artifacts, loading, publishArtifact } = usePublicArtifacts();
+  const { artifacts, allArtifacts, loading, publishArtifact } = usePublicArtifacts();
   const { isSaved, saveArtifact, unsaveArtifact } = useSavedArtifacts();
-  const { isFollowing, follow, unfollow, followingIds } = useFollows();
+  const { isFollowing, follow, unfollow } = useFollows();
 
   const [publishOpen, setPublishOpen] = useState(false);
   const [selectedArtifact, setSelectedArtifact] = useState<PublicArtifact | null>(null);
@@ -32,15 +32,11 @@ const CommunityPage = () => {
   const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
-    let items = [...artifacts];
+    let items = feedTab === "discover" ? [...allArtifacts] : [...artifacts];
 
     items = items.map((a) =>
       a.user_id === user?.id ? { ...a, creator_name: "You" } : a
     );
-
-    if (feedTab === "following") {
-      items = items.filter((a) => a.user_id === user?.id || followingIds.has(a.user_id));
-    }
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -53,7 +49,7 @@ const CommunityPage = () => {
     }
 
     return items;
-  }, [artifacts, feedTab, search, followingIds, user?.id]);
+  }, [artifacts, allArtifacts, feedTab, search, user?.id]);
 
   const paginated = filtered.slice(0, page * ITEMS_PER_PAGE);
   const hasMore = paginated.length < filtered.length;
@@ -79,13 +75,13 @@ const CommunityPage = () => {
               value="all"
               className="text-xs rounded-full px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
             >
-              Recently Added
+              Feed
             </TabsTrigger>
             <TabsTrigger
-              value="following"
+              value="discover"
               className="text-xs rounded-full px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
             >
-              Following
+              Discover
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -110,14 +106,14 @@ const CommunityPage = () => {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<Radio size={40} strokeWidth={1.2} />}
-          title={feedTab === "following" ? "No posts from people you follow" : "No posts yet"}
+          title={feedTab === "discover" ? "No posts yet" : "Your feed is empty"}
           subtitle={
-            feedTab === "following"
-              ? "Follow builders to see their shared tools and resources here."
-              : "Be the first to share a tool or resource with the community."
+            feedTab === "discover"
+              ? "Be the first to share a tool or resource with the community."
+              : "Follow builders to see their shared tools and resources here."
           }
-          actionLabel={feedTab === "following" ? "Browse builders" : "Share something"}
-          onAction={feedTab === "following" ? () => navigate("/community/builders") : () => setPublishOpen(true)}
+          actionLabel={feedTab === "discover" ? "Share something" : "Discover builders"}
+          onAction={feedTab === "discover" ? () => setPublishOpen(true) : () => navigate("/community/builders")}
         />
       ) : (
         <>
