@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import { Plus, Search, Radio, Users } from "lucide-react";
+import { Search, Users, Radio } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArtifactCard from "@/components/ArtifactCard";
+import ArtifactDetailModal from "@/components/ArtifactDetailModal";
 import PublishArtifactModal from "@/components/PublishArtifactModal";
 import CopyToProjectModal from "@/components/CopyToProjectModal";
 import FloatingActionButton from "@/components/FloatingActionButton";
@@ -24,6 +25,7 @@ const CommunityPage = () => {
   const { isFollowing, follow, unfollow, followingIds } = useFollows();
 
   const [publishOpen, setPublishOpen] = useState(false);
+  const [selectedArtifact, setSelectedArtifact] = useState<PublicArtifact | null>(null);
   const [copyArtifact, setCopyArtifact] = useState<PublicArtifact | null>(null);
   const [search, setSearch] = useState("");
   const [feedTab, setFeedTab] = useState("all");
@@ -32,7 +34,6 @@ const CommunityPage = () => {
   const filtered = useMemo(() => {
     let items = [...artifacts];
 
-    // Mark own artifacts
     items = items.map((a) =>
       a.user_id === user?.id ? { ...a, creator_name: "You" } : a
     );
@@ -58,73 +59,81 @@ const CommunityPage = () => {
   const hasMore = paginated.length < filtered.length;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-3 sm:space-y-6">
-      {/* Search, Tabs & Builders — single row on mobile */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        <div className="relative flex-1">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            placeholder="Search artifacts..."
-            className="pl-9 h-9"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Tabs value={feedTab} onValueChange={(v) => { setFeedTab(v); setPage(1); }} className="shrink-0">
-            <TabsList className="h-9">
-              <TabsTrigger value="all" className="text-xs">Recently Added</TabsTrigger>
-              <TabsTrigger value="following" className="text-xs">Following</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Button variant="outline" size="sm" className="gap-1.5 h-9 shrink-0" onClick={() => navigate("/community/builders")}>
-            <Users size={15} />
-            <span className="hidden sm:inline">Builders</span>
-          </Button>
-        </div>
+    <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
+      {/* Search bar */}
+      <div className="relative">
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+        <Input
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          placeholder="Search resources…"
+          className="pl-11 h-11 rounded-full bg-card/80 border-border/20 text-sm placeholder:text-muted-foreground/50 focus-visible:ring-primary/20"
+        />
+      </div>
+
+      {/* Tabs + Builders */}
+      <div className="flex items-center gap-2">
+        <Tabs value={feedTab} onValueChange={(v) => { setFeedTab(v); setPage(1); }} className="flex-1">
+          <TabsList className="h-9 bg-transparent p-0 gap-1">
+            <TabsTrigger
+              value="all"
+              className="text-xs rounded-full px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+            >
+              Recently Added
+            </TabsTrigger>
+            <TabsTrigger
+              value="following"
+              className="text-xs rounded-full px-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+            >
+              Following
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 h-9 shrink-0 text-muted-foreground hover:text-foreground"
+          onClick={() => navigate("/community/builders")}
+        >
+          <Users size={15} />
+          <span className="hidden sm:inline">Builders</span>
+        </Button>
       </div>
 
       {/* Feed */}
       {loading ? (
-        <div className="columns-2 lg:columns-3 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className={`rounded-xl bg-muted/30 animate-pulse break-inside-avoid ${i % 3 === 0 ? 'h-32' : 'h-48'}`} />
+        <div className="space-y-5">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="rounded-2xl bg-muted/20 animate-pulse h-64" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<Radio size={40} strokeWidth={1.2} />}
-          title={feedTab === "following" ? "No artifacts from people you follow" : "No artifacts yet"}
+          title={feedTab === "following" ? "No posts from people you follow" : "No posts yet"}
           subtitle={
             feedTab === "following"
-              ? "Follow builders to see their shared prompts and resources here."
-              : "Be the first to publish a prompt or resource to the community."
+              ? "Follow builders to see their shared tools and resources here."
+              : "Be the first to share a tool or resource with the community."
           }
-          actionLabel={feedTab === "following" ? "Browse builders" : "Publish artifact"}
+          actionLabel={feedTab === "following" ? "Browse builders" : "Share something"}
           onAction={feedTab === "following" ? () => navigate("/community/builders") : () => setPublishOpen(true)}
         />
       ) : (
         <>
-          <div className="columns-2 lg:columns-3 gap-2 sm:gap-4 space-y-2 sm:space-y-4">
+          <div className="space-y-5 sm:space-y-6">
             {paginated.map((artifact) => (
-              <div key={artifact.id} className="break-inside-avoid">
-                <ArtifactCard
-                  artifact={artifact}
-                  isSaved={isSaved(artifact.id)}
-                  onSave={saveArtifact}
-                  onUnsave={unsaveArtifact}
-                  onCopyToProject={(a) => setCopyArtifact(a)}
-                  onFollow={follow}
-                  onUnfollow={unfollow}
-                  isFollowing={isFollowing(artifact.user_id)}
-                />
-              </div>
+              <ArtifactCard
+                key={artifact.id}
+                artifact={artifact}
+                onClick={setSelectedArtifact}
+              />
             ))}
           </div>
 
           {hasMore && (
             <div className="flex justify-center pt-2">
-              <Button variant="outline" size="sm" onClick={() => setPage((p) => p + 1)}>
+              <Button variant="outline" size="sm" className="rounded-full" onClick={() => setPage((p) => p + 1)}>
                 Load more
               </Button>
             </div>
@@ -132,6 +141,21 @@ const CommunityPage = () => {
         </>
       )}
 
+      {/* Detail Modal */}
+      <ArtifactDetailModal
+        artifact={selectedArtifact}
+        onClose={() => setSelectedArtifact(null)}
+        isSaved={selectedArtifact ? isSaved(selectedArtifact.id) : false}
+        onSave={saveArtifact}
+        onUnsave={unsaveArtifact}
+        onCopyToProject={(a) => {
+          setSelectedArtifact(null);
+          setCopyArtifact(a);
+        }}
+        isFollowing={selectedArtifact ? isFollowing(selectedArtifact.user_id) : false}
+        onFollow={follow}
+        onUnfollow={unfollow}
+      />
 
       {/* Modals */}
       <PublishArtifactModal
@@ -144,7 +168,7 @@ const CommunityPage = () => {
         onOpenChange={(open) => !open && setCopyArtifact(null)}
         artifact={copyArtifact}
       />
-      <FloatingActionButton onClick={() => setPublishOpen(true)} label="Publish" />
+      <FloatingActionButton onClick={() => setPublishOpen(true)} label="Share" />
     </div>
   );
 };
