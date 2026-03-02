@@ -493,7 +493,7 @@ const ProfilePage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.10 }}
-          className="card-glass p-4 space-y-3"
+          className="card-glass p-4 space-y-3 md:row-span-2"
         >
           <div className="flex items-center gap-2 text-foreground">
             <MessageSquare size={16} />
