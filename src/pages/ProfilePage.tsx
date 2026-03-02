@@ -22,10 +22,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown, Sun, Moon, LogOut } from "lucide-react";
+import { Loader2, KeyRound, Trash2, CreditCard, Link2, Camera, Check, Eye, EyeOff, UserCheck, UserX, Bell, Crown, Sun, Moon, LogOut, MessageSquare, Bug, HelpCircle, Lightbulb } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import UpgradeModal from "@/components/UpgradeModal";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import { useSubscription, PLANS } from "@/hooks/useSubscription";
+import { useFeedback } from "@/hooks/useFeedback";
 
 const ProfilePage = () => {
   const { user, signOut, refreshProfile, subscription } = useAuth();
@@ -33,7 +35,12 @@ const ProfilePage = () => {
   const { theme, setTheme } = useTheme();
   const { incomingRequests, acceptRequest, declineRequest, refetchRequests } = useFollows();
   const { startCheckout, openCustomerPortal, checkSubscription } = useSubscription();
+  const { submitFeedback, isSubmitting: feedbackSubmitting } = useFeedback();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  // Feedback state
+  const [feedbackType, setFeedbackType] = useState<"bug" | "feedback" | "question">("feedback");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackEmail, setFeedbackEmail] = useState("");
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,13 +79,16 @@ const ProfilePage = () => {
     const loadProfile = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("display_name, avatar_url, is_public")
+        .select("display_name, avatar_url, is_public, email")
         .eq("user_id", user.id)
         .single();
       if (data) {
         setDisplayName(data.display_name || "");
         setAvatarUrl(data.avatar_url || null);
         setIsPublic((data as any).is_public ?? false);
+      }
+      if (!feedbackEmail) {
+        setFeedbackEmail(data?.email || user.email || "");
       }
     };
     loadProfile();
@@ -476,6 +486,76 @@ const ProfilePage = () => {
               </div>
             </div>
           )}
+        </motion.section>
+
+        {/* Feedback & Support */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.10 }}
+          className="card-glass p-4 space-y-3"
+        >
+          <div className="flex items-center gap-2 text-foreground">
+            <MessageSquare size={16} />
+            <h2 className="font-heading text-base">Feedback & Support</h2>
+          </div>
+
+          <Input
+            type="email"
+            placeholder="Your email for follow-up"
+            value={feedbackEmail}
+            onChange={(e) => setFeedbackEmail(e.target.value)}
+            className="h-9 text-sm"
+          />
+
+          <div className="flex gap-1.5">
+            {([
+              { value: "bug" as const, label: "Bug", icon: Bug },
+              { value: "feedback" as const, label: "Feedback", icon: Lightbulb },
+              { value: "question" as const, label: "Question", icon: HelpCircle },
+            ]).map(({ value, label, icon: Icon }) => (
+              <button
+                key={value}
+                onClick={() => setFeedbackType(value)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  feedbackType === value
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon size={12} />
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <Textarea
+            placeholder={
+              feedbackType === "bug"
+                ? "Describe the bug — what happened and what you expected…"
+                : feedbackType === "question"
+                ? "What do you need help with?"
+                : "Share your thoughts, ideas or suggestions…"
+            }
+            value={feedbackMessage}
+            onChange={(e) => setFeedbackMessage(e.target.value)}
+            className="min-h-[80px] text-sm resize-none"
+          />
+
+          <Button
+            size="sm"
+            className="w-full"
+            disabled={!feedbackMessage.trim() || !feedbackEmail.trim() || feedbackSubmitting}
+            onClick={async () => {
+              const ok = await submitFeedback(feedbackType, feedbackMessage, feedbackEmail);
+              if (ok) {
+                setFeedbackMessage("");
+                setFeedbackType("feedback");
+              }
+            }}
+          >
+            {feedbackSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Feedback"}
+          </Button>
         </motion.section>
 
         {/* Danger Zone */}
