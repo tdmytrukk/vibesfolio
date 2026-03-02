@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Copy, Trash2, Check, Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
+import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
@@ -56,8 +56,6 @@ const VaultPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [detailResource, setDetailResource] = useState<Resource | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const filtered = resources.filter((r) => {
     const matchCat = selectedCategory === "all" || r.category === selectedCategory;
@@ -68,12 +66,6 @@ const VaultPage = () => {
       r.description?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchSearch;
   });
-
-  const handleCopy = useCallback(async (resource: Resource) => {
-    await navigator.clipboard.writeText(resource.url);
-    setCopiedId(resource.id);
-    setTimeout(() => setCopiedId(null), 1500);
-  }, []);
 
   const handleDeleteFromDetail = async (id: string) => {
     const ok = await deleteResource(id);
@@ -86,36 +78,35 @@ const VaultPage = () => {
   return (
     <div className="max-w-5xl mx-auto">
 
-      {/* Filters */}
-      <div className="mb-6 space-y-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          {categoryConfig.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setSelectedCategory(cat.value)}
-              className={`flex items-center gap-1.5 rounded-pill px-3.5 py-2 text-xs font-medium transition-all duration-200 border ${
-                selectedCategory === cat.value
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-secondary/80 text-secondary-foreground border-transparent hover:bg-muted"
-              }`}
-              aria-pressed={selectedCategory === cat.value}
-            >
-              {cat.icon}
-              {cat.label}
-            </button>
-          ))}
-        </div>
+      {/* Search bar — full-width rounded pill like Community */}
+      <div className="relative mb-4 sm:mb-6">
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+        <input
+          type="text"
+          placeholder="Search resources…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full sm:max-w-sm rounded-full bg-card/80 backdrop-blur-sm border border-border/20 pl-11 pr-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+        />
+      </div>
 
-        <div className="relative max-w-sm">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
-          <input
-            type="text"
-            placeholder="Search resources…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-pill bg-card/80 backdrop-blur-sm border border-border/40 pl-9 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 shadow-sm"
-          />
-        </div>
+      {/* Category pills */}
+      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-4 sm:mb-6">
+        {categoryConfig.map((cat) => (
+          <button
+            key={cat.value}
+            onClick={() => setSelectedCategory(cat.value)}
+            className={`flex items-center gap-1.5 rounded-full px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-medium transition-all duration-200 border ${
+              selectedCategory === cat.value
+                ? "bg-primary text-primary-foreground border-primary shadow-none"
+                : "bg-transparent text-muted-foreground border-transparent hover:bg-muted"
+            }`}
+            aria-pressed={selectedCategory === cat.value}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
       </div>
 
       {/* Grid */}
@@ -152,33 +143,31 @@ const VaultPage = () => {
           <AnimatePresence initial={false}>
             {filtered.map((resource, i) => {
               const hasCover = resource.cover_image_url && !imgErrors.has(resource.id);
-              const isHovered = hoveredId === resource.id;
-              const isCopied = copiedId === resource.id;
 
               return (
-                <motion.div
+                <motion.button
                   key={resource.id}
                   layout
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                   transition={{ duration: 0.25, delay: i * 0.03 }}
-                  className="card-glass p-0 overflow-hidden cursor-pointer group relative hover:-translate-y-0.5 transition-all duration-200"
+                  className="group w-full text-left rounded-2xl bg-card/80 backdrop-blur-sm border border-border/20 overflow-hidden cursor-pointer hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex flex-col"
                   onClick={() => setDetailResource(resource)}
                 >
-                  {/* Cover image or fallback */}
+                  {/* Hero image — aspect-video on mobile, fixed h-40 on desktop */}
                   {hasCover ? (
-                    <div className="relative w-full overflow-hidden bg-muted h-40">
+                    <div className="relative w-full aspect-video sm:aspect-auto sm:h-40 overflow-hidden bg-muted/30 shrink-0">
                       <img
                         src={resource.cover_image_url!}
                         alt=""
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                         loading="lazy"
                         onError={() => setImgErrors((prev) => new Set(prev).add(resource.id))}
                       />
                     </div>
                   ) : (
-                    <div className={`flex flex-col items-center justify-center gap-2 h-40 px-4 bg-gradient-to-br ${categoryGradients[resource.category]}`}>
+                    <div className={`flex flex-col items-center justify-center gap-2 aspect-video sm:aspect-auto sm:h-40 px-4 bg-gradient-to-br ${categoryGradients[resource.category]}`}>
                       {resource.file_url ? (
                         <Paperclip size={28} className="text-foreground/30" />
                       ) : resource.favicon_url ? (
@@ -186,93 +175,52 @@ const VaultPage = () => {
                       ) : (
                         categoryIcons[resource.category]
                       )}
-                      <span className="text-xs font-medium text-foreground/40">{resource.domain || "File"}</span>
+                      <span className="text-xs font-medium text-foreground/40 max-w-[80%] text-center truncate">
+                        {resource.domain || "File"}
+                      </span>
                     </div>
                   )}
 
                   {/* Content */}
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <h3 className="font-medium text-foreground text-sm leading-snug line-clamp-2">
+                  <div className="p-3 sm:p-4 flex-1 flex flex-col gap-1.5">
+                    <div className="flex items-start gap-1.5">
+                      <h3 className="text-[13px] sm:text-sm font-semibold text-foreground leading-snug line-clamp-2 flex-1">
                         {resource.title}
                       </h3>
                       {sharedResourceMap.has(resource.title) && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-medium shrink-0">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-medium shrink-0 mt-0.5">
                           <Globe size={9} />
-                          Shared
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
+
+                    {/* Description — hidden on mobile */}
+                    {resource.description && (
+                      <p className="hidden sm:block text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {resource.description}
+                      </p>
+                    )}
+
+                    {/* Meta row — compact, pushed to bottom */}
+                    <div className="flex items-center gap-2 mt-auto pt-1">
                       {resource.favicon_url && (
-                        <img src={resource.favicon_url} alt="" className="w-3.5 h-3.5 rounded-sm" />
+                        <img src={resource.favicon_url} alt="" className="w-3.5 h-3.5 rounded-sm shrink-0" />
                       )}
-                      <span className="text-[11px] text-muted-foreground truncate">{resource.domain}</span>
+                      <span className="text-[11px] text-muted-foreground truncate">
+                        {resource.domain || categoryEmoji[resource.category] + " " + resource.category}
+                      </span>
                     </div>
-                    <span className="text-[11px] text-muted-foreground font-medium capitalize">
-                      {categoryEmoji[resource.category]} {resource.category}
-                    </span>
+
+                    {/* Tags — limit to 2 on mobile, show all on desktop */}
                     {resource.tags && resource.tags.length > 0 && (
-                      <div className="flex gap-1 flex-wrap mt-2">
+                      <div className="hidden sm:flex gap-1 flex-wrap mt-1">
                         {resource.tags.map((tag, ti) => (
                           <TagChip key={ti} label={tag} colorIndex={ti} className="text-[10px] px-2 py-0.5" />
                         ))}
                       </div>
                     )}
-                    {resource.description && (
-                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
-                        {resource.description}
-                      </p>
-                    )}
-                    {resource.file_url && (
-                      <div className="flex items-center gap-1 mt-2 text-[11px] text-primary">
-                        <Paperclip size={11} />
-                        <span className="truncate">{resource.file_name || "File attached"}</span>
-                      </div>
-                    )}
                   </div>
-
-                  {/* Hover overlay */}
-                  <AnimatePresence>
-                    {isHovered && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute inset-0 bg-foreground/5 backdrop-blur-[2px] flex items-end justify-center pb-4 gap-2"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          onClick={() => window.open(resource.url, "_blank", "noopener")}
-                          className="flex items-center gap-1.5 rounded-pill bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity shadow-md"
-                          aria-label="Open resource"
-                        >
-                          <ExternalLink size={13} /> Open
-                        </button>
-                        <button
-                          onClick={() => handleCopy(resource)}
-                          className={`flex items-center gap-1 rounded-pill px-3 py-2 text-xs font-medium shadow-md transition-all duration-200 ${
-                            isCopied
-                              ? "bg-status-shipped text-foreground"
-                              : "bg-card text-foreground hover:bg-secondary"
-                          }`}
-                          aria-label="Copy link"
-                        >
-                          {isCopied ? <Check size={13} /> : <Copy size={13} />}
-                          {isCopied ? "Copied!" : "Copy"}
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteFromDetail(resource.id); }}
-                          className="flex items-center rounded-pill bg-card px-2.5 py-2 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shadow-md"
-                          aria-label="Delete resource"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
+                </motion.button>
               );
             })}
           </AnimatePresence>
