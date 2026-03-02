@@ -111,6 +111,39 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          page_url: string | null
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          page_url?: string | null
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          page_url?: string | null
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       follow_requests: {
         Row: {
           created_at: string
