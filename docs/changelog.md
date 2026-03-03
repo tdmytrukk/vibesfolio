@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **2026-03-03**: Masterplan revision — removed Build Log, Cockpit, session debriefs, shipping logs from active feature pillars; updated value loop, success metrics, product principles, personas, and risks to reflect current positioning around ideas, prompts, resources & community (`docs/masterplan.md`)
+
 ### Added
 
 - Initial project setup

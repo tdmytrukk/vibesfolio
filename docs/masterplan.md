@@ -14,7 +14,7 @@ Vibe-builders and AI learners collect ideas, prompts, tutorials, and tools acros
 |---------|-------------|-------------|
 | **Vibe-Coder** | Builds with AI prompts as primary workflow using tools like Lovable, Cursor, Replit | Reuses prompts but can't find old ones; no prompt library; no way to share what works |
 | **AI Learner** | Exploring AI tools, collecting tutorials and resources to level up | Bookmarks scattered everywhere; no organized space for learning materials |
-| **Indie Builder** | Ships solo products, manages ideas and side projects | Loses track of ideas; context-switches between too many tabs; needs lightweight tracking |
+| **Indie Builder** | Ships solo products, collects resources and prompts to move faster | Great prompts and resources lost in chat history; no way to organize and share what works |
 
 ## Value Proposition
 
@@ -24,14 +24,12 @@ Vibe-builders and AI learners collect ideas, prompts, tutorials, and tools acros
 - **Built for builders** — not a PM tool, not a note app. Purpose-built for people who build with AI.
 - **Aesthetic-first** — the UI itself reduces stress (soft gradients, glass effects, paper texture).
 - **Core trio** — Ideas, Prompts, and Resources as first-class citizens, not afterthoughts.
-- **Community layer** — share artifacts (prompts, resources) publicly; follow other builders.
+- **Community layer** — share artifacts (prompts & resources) publicly; follow other builders.
 
 ## Primary Value Loop
 
 ```
-Capture idea → Collect resources → Save prompts → Start build →
-Track progress (tasks, decisions, shipping log) → Reflect (session debriefs) →
-Ship → Share artifacts → Repeat
+Capture idea → Collect resources → Save prompts → Share with community → Repeat
 ```
 
 ## Success Metrics
@@ -39,17 +37,17 @@ Ship → Share artifacts → Repeat
 | Metric | Target | Measurement |
 |--------|--------|-------------|
 | **Weekly active builders** | Steady growth month-over-month | Users who log in and perform ≥1 action per week |
-| **Ideas → Builds conversion** | >20% of ideas become active builds | Count of builds created from idea references |
-| **Session debrief completion** | >30% of active sessions end with a debrief | Debriefs created vs. active build sessions |
+| **Resources saved per user** | Avg 10+ resources per active user | Resources saved per user |
 | **Prompt library depth** | Avg 10+ prompts per active user | Prompts saved per user |
 | **Community engagement** | >15% of users share ≥1 artifact publicly | Public artifacts / total users |
+| **Artifacts shared to community** | Steady growth month-over-month | Total public artifacts published per week |
 | **Retention (D7)** | >40% | Users returning within 7 days of signup |
 
 ## Product Principles
 
 1. **Calm over busy** — Every screen should feel manageable. No notification overload.
 2. **Capture is king** — Adding an idea, prompt, or resource must take <10 seconds.
-3. **Reflection drives growth** — Session debriefs and shipping logs aren't optional overhead; they're the product's secret weapon.
+3. **Sharing accelerates learning** — Publishing prompts and resources to the community creates a flywheel of collective growth.
 4. **Beautiful by default** — The workspace aesthetic is a feature, not decoration.
 5. **Privacy first, sharing optional** — Everything is private by default; community sharing is opt-in per artifact.
 
@@ -64,16 +62,10 @@ Bookmark links with auto-fetched metadata (title, description, favicon, OG image
 ### 3. Prompt Library
 Store, tag, and retrieve AI prompts. Copy-to-clipboard workflow. Publishable to community.
 
-### 4. Build Log (Projects)
-Lightweight project tracking: status pipeline (idea → in progress → paused → shipped → archived), Lovable URL linking, project-level tasks, decisions, shipping log, and session debriefs.
-
-### 5. Cockpit (Build Detail)
-Per-project command center: mission/focus area, task board (today/next/backlog), decision vault, shipping log timeline, and session debrief history.
-
-### 6. Community
+### 4. Community
 Browse public artifacts (prompts & resources) shared by other builders. Save artifacts to your own library. Follow builders.
 
-### 7. Profile
+### 5. Profile
 Public/private toggle, display name, avatar. Manage followers and following.
 
 ## Revenue Model (Future)
@@ -86,7 +78,7 @@ Public/private toggle, display name, avatar. Manage followers and following.
 
 | Risk | Mitigation |
 |------|-----------|
-| Users don't return after initial capture | Session debriefs and "what's next" nudges create return loops |
+| Users don't return after initial capture | Community notifications and new shared artifacts create return loops |
 | Community becomes low-quality | Moderation via admin/moderator roles (already in DB schema) |
-| Feature creep toward PM tools | Strict adherence to "built for one person" principle |
+| Feature creep beyond curation | Strict adherence to core trio (ideas, prompts, resources) + community |
 | Mobile experience friction | Glass UI tested on mobile; bottom-tab navigation; mobile-first modals |
