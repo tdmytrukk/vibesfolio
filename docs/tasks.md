@@ -71,7 +71,7 @@
 | 6.3 | Export/import data | ⬜ | JSON export of all user data; import from JSON |
 | 6.5 | Pro tier with gating | ✅ | Stripe integration done: 14-day trial → read-only → $5/mo or $50/yr. Edge functions: create-checkout, check-subscription, customer-portal. Gating via FAB + AppShell banner. |
 | 6.6 | Prompt effectiveness tracking | ⬜ | Rate prompts after use; community sorting by effectiveness |
-| 6.7 | Dark mode toggle in UI | ⬜ | CSS tokens exist; add toggle in profile/nav |
+| 6.7 | Dark mode toggle in UI | ✅ | Implemented via `next-themes` with full CSS custom property support in `index.css` |
 | 6.8 | Repositioning: copy update across landing, SEO, docs | ✅ | Shifted to "vibe-builders & AI learners" positioning |
 
 ---
