@@ -196,7 +196,7 @@ const VaultPage = () => {
 
                     {/* Description — hidden on mobile */}
                     {resource.description && (
-                      <p className="hidden sm:block text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed overflow-hidden">
                         {resource.description}
                       </p>
                     )}
