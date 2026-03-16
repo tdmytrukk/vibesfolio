@@ -45,7 +45,7 @@ const categoryEmoji: Record<ResourceCategory, string> = {
 
 const VaultPage = () => {
   const { resources, loading, addResource, updateResource, deleteResource, fetchUrlMetadata } = useResources();
-  const { myArtifacts } = usePublicArtifacts();
+  const { myArtifacts, refetchMy } = usePublicArtifacts();
   
   const sharedResourceMap = new Map(
     myArtifacts
