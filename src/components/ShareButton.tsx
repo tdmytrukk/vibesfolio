@@ -19,10 +19,13 @@ interface ShareButtonProps {
 const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const shareUrl = artifactId
     ? `${window.location.origin}/shared/${artifactId}`
     : fallbackUrl || null;
+
+  const supportsNativeShare = isMobile && typeof navigator !== "undefined" && !!navigator.share;
 
   const handleNativeShare = async () => {
     if (!shareUrl) {
