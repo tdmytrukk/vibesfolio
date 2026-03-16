@@ -30,6 +30,7 @@ const ShareToCommunityToggle = ({
   resourceUrl,
   resourceCategory,
   description,
+  coverImageUrl,
   onShared,
   onUnshared,
 }: ShareToCommunityToggleProps) => {
