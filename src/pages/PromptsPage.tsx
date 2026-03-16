@@ -77,9 +77,8 @@ const PromptsPage = () => {
     return [...raw].sort((a, b) => (freq.get(b) || 0) - (freq.get(a) || 0));
   }, [allTags, prompts]);
 
-  const TAG_MOBILE_LIMIT = 10;
-  const displayTags = isMobile && !showAllTags ? sortedTags.slice(0, TAG_MOBILE_LIMIT) : sortedTags;
-  const hiddenTagCount = sortedTags.length - TAG_MOBILE_LIMIT;
+  const displayTags = sortedTags;
+  const hasHiddenTags = sortedTags.length > 5;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -96,7 +95,11 @@ const PromptsPage = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className={`relative flex items-center gap-2 flex-wrap overflow-hidden transition-all duration-200 ${
+          showAllTags ? "" : "max-h-[40px] md:max-h-[40px]"
+        }`}
+          style={!showAllTags ? { maxHeight: isMobile ? '80px' : '40px' } : undefined}
+        >
           {displayTags.map((tag) => {
             const isSelected = selectedTags.includes(tag);
             return (
@@ -114,31 +117,23 @@ const PromptsPage = () => {
               </button>
             );
           })}
-          {isMobile && hiddenTagCount > 0 && !showAllTags && (
-            <button
-              onClick={() => setShowAllTags(true)}
-              className="flex items-center gap-0.5 rounded-pill px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-secondary/50 border border-border/30 transition-colors"
-            >
-              +{hiddenTagCount} <ChevronDown size={12} />
-            </button>
-          )}
-          {isMobile && showAllTags && sortedTags.length > TAG_MOBILE_LIMIT && (
-            <button
-              onClick={() => setShowAllTags(false)}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Show less
-            </button>
-          )}
-          {hasFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-1"
-            >
-              Clear filters
-            </button>
-          )}
         </div>
+        {hasHiddenTags && (
+          <button
+            onClick={() => setShowAllTags(!showAllTags)}
+            className="flex items-center gap-0.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mt-1"
+          >
+            {showAllTags ? "Show less" : "Show all"} <ChevronDown size={12} className={`transition-transform ${showAllTags ? "rotate-180" : ""}`} />
+          </button>
+        )}
+        {hasFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-1"
+          >
+            Clear filters
+          </button>
+        )}
       </div>
 
       {/* Prompt grid */}
