@@ -78,7 +78,7 @@ const LandingPage = () => {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <span className="inline-block rounded-pill bg-secondary px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-            Built for vibe-coders ✦
+            Built for vibe-coders and AI learners ✦
           </span>
           <h1 className="font-heading text-4xl md:text-6xl text-foreground leading-tight tracking-tight mb-5">
             Your best prompts
