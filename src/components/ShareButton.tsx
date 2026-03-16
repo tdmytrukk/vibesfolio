@@ -101,7 +101,6 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
           aria-label="Share"
         >
           <Share2 size={13} />
-          Share
         </button>
       </PopoverTrigger>
       <PopoverContent
