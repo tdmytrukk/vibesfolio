@@ -149,7 +149,14 @@ const AppShell = ({ children }: AppShellProps) => {
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
-        <header className={`sticky top-0 z-20 flex items-center justify-end px-5 py-2 md:hidden ${location.pathname === "/profile" ? "hidden" : ""}`}>
+        <header className={`sticky top-0 z-20 flex items-center justify-end gap-2 px-5 py-2 md:hidden ${location.pathname === "/profile" ? "hidden" : ""}`}>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground"
+            aria-label="Search"
+          >
+            <Search size={18} />
+          </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <button
