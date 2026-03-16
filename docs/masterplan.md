@@ -2,7 +2,7 @@
 
 ## Vision
 
-Vibesfolio is **a space for vibe-builders and AI learners** to capture ideas, save prompts, and curate resources that help you build products and learn AI better. It's a calm, beautiful workspace where everything you need to grow as a builder lives in one place.
+Vibesfolio is **a space for vibe-builders and AI learners** to capture ideas, save prompts, and curate resources that help you build products and learn AI better. Everything you need to grow as a builder lives in one place.
 
 ## Core Purpose
 
