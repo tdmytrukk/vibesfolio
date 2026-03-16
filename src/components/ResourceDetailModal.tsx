@@ -32,7 +32,7 @@ interface Props {
   onUnpublished?: () => void;
 }
 
-const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) => {
+const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArtifactId, onPublished, onUnpublished }: Props) => {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ResourceCategory>("other");
