@@ -8,17 +8,17 @@ const features = [
   {
     icon: Lightbulb,
     title: "Idea Inbox",
-    desc: "Stop losing ideas to Apple Notes and voice memos. One inbox for every raw idea — tagged, searchable, there when you're ready to ship.",
+    desc: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
   },
   {
     icon: Sparkles,
     title: "Prompt Library",
-    desc: "Stop scrolling through chat history to find the prompt that worked. Save it once, find it instantly, copy in one click.",
+    desc: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
   },
   {
     icon: Archive,
     title: "Resource Vault",
-    desc: "Your browser bookmarks are a graveyard. Save tools and links with auto-fetched metadata — organized, not just saved.",
+    desc: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
   },
   {
     icon: Radio,
@@ -81,13 +81,13 @@ const LandingPage = () => {
             Built for vibe-coders ✦
           </span>
           <h1 className="font-heading text-4xl md:text-6xl text-foreground leading-tight tracking-tight mb-5">
-            Stop losing your
+            Your best prompts
             <br />
-            <span className="text-muted-foreground">best prompts.</span>
+            <span className="text-muted-foreground">deserve a home.</span>
           </h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
-            One home for the three things you collect when you build: prompts,
-            ideas, and inspiration. Find them again. Share what works.
+            One place for the prompts, ideas, and resources you collect while
+            building. Find them instantly. Share what ships.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -140,10 +140,10 @@ const LandingPage = () => {
           className="card-glass p-10 md:p-14"
         >
           <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-            Stop starting from scratch. Start building on what works.
+            Build on what worked last time.
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Join vibe-coders who've stopped losing their best work to chat history and scattered bookmarks.
+            Join builders who keep their best work close — not scattered across tabs, chats, and bookmarks.
           </p>
           <Link
             to="/auth?mode=signup"

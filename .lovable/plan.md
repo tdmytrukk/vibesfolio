@@ -1,39 +1,28 @@
 
 
-## Landing Page Copy Refresh
+## Update Masterplan to Reflect Current Positioning
 
-The current page uses "Stop..." phrasing three times, which feels repetitive and aggressive. Here's a revision that keeps the same meaning but feels more builder-friendly and confident:
+The masterplan still references the deferred project-tracking features (Build Log, Cockpit, session debriefs, shipping logs) as active pillars. These need to be removed or moved to a "Deferred" section to match the current focus: **ideas, prompts, resources, and community**.
 
-### Current → Proposed Copy
+### Changes to `docs/masterplan.md`
 
-**Hero headline:**
-- Current: "Stop losing your best prompts."
-- Proposed: **"Your best prompts deserve a home."**
+1. **Primary Value Loop** (lines 31–35) — Remove "Start build → Track progress → Reflect → Ship" steps. New loop:
+   ```
+   Capture idea → Collect resources → Save prompts → Share with community → Repeat
+   ```
 
-**Hero subtext:**
-- Current: "One home for the three things you collect when you build: prompts, ideas, and inspiration. Find them again. Share what works."
-- Proposed: **"One place for the prompts, ideas, and resources you collect while building. Find them instantly. Share what ships."**
+2. **Success Metrics** (lines 41–43) — Remove "Ideas → Builds conversion" and "Session debrief completion" rows. Replace with metrics like "Resources saved per user" and "Artifacts shared to community".
 
-**Idea Inbox description:**
-- Current: "Stop losing ideas to Apple Notes and voice memos. One inbox for every raw idea..."
-- Proposed: **"One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship."**
+3. **Product Principles** (line 53) — Replace principle #3 ("Reflection drives growth" referencing debriefs/shipping logs) with something like: **"Sharing accelerates learning"** — Publishing prompts and resources to the community creates a flywheel of collective growth.
 
-**Prompt Library description:**
-- Current: "Stop scrolling through chat history to find the prompt that worked..."
-- Proposed: **"The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click."**
+4. **Feature Pillars** (lines 67–71) — Remove **Build Log** and **Cockpit** sections entirely. Keep only: Idea Inbox, Resource Vault, Prompt Library, Community, Profile.
 
-**Resource Vault description:**
-- Current: "Your browser bookmarks are a graveyard..."
-- Proposed: **"Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried."**
+5. **Indie Builder persona** (line 17) — Update description and pain points to remove "manages ideas and side projects" / "lightweight tracking". Reframe around saving and sharing resources.
 
-**Bottom CTA headline:**
-- Current: "Stop starting from scratch. Start building on what works."
-- Proposed: **"Build on what worked last time."**
+6. **Risks & Mitigations** (line 88) — Replace "Session debriefs and what's next nudges" with a return-loop strategy that fits (e.g., community notifications, new shared artifacts). Replace "Feature creep toward PM tools" with "Feature creep beyond curation" or similar.
 
-**Bottom CTA subtext:**
-- Current: "Join vibe-coders who've stopped losing their best work to chat history and scattered bookmarks."
-- Proposed: **"Join builders who keep their best work close — not scattered across tabs, chats, and bookmarks."**
+7. **Revenue Model** (line 83) — Keep as-is (already aligned with current positioning).
 
-### Files Changed
-- `src/pages/LandingPage.tsx` — Update all string literals listed above
+### Also update
+- **`docs/changelog.md`** — Log the masterplan revision.
 
