@@ -18,7 +18,7 @@ const features = [
   {
     icon: Archive,
     title: "Resource Vault",
-    desc: "Your browser bookmarks are a graveyard. Save tools and links with auto-fetched metadata — organized, not just saved.",
+    desc: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
   },
   {
     icon: Radio,
