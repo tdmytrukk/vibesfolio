@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload, Loader2 } from "lucide-react";
+import { Radio, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -146,7 +146,7 @@ const PublishToggle = ({
       className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
       aria-label="Publish to community"
     >
-      <Upload size={13} />
+      <Radio size={13} />
       Publish
     </button>
   );

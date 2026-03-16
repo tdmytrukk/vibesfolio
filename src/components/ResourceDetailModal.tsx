@@ -256,49 +256,55 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
               )}
 
               {/* Actions */}
-              <div className="space-y-2 pt-2 border-t border-border/30">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <button
-                    onClick={() => window.open(resource.url, "_blank", "noopener")}
-                    className="flex items-center gap-1.5 rounded-pill bg-primary px-4 py-2.5 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-                  >
-                    <ExternalLink size={14} /> Open
-                  </button>
-                  <button
-                    onClick={handleCopy}
-                    className={`flex items-center gap-1.5 rounded-pill px-4 py-2.5 text-xs font-medium transition-all duration-200 ${
-                      copied
-                        ? "bg-status-shipped text-foreground"
-                        : "bg-secondary text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {copied ? <Check size={14} /> : <Copy size={14} />}
-                    {copied ? "Copied!" : "Copy"}
-                  </button>
+              <div className="flex items-center gap-2 pt-2 border-t border-border/30">
+                <button
+                  onClick={() => window.open(resource.url, "_blank", "noopener")}
+                  className="flex items-center justify-center rounded-full p-2 bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                  aria-label="Open link"
+                >
+                  <ExternalLink size={15} />
+                </button>
+                <button
+                  onClick={handleCopy}
+                  className={`flex items-center justify-center rounded-full p-2 transition-all duration-200 ${
+                    copied
+                      ? "bg-status-shipped text-foreground"
+                      : "bg-secondary text-foreground hover:bg-muted"
+                  }`}
+                  aria-label={copied ? "Copied" : "Copy URL"}
+                >
+                  {copied ? <Check size={15} /> : <Copy size={15} />}
+                </button>
 
-                  <PublishToggle
-                    artifactId={sharedArtifactId}
-                    artifactType="resource"
-                    title={resource.title}
-                    resourceUrl={resource.url}
-                    resourceCategory={resource.category}
-                    description={resource.description || undefined}
-                    tags={resource.tags}
-                    onPublished={() => onPublished?.()}
-                    onUnpublished={() => onUnpublished?.()}
-                  />
-                </div>
+                <PublishToggle
+                  artifactId={sharedArtifactId}
+                  artifactType="resource"
+                  title={resource.title}
+                  resourceUrl={resource.url}
+                  resourceCategory={resource.category}
+                  description={resource.description || undefined}
+                  tags={resource.tags}
+                  onPublished={() => onPublished?.()}
+                  onUnpublished={() => onUnpublished?.()}
+                />
 
-                <div className="flex items-center gap-2">
-                  <ShareButton
-                    artifactId={sharedArtifactId}
-                    fallbackUrl={resource.url}
-                    title={resource.title}
-                  />
+                <ShareButton
+                  artifactId={sharedArtifactId}
+                  fallbackUrl={resource.url}
+                  title={resource.title}
+                />
 
-                  <div className="flex-1" />
+                <div className="flex-1" />
 
-                  {editing ? (
+                {editing ? (
+                  <>
+                    <button
+                      onClick={handleDelete}
+                      className="flex items-center justify-center rounded-full p-2 bg-secondary text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      aria-label="Delete"
+                    >
+                      <Trash2 size={15} />
+                    </button>
                     <button
                       onClick={handleSave}
                       disabled={!title.trim() || saving}
@@ -306,23 +312,16 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
                     >
                       <Save size={14} /> {saving ? "Saving…" : "Save"}
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => setEditing(true)}
-                      className="flex items-center gap-1.5 rounded-pill bg-secondary text-foreground px-3 py-2.5 text-xs font-medium hover:bg-muted transition-colors"
-                    >
-                      <Pencil size={14} /> Edit
-                    </button>
-                  )}
-
+                  </>
+                ) : (
                   <button
-                    onClick={handleDelete}
-                    className="flex items-center rounded-pill bg-secondary text-muted-foreground px-3 py-2.5 text-xs hover:bg-destructive/10 hover:text-destructive transition-colors"
-                    aria-label="Delete"
+                    onClick={() => setEditing(true)}
+                    className="flex items-center justify-center rounded-full p-2 bg-secondary text-foreground hover:bg-muted transition-colors"
+                    aria-label="Edit"
                   >
-                    <Trash2 size={14} />
+                    <Pencil size={15} />
                   </button>
-                </div>
+                )}
               </div>
             </div>
           </motion.div>
