@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload, Loader2 } from "lucide-react";
+import { Radio, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
