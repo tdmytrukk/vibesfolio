@@ -94,8 +94,27 @@ export function usePublicArtifacts() {
         };
       });
 
-    setAllArtifacts(enrich(publicData));
-    setArtifacts(enrich(visibleData));
+    const enriched = enrich(publicData);
+    const enrichedVisible = enrich(visibleData);
+    
+    setAllArtifacts(enriched);
+    setArtifacts(enrichedVisible);
+
+    // Backfill missing cover images for resource artifacts
+    const missingCover = publicData.filter(
+      (a: any) => !a.cover_image_url && a.artifact_type === "resource" && a.resource_url
+    );
+    if (missingCover.length > 0) {
+      missingCover.slice(0, 5).forEach(async (a: any) => {
+        const meta = await fetchUrlMetadata(a.resource_url);
+        if (meta?.ogImage) {
+          await supabase
+            .from("public_artifacts")
+            .update({ cover_image_url: meta.ogImage })
+            .eq("id", a.id);
+        }
+      });
+    }
     setLoading(false);
   }, [user]);
 
