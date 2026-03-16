@@ -62,7 +62,7 @@ const PublishToggle = ({
 
     const { data, error } = await supabase
       .from("public_artifacts")
-      .insert(insertData)
+      .insert(insertData as any)
       .select("id")
       .single();
 
