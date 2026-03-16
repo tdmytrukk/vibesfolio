@@ -61,6 +61,14 @@ const AppShell = ({ children }: AppShellProps) => {
 
         <div className="h-5 w-px bg-border/50 mx-1" />
 
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-white/25 dark:hover:bg-white/5 transition-colors"
+          aria-label="Search (⌘K)"
+        >
+          <Search size={16} />
+        </button>
+
         <nav className="flex items-center gap-0.5">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to;
