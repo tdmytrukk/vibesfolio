@@ -42,11 +42,7 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
     onClose();
   };
 
-  const handleDelete = () => {
-    if (!prompt) return;
-    onDelete(prompt);
-    onClose();
-  };
+  // Delete is handled via the edit modal flow
 
   const hasSections = prompt && prompt.sections.length > 0;
 
