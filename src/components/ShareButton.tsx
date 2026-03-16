@@ -77,7 +77,7 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
   };
 
   // On mobile with Web Share API, use native share directly
-  if (typeof navigator !== "undefined" && navigator.share) {
+  if (supportsNativeShare) {
     return (
       <button
         onClick={(e) => {
@@ -88,7 +88,6 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
         aria-label="Share"
       >
         <Share2 size={13} />
-        Share
       </button>
     );
   }
