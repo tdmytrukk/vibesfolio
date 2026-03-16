@@ -125,16 +125,14 @@ const PromptsPage = () => {
           >
             {showAllTags ? "Show less" : "Show all"} <ChevronDown size={12} className={`transition-transform ${showAllTags ? "rotate-180" : ""}`} />
           </button>
+        {hasFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-1"
+          >
+            Clear filters
+          </button>
         )}
-          {hasFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors ml-1"
-            >
-              Clear filters
-            </button>
-          )}
-        </div>
       </div>
 
       {/* Prompt grid */}
