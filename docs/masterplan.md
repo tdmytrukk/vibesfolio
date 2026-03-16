@@ -45,10 +45,9 @@ Capture idea → Collect resources → Save prompts → Share with community →
 
 ## Product Principles
 
-1. **Calm over busy** — Every screen should feel manageable. No notification overload.
+1. **Simple over busy** — Every screen should feel manageable. No notification overload.
 2. **Capture is king** — Adding an idea, prompt, or resource must take <10 seconds.
 3. **Sharing accelerates learning** — Publishing prompts and resources to the community creates a flywheel of collective growth.
-4. **Beautiful by default** — The workspace aesthetic is a feature, not decoration.
 5. **Privacy first, sharing optional** — Everything is private by default; community sharing is opt-in per artifact.
 
 ## Feature Pillars
