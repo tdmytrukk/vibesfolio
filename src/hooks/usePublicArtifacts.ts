@@ -146,13 +146,7 @@ export function usePublicArtifacts() {
   }) => {
     if (!user) return null;
 
-    // Fetch cover image for resource artifacts
-    let coverImageUrl: string | null = null;
-    if (artifact.artifact_type === "resource" && artifact.resource_url) {
-      const meta = await fetchUrlMetadata(artifact.resource_url);
-      if (meta?.ogImage) coverImageUrl = meta.ogImage;
-    }
-
+    // Insert first, then fetch cover image in background
     const { data, error } = await supabase
       .from("public_artifacts")
       .insert({
@@ -160,12 +154,26 @@ export function usePublicArtifacts() {
         user_id: user.id,
         tags: artifact.tags || [],
         is_public: artifact.is_public ?? true,
-        cover_image_url: coverImageUrl,
       } as any)
       .select()
       .single();
 
     if (error) return null;
+
+    // Fetch cover image async for resource artifacts
+    if (artifact.artifact_type === "resource" && artifact.resource_url && data) {
+      fetchUrlMetadata(artifact.resource_url).then(async (meta) => {
+        if (meta?.ogImage) {
+          await supabase
+            .from("public_artifacts")
+            .update({ cover_image_url: meta.ogImage })
+            .eq("id", data.id);
+          fetchMyArtifacts();
+          fetchFeed();
+        }
+      });
+    }
+
     await fetchMyArtifacts();
     await fetchFeed();
     return data as PublicArtifact;

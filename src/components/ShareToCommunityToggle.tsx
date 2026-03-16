@@ -15,6 +15,7 @@ interface ShareToCommunityToggleProps {
   resourceUrl?: string;
   resourceCategory?: string;
   description?: string;
+  coverImageUrl?: string | null;
   /** Callbacks */
   onShared?: (artifactId: string) => void;
   onUnshared?: () => void;
