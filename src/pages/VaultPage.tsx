@@ -233,6 +233,9 @@ const VaultPage = () => {
         onClose={() => setDetailResource(null)}
         onUpdate={updateResource}
         onDelete={handleDeleteFromDetail}
+        sharedArtifactId={detailResource ? sharedResourceMap.get(detailResource.title) || null : null}
+        onPublished={() => myArtifacts}
+        onUnpublished={() => myArtifacts}
       />
       <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={async (resource) => {
         const result = await addResource(resource);
