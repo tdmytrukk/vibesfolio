@@ -81,13 +81,13 @@ const LandingPage = () => {
             Built for vibe-coders ✦
           </span>
           <h1 className="font-heading text-4xl md:text-6xl text-foreground leading-tight tracking-tight mb-5">
-            Stop losing your
+            Your best prompts
             <br />
-            <span className="text-muted-foreground">best prompts.</span>
+            <span className="text-muted-foreground">deserve a home.</span>
           </h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
-            One home for the three things you collect when you build: prompts,
-            ideas, and inspiration. Find them again. Share what works.
+            One place for the prompts, ideas, and resources you collect while
+            building. Find them instantly. Share what ships.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
