@@ -140,10 +140,10 @@ const LandingPage = () => {
           className="card-glass p-10 md:p-14"
         >
           <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-            Stop starting from scratch. Start building on what works.
+            Build on what worked last time.
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Join vibe-coders who've stopped losing their best work to chat history and scattered bookmarks.
+            Join builders who keep their best work close — not scattered across tabs, chats, and bookmarks.
           </p>
           <Link
             to="/auth?mode=signup"
