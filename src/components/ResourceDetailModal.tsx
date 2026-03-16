@@ -39,7 +39,6 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -52,13 +51,6 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
       setEditing(false);
     }
   }, [resource]);
-
-  const handleCopy = async () => {
-    if (!resource) return;
-    await navigator.clipboard.writeText(resource.url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
 
   const handleSave = async () => {
     if (!resource || !title.trim()) return;
