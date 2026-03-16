@@ -64,7 +64,7 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
 
       {/* Content — padding only here */}
       <div className="p-4 space-y-2 flex-1 flex flex-col">
-        <h3 className="text-[15px] sm:text-base font-semibold text-foreground leading-snug line-clamp-2">
+        <h3 className="font-heading text-base sm:text-lg font-normal text-foreground leading-snug line-clamp-2">
           {artifact.title}
         </h3>
 
