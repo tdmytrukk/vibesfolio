@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Share2, Copy, Check, ExternalLink } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "@/hooks/use-toast";
 import {
   Popover,
