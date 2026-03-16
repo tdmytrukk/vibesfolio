@@ -22,7 +22,7 @@ Vibe-builders and AI learners collect ideas, prompts, tutorials, and tools acros
 
 **Key differentiators:**
 - **Built for builders** — not a PM tool, not a note app. Purpose-built for people who build with AI.
-- **Aesthetic-first** — the UI itself reduces stress (soft gradients, glass effects, paper texture).
+- **Aesthetic-first** — Clean, polished UI that stays out of your way.
 - **Core trio** — Ideas, Prompts, and Resources as first-class citizens, not afterthoughts.
 - **Community layer** — share artifacts (prompts & resources) publicly; follow other builders.
 
