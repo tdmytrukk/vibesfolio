@@ -216,6 +216,8 @@ const AppShell = ({ children }: AppShellProps) => {
         onCheckout={startCheckout}
         trialDaysLeft={subscription.trial_days_left}
       />
+
+      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 };
