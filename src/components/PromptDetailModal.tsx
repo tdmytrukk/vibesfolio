@@ -151,50 +151,54 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
               )}
 
               {/* Actions */}
-              <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/30">
-                <button
-                  onClick={handleCopyAll}
-                  className={`flex items-center gap-1.5 rounded-pill px-4 py-2.5 text-xs font-medium transition-all duration-200 ${
-                    copiedAll
-                      ? "bg-status-shipped text-foreground"
-                      : "bg-primary text-primary-foreground hover:opacity-90"
-                  }`}
-                >
-                  {copiedAll ? <Check size={14} /> : <Copy size={14} />}
-                  {copiedAll ? "Copied!" : hasSections ? "Copy All" : "Copy"}
-                </button>
+              <div className="space-y-2 pt-2 border-t border-border/30">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={handleCopyAll}
+                    className={`flex items-center gap-1.5 rounded-pill px-4 py-2.5 text-xs font-medium transition-all duration-200 ${
+                      copiedAll
+                        ? "bg-status-shipped text-foreground"
+                        : "bg-primary text-primary-foreground hover:opacity-90"
+                    }`}
+                  >
+                    {copiedAll ? <Check size={14} /> : <Copy size={14} />}
+                    {copiedAll ? "Copied!" : hasSections ? "Copy All" : "Copy"}
+                  </button>
 
-                <PublishToggle
-                  artifactId={sharedArtifactId}
-                  artifactType="prompt"
-                  title={prompt.title}
-                  promptContent={prompt.content}
-                  tags={prompt.tags}
-                  onPublished={() => onShared?.()}
-                  onUnpublished={() => onUnshared?.()}
-                />
+                  <PublishToggle
+                    artifactId={sharedArtifactId}
+                    artifactType="prompt"
+                    title={prompt.title}
+                    promptContent={prompt.content}
+                    tags={prompt.tags}
+                    onPublished={() => onShared?.()}
+                    onUnpublished={() => onUnshared?.()}
+                  />
+                </div>
 
-                <ShareButton
-                  artifactId={sharedArtifactId}
-                  title={prompt.title}
-                />
+                <div className="flex items-center gap-2">
+                  <ShareButton
+                    artifactId={sharedArtifactId}
+                    title={prompt.title}
+                  />
 
-                <div className="flex-1" />
+                  <div className="flex-1" />
 
-                <button
-                  onClick={handleEdit}
-                  className="flex items-center gap-1.5 rounded-pill bg-secondary text-foreground px-3 py-2.5 text-xs font-medium hover:bg-muted transition-colors"
-                >
-                  <Pencil size={14} /> Edit
-                </button>
+                  <button
+                    onClick={handleEdit}
+                    className="flex items-center gap-1.5 rounded-pill bg-secondary text-foreground px-3 py-2.5 text-xs font-medium hover:bg-muted transition-colors"
+                  >
+                    <Pencil size={14} /> Edit
+                  </button>
 
-                <button
-                  onClick={handleDelete}
-                  className="flex items-center rounded-pill bg-secondary text-muted-foreground px-3 py-2.5 text-xs hover:bg-destructive/10 hover:text-destructive transition-colors"
-                  aria-label="Delete"
-                >
-                  <Trash2 size={14} />
-                </button>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center rounded-pill bg-secondary text-muted-foreground px-3 py-2.5 text-xs hover:bg-destructive/10 hover:text-destructive transition-colors"
+                    aria-label="Delete"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
