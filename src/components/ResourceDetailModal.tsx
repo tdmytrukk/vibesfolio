@@ -27,6 +27,9 @@ interface Props {
   onClose: () => void;
   onUpdate: (id: string, updates: { title?: string; category?: ResourceCategory; description?: string | null; tags?: string[] }) => Promise<any>;
   onDelete: (id: string) => void;
+  sharedArtifactId?: string | null;
+  onPublished?: () => void;
+  onUnpublished?: () => void;
 }
 
 const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) => {
