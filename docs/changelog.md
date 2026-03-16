@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **2026-03-16**: Phase 5B complete — Global search via ⌘K/Ctrl+K command palette; `useSearch` hook queries ideas/prompts/resources with debounced ilike; `GlobalSearch` component with categorized results; search button in desktop nav + mobile header; navigates to page with `?highlight=id` (`src/hooks/useSearch.ts`, `src/components/GlobalSearch.tsx`, `src/components/AppShell.tsx`)
 - **2026-03-03**: Masterplan revision — removed Build Log, Cockpit, session debriefs, shipping logs from active feature pillars; updated value loop, success metrics, product principles, personas, and risks to reflect current positioning around ideas, prompts, resources & community (`docs/masterplan.md`)
 
 ### Added

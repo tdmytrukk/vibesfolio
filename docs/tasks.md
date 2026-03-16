@@ -28,9 +28,9 @@
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 5B.1 | Global search component in nav bar | ⬜ | Search across ideas, prompts, resources by title/tags |
-| 5B.2 | Search results page or dropdown with categorized results | ⬜ | Group by type: Ideas (3), Prompts (5), Resources (2) |
-| 5B.3 | Add full-text search indexes to DB tables | ⬜ | DB migration for `tsvector` columns or use textSearch |
+| 5B.1 | Global search component in nav bar | ✅ | ⌘K command palette via cmdk; searches ideas, prompts, resources by title |
+| 5B.2 | Search results dropdown with categorized results | ✅ | Grouped by type with icons; navigates to page with ?highlight=id |
+| 5B.3 | Add full-text search indexes to DB tables | ⏸️ | Deferred — server-side ilike sufficient for current scale |
 
 ## Phase 5C — Onboarding
 
