@@ -31,7 +31,19 @@ const AppShell = ({ children }: AppShellProps) => {
   const { incomingRequests } = useFollows();
   const { startCheckout } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
+  // ⌘K / Ctrl+K shortcut
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSearchOpen((o) => !o);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
   const userInitial = (profile?.display_name || user?.email || "U").charAt(0).toUpperCase();
   const avatarUrl = profile?.avatar_url;
   const pendingCount = incomingRequests.length;
