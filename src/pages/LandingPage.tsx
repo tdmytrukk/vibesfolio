@@ -6,22 +6,22 @@ const features = [
   {
     icon: Lightbulb,
     title: "Idea Inbox",
-    desc: "Capture ideas the moment they hit — tag, annotate, and build your personal idea bank.",
+    desc: "Stop losing ideas to Apple Notes and voice memos. One inbox for every raw idea — tagged, searchable, there when you're ready to ship.",
   },
   {
     icon: Sparkles,
     title: "Prompt Library",
-    desc: "Save and organize your best AI prompts. Find what works, reuse it, and learn faster.",
+    desc: "Stop scrolling through chat history to find the prompt that worked. Save it once, find it instantly, copy in one click.",
   },
   {
     icon: Archive,
     title: "Resource Vault",
-    desc: "Bookmark the tools, tutorials, and links that level up your AI skills — all in one place.",
+    desc: "Your browser bookmarks are a graveyard. Save tools and links with auto-fetched metadata — organized, not just saved.",
   },
   {
     icon: Radio,
     title: "Community",
-    desc: "Share prompts & resources with other builders. Discover what's working for the community.",
+    desc: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
   },
 ];
 
@@ -53,7 +53,7 @@ const LandingPage = () => {
             to="/auth?mode=signup"
             className="rounded-pill bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
           >
-            Get Started
+            Start your library
           </Link>
         </div>
       </header>
@@ -66,30 +66,30 @@ const LandingPage = () => {
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <span className="inline-block rounded-pill bg-secondary px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6">
-            Built for vibe-builders & AI learners ✦
+            Built for vibe-coders ✦
           </span>
           <h1 className="font-heading text-4xl md:text-6xl text-foreground leading-tight tracking-tight mb-5">
-            Your space for ideas,
+            Stop losing your
             <br />
-            <span className="text-muted-foreground">prompts & resources</span>
+            <span className="text-muted-foreground">best prompts.</span>
           </h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
-            Save your best AI prompts, capture ideas, and curate the resources
-            that help you build better products and learn AI faster.
+            One home for the three things you collect when you build: prompts,
+            ideas, and inspiration. Find them again. Share what works.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/auth?mode=signup"
               className="rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all flex items-center gap-2 shadow-sm"
             >
-              Get Started
+              Start building your library
               <ArrowRight size={16} />
             </Link>
             <a
               href="#features"
               className="rounded-pill border border-border bg-card/60 backdrop-blur-sm px-8 py-3 text-sm font-medium text-foreground hover:bg-card transition-colors"
             >
-              See Features
+              See how it works
             </a>
           </div>
         </motion.div>
@@ -147,16 +147,16 @@ const LandingPage = () => {
           className="card-glass p-10 md:p-14"
         >
           <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-            Your ideas deserve a home
+            Stop starting from scratch. Start building on what works.
           </h2>
           <p className="text-sm text-muted-foreground mb-8 max-w-md mx-auto">
-            Join vibe-builders and AI learners who use Vibesfolio to capture what matters and ship what counts.
+            Join vibe-coders who've stopped losing their best work to chat history and scattered bookmarks.
           </p>
           <Link
             to="/auth?mode=signup"
             className="inline-flex items-center gap-2 rounded-pill bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all shadow-sm"
           >
-            Start Your Free Space
+            Start building your library
             <ArrowRight size={16} />
           </Link>
         </motion.div>
