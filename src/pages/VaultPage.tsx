@@ -188,8 +188,9 @@ const VaultPage = () => {
                         {resource.title}
                       </h3>
                       {sharedResourceMap.has(resource.title) && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-medium shrink-0 mt-0.5">
-                          <Globe size={9} />
+                        <span className="relative flex h-2.5 w-2.5 shrink-0 mt-1" title="Published">
+                          <span className="absolute inset-0 rounded-full bg-status-shipped animate-ping opacity-40" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-shipped" />
                         </span>
                       )}
                     </div>
