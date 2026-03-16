@@ -77,8 +77,7 @@ const PromptsPage = () => {
     return [...raw].sort((a, b) => (freq.get(b) || 0) - (freq.get(a) || 0));
   }, [allTags, prompts]);
 
-  const TAG_MOBILE_LIMIT = 10;
-  const displayTags = isMobile && !showAllTags ? sortedTags.slice(0, TAG_MOBILE_LIMIT) : sortedTags;
+  const displayTags = showAllTags ? sortedTags : sortedTags;
   const hiddenTagCount = sortedTags.length - TAG_MOBILE_LIMIT;
 
   return (
