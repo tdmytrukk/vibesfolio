@@ -108,9 +108,9 @@ const LandingPage = () => {
       </section>
 
       {/* Features */}
-      <section id="features" className="relative z-10 max-w-5xl mx-auto px-6 pb-20 md:pb-32">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {features.slice(0, 3).map((f, i) => (
+       <section id="features" className="relative z-10 max-w-4xl mx-auto px-6 pb-20 md:pb-32">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {features.map((f, i) => (
             <motion.div
               key={f.title}
               custom={i}
@@ -119,25 +119,6 @@ const LandingPage = () => {
               viewport={{ once: true, margin: "-40px" }}
               variants={fadeUp}
               className="card-glass p-6 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
-              </div>
-              <h3 className="font-heading text-lg text-foreground">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        <div className="flex justify-center mt-4">
-          {features.slice(3).map((f, i) => (
-            <motion.div
-              key={f.title}
-              custom={i + 3}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              variants={fadeUp}
-              className="card-glass p-6 flex flex-col gap-3 w-full max-w-sm hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                 <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
