@@ -50,6 +50,27 @@ serve(async (req) => {
     const user = userData.user;
     logStep("User authenticated", { userId: user.id, email: user.email });
 
+    // Check if user is admin — bypass subscription entirely
+    const { data: roleData } = await supabaseClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (roleData) {
+      logStep("User is admin, granting full access");
+      return new Response(JSON.stringify({
+        subscribed: true,
+        trial_active: false,
+        trial_days_left: 0,
+        trial_ends_at: null,
+        can_write: true,
+        subscription_end: null,
+        plan_interval: "admin",
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+    }
+
     // Get trial_started_at from profile
     const { data: profile } = await supabaseClient
       .from("profiles")
