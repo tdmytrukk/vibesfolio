@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Instrument Serif", "serif"],
+        heading: ["DM Serif Display", "serif"],
         body: ["Inter", "sans-serif"],
       },
       colors: {

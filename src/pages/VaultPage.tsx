@@ -184,7 +184,7 @@ const VaultPage = () => {
                   {/* Content */}
                   <div className="p-3 sm:p-4 flex-1 flex flex-col gap-1.5 overflow-hidden">
                     <div className="flex items-start gap-1.5">
-                      <h3 className="font-heading text-[15px] sm:text-base font-normal text-foreground leading-snug line-clamp-2 flex-1">
+                      <h3 className="text-[13px] sm:text-sm font-semibold text-foreground leading-snug line-clamp-2 flex-1">
                         {resource.title}
                       </h3>
                       {sharedResourceMap.has(resource.title) && (

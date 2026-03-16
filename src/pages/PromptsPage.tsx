@@ -185,7 +185,7 @@ const PromptsPage = () => {
                 >
                   {/* Title + shared badge */}
                   <div className="flex items-start gap-1.5 mb-1.5">
-                    <h3 className="font-heading text-base font-normal text-foreground leading-snug line-clamp-2 flex-1">
+                    <h3 className="font-medium text-sm text-foreground leading-snug line-clamp-2 flex-1">
                       {prompt.title}
                     </h3>
                     {isShared && (

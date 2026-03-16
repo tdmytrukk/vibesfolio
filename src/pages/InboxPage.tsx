@@ -59,7 +59,7 @@ const InboxPage = () => {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-heading text-lg font-normal text-foreground mb-1">{idea.title}</h3>
+                  <h3 className="font-medium text-foreground text-[15px] mb-1">{idea.title}</h3>
                   {idea.note && (
                     <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                       {idea.note}
