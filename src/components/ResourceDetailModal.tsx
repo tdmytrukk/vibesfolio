@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
 import { Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
-import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
+import PublishToggle from "@/components/PublishToggle";
+import ShareButton from "@/components/ShareButton";
 
 const categories: { value: ResourceCategory; label: string; emoji: string }[] = [
   { value: "inspiration", label: "Inspiration", emoji: "✨" },
