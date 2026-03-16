@@ -37,6 +37,16 @@ const fadeUp = {
 };
 
 const LandingPage = () => {
+  const { setTheme, theme } = useTheme();
+
+  useEffect(() => {
+    const prev = theme;
+    setTheme("light");
+    return () => {
+      if (prev) setTheme(prev);
+    };
+  }, []);
+
   return (
     <div className="bg-gradient-app bg-noise min-h-screen relative">
       {/* Nav */}
