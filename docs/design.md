@@ -72,11 +72,11 @@ Full dark mode support with inverted tokens. Background shifts to `240 10% 6%`, 
 
 | Role | Font | Weight | Usage |
 |------|------|--------|-------|
-| **Headings** | DM Serif Display | 400 | h1, h2, h3 — editorial, warm serif |
+| **Headings** | Instrument Serif | 400 | h1, h2, h3 — modern editorial serif |
 | **Body** | Inter | 400/500/600 | All body text, labels, UI elements |
 
 ```css
---font-heading: 'DM Serif Display', serif;
+--font-heading: 'Instrument Serif', serif;
 --font-body: 'Inter', sans-serif;
 ```
 

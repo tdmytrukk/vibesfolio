@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **2026-03-16**: Typography update — Switched heading font from DM Serif Display to Instrument Serif for a more modern, readable editorial feel. Updated Google Fonts link, CSS variable, and Tailwind config. (`index.html`, `src/index.css`, `tailwind.config.ts`)
+
 - **2026-03-16**: Action bar simplification — Merged two-row actions into single row; removed text labels from Open/Copy/Edit (icon-only); moved Delete button out of main card (appears only in edit mode for resources, handled via edit modal for prompts); changed Publish icon from Upload to Radio to match Community icon. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`, `src/components/PublishToggle.tsx`)
 - **2026-03-16**: Share vs Publish redesign — Split `ShareToCommunityToggle` into `PublishToggle` (green dot "Live" indicator with unpublish popover) and `ShareButton` (Web Share API / copy link / X / LinkedIn). Created public `SharedArtifactPage` at `/shared/:artifactId` for unauthenticated viewing. Updated `PromptDetailModal`, `ResourceDetailModal`, `VaultPage`, and `PromptsPage` cards with green dot indicator for published items. (`src/components/PublishToggle.tsx`, `src/components/ShareButton.tsx`, `src/pages/SharedArtifactPage.tsx`)
 - **2026-03-16**: Phase 5B complete — Global search via ⌘K/Ctrl+K command palette; `useSearch` hook queries ideas/prompts/resources with debounced ilike; `GlobalSearch` component with categorized results; search button in desktop nav + mobile header; navigates to page with `?highlight=id` (`src/hooks/useSearch.ts`, `src/components/GlobalSearch.tsx`, `src/components/AppShell.tsx`)
