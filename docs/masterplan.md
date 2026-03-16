@@ -2,7 +2,7 @@
 
 ## Vision
 
-Vibesfolio is **a space for vibe-builders and AI learners** to capture ideas, save prompts, and curate resources that help you build products and learn AI better. It's a calm, beautiful workspace where everything you need to grow as a builder lives in one place.
+Vibesfolio is **a space for vibe-builders and AI learners** to capture ideas, save prompts, and curate resources that help you build products and learn AI better. Everything you need to grow as a builder lives in one place.
 
 ## Core Purpose
 
@@ -22,7 +22,7 @@ Vibe-builders and AI learners collect ideas, prompts, tutorials, and tools acros
 
 **Key differentiators:**
 - **Built for builders** — not a PM tool, not a note app. Purpose-built for people who build with AI.
-- **Aesthetic-first** — the UI itself reduces stress (soft gradients, glass effects, paper texture).
+- **Aesthetic-first** — Clean, polished UI that stays out of your way.
 - **Core trio** — Ideas, Prompts, and Resources as first-class citizens, not afterthoughts.
 - **Community layer** — share artifacts (prompts & resources) publicly; follow other builders.
 
@@ -45,10 +45,9 @@ Capture idea → Collect resources → Save prompts → Share with community →
 
 ## Product Principles
 
-1. **Calm over busy** — Every screen should feel manageable. No notification overload.
+1. **Simple over busy** — Every screen should feel manageable. No notification overload.
 2. **Capture is king** — Adding an idea, prompt, or resource must take <10 seconds.
 3. **Sharing accelerates learning** — Publishing prompts and resources to the community creates a flywheel of collective growth.
-4. **Beautiful by default** — The workspace aesthetic is a feature, not decoration.
 5. **Privacy first, sharing optional** — Everything is private by default; community sharing is opt-in per artifact.
 
 ## Feature Pillars
