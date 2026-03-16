@@ -264,17 +264,8 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
                 >
                   <ExternalLink size={15} />
                 </button>
-                <button
-                  onClick={handleCopy}
-                  className={`flex items-center justify-center rounded-full p-2 transition-all duration-200 ${
-                    copied
-                      ? "bg-status-shipped text-foreground"
-                      : "bg-secondary text-foreground hover:bg-muted"
-                  }`}
-                  aria-label={copied ? "Copied" : "Copy URL"}
-                >
-                  {copied ? <Check size={15} /> : <Copy size={15} />}
-                </button>
+
+
 
                 <PublishToggle
                   artifactId={sharedArtifactId}
