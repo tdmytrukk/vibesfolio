@@ -13,7 +13,7 @@ const features = [
   {
     icon: Sparkles,
     title: "Prompt Library",
-    desc: "Stop scrolling through chat history to find the prompt that worked. Save it once, find it instantly, copy in one click.",
+    desc: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
   },
   {
     icon: Archive,
