@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Copy, Check, Trash2, Pencil } from "lucide-react";
+import { X, Copy, Check, Pencil } from "lucide-react";
 import { Prompt } from "@/hooks/usePrompts";
 import TagChip from "@/components/TagChip";
 import PublishToggle from "@/components/PublishToggle";
