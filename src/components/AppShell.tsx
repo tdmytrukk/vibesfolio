@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown, Search } from "lucide-react";
+import GlobalSearch from "@/components/GlobalSearch";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -30,7 +31,19 @@ const AppShell = ({ children }: AppShellProps) => {
   const { incomingRequests } = useFollows();
   const { startCheckout } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
+  // ⌘K / Ctrl+K shortcut
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSearchOpen((o) => !o);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
   const userInitial = (profile?.display_name || user?.email || "U").charAt(0).toUpperCase();
   const avatarUrl = profile?.avatar_url;
   const pendingCount = incomingRequests.length;
@@ -47,6 +60,14 @@ const AppShell = ({ children }: AppShellProps) => {
         </span>
 
         <div className="h-5 w-px bg-border/50 mx-1" />
+
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-white/25 dark:hover:bg-white/5 transition-colors"
+          aria-label="Search (⌘K)"
+        >
+          <Search size={16} />
+        </button>
 
         <nav className="flex items-center gap-0.5">
           {navItems.map((item) => {
@@ -128,7 +149,14 @@ const AppShell = ({ children }: AppShellProps) => {
       {/* Main content */}
       <main className="relative z-10 min-h-screen pb-24 md:pb-8 md:pt-24">
         {/* Mobile header - avatar only */}
-        <header className={`sticky top-0 z-20 flex items-center justify-end px-5 py-2 md:hidden ${location.pathname === "/profile" ? "hidden" : ""}`}>
+        <header className={`sticky top-0 z-20 flex items-center justify-end gap-2 px-5 py-2 md:hidden ${location.pathname === "/profile" ? "hidden" : ""}`}>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground"
+            aria-label="Search"
+          >
+            <Search size={18} />
+          </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
                <button
@@ -188,6 +216,8 @@ const AppShell = ({ children }: AppShellProps) => {
         onCheckout={startCheckout}
         trialDaysLeft={subscription.trial_days_left}
       />
+
+      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 };
