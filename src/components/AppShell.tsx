@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown, Search } from "lucide-react";
+import GlobalSearch from "@/components/GlobalSearch";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
 import UpgradeModal from "@/components/UpgradeModal";
