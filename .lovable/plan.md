@@ -1,28 +1,39 @@
 
 
-## Update Masterplan to Reflect Current Positioning
+# Share vs Publish Redesign
 
-The masterplan still references the deferred project-tracking features (Build Log, Cockpit, session debriefs, shipping logs) as active pillars. These need to be removed or moved to a "Deferred" section to match the current focus: **ideas, prompts, resources, and community**.
+## Current State
+- `ArtifactDetailModal` exists as an in-app modal for viewing community artifacts (requires auth)
+- `ShareToCommunityToggle` handles both publish + unpublish in one component
+- No public-facing artifact page exists yet
 
-### Changes to `docs/masterplan.md`
+## Plan
 
-1. **Primary Value Loop** (lines 31–35) — Remove "Start build → Track progress → Reflect → Ship" steps. New loop:
-   ```
-   Capture idea → Collect resources → Save prompts → Share with community → Repeat
-   ```
+### 1. Create `PublishToggle` component (replace `ShareToCommunityToggle`)
+- **Unpublished**: Button with upload icon + "Publish" label
+- **Published**: Green dot + "Live" label. Clicking opens a small popover with "Unpublish" option
+- Same DB logic (insert/delete `public_artifacts`)
 
-2. **Success Metrics** (lines 41–43) — Remove "Ideas → Builds conversion" and "Session debrief completion" rows. Replace with metrics like "Resources saved per user" and "Artifacts shared to community".
+### 2. Create `ShareButton` component
+- Uses Web Share API on supported devices, otherwise shows a dropdown: Copy Link, Twitter/X, LinkedIn
+- If artifact is published, link = `/shared/{artifactId}`. If not, copies the resource URL directly (for resources) or shows "Publish first to share a link" for prompts
 
-3. **Product Principles** (line 53) — Replace principle #3 ("Reflection drives growth" referencing debriefs/shipping logs) with something like: **"Sharing accelerates learning"** — Publishing prompts and resources to the community creates a flywheel of collective growth.
+### 3. Create `SharedArtifactPage` at `/shared/:artifactId`
+- Public route (no auth required) — reuses the visual layout/styling from `ArtifactDetailModal` but as a full page
+- Fetches from `public_artifacts` by ID (RLS already allows `is_public = true` for anon)
+- Shows title, description, prompt content or resource link, tags, creator info, app branding with CTA to sign up
 
-4. **Feature Pillars** (lines 67–71) — Remove **Build Log** and **Cockpit** sections entirely. Keep only: Idea Inbox, Resource Vault, Prompt Library, Community, Profile.
+### 4. Update detail modals
+- `PromptDetailModal` and `ResourceDetailModal`: replace `ShareToCommunityToggle` with `PublishToggle` + `ShareButton`
 
-5. **Indie Builder persona** (line 17) — Update description and pain points to remove "manages ideas and side projects" / "lightweight tracking". Reframe around saving and sharing resources.
+### 5. Update cards with green dot indicator
+- `VaultPage` resource cards and `PromptsPage` prompt cards: show a small green dot when item is published (instead of current globe icon if any)
 
-6. **Risks & Mitigations** (line 88) — Replace "Session debriefs and what's next nudges" with a return-loop strategy that fits (e.g., community notifications, new shared artifacts). Replace "Feature creep toward PM tools" with "Feature creep beyond curation" or similar.
+### 6. Route registration
+- Add `/shared/:artifactId` as a public route in `App.tsx`
 
-7. **Revenue Model** (line 83) — Keep as-is (already aligned with current positioning).
-
-### Also update
-- **`docs/changelog.md`** — Log the masterplan revision.
+### Files
+- **Create**: `src/components/PublishToggle.tsx`, `src/components/ShareButton.tsx`, `src/pages/SharedArtifactPage.tsx`
+- **Modify**: `PromptDetailModal.tsx`, `ResourceDetailModal.tsx`, `VaultPage.tsx`, `PromptsPage.tsx`, `App.tsx`
+- **Deprecate**: `ShareToCommunityToggle.tsx`
 
