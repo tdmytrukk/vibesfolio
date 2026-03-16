@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, Search, Sparkles, Globe, ChevronDown } from "lucide-react";
+import { Copy, Check, Search, Sparkles, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
@@ -194,7 +194,10 @@ const PromptsPage = () => {
                       {prompt.title}
                     </h3>
                     {isShared && (
-                      <Globe size={12} className="text-primary shrink-0 mt-0.5" />
+                      <span className="relative flex h-2.5 w-2.5 shrink-0 mt-1" title="Published">
+                        <span className="absolute inset-0 rounded-full bg-status-shipped animate-ping opacity-40" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-shipped" />
+                      </span>
                     )}
                   </div>
 

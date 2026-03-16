@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, Trash2, Pencil } from "lucide-react";
 import { Prompt } from "@/hooks/usePrompts";
 import TagChip from "@/components/TagChip";
-import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
+import PublishToggle from "@/components/PublishToggle";
+import ShareButton from "@/components/ShareButton";
 
 interface Props {
   prompt: Prompt | null;
@@ -163,14 +164,19 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
                   {copiedAll ? "Copied!" : hasSections ? "Copy All" : "Copy"}
                 </button>
 
-                <ShareToCommunityToggle
+                <PublishToggle
                   artifactId={sharedArtifactId}
                   artifactType="prompt"
                   title={prompt.title}
                   promptContent={prompt.content}
                   tags={prompt.tags}
-                  onShared={() => onShared?.()}
-                  onUnshared={() => onUnshared?.()}
+                  onPublished={() => onShared?.()}
+                  onUnpublished={() => onUnshared?.()}
+                />
+
+                <ShareButton
+                  artifactId={sharedArtifactId}
+                  title={prompt.title}
                 />
 
                 <div className="flex-1" />

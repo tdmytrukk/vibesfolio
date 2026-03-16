@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
 import { Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
-import ShareToCommunityToggle from "@/components/ShareToCommunityToggle";
+import PublishToggle from "@/components/PublishToggle";
+import ShareButton from "@/components/ShareButton";
 
 const categories: { value: ResourceCategory; label: string; emoji: string }[] = [
   { value: "inspiration", label: "Inspiration", emoji: "✨" },
@@ -26,9 +27,12 @@ interface Props {
   onClose: () => void;
   onUpdate: (id: string, updates: { title?: string; category?: ResourceCategory; description?: string | null; tags?: string[] }) => Promise<any>;
   onDelete: (id: string) => void;
+  sharedArtifactId?: string | null;
+  onPublished?: () => void;
+  onUnpublished?: () => void;
 }
 
-const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) => {
+const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArtifactId, onPublished, onUnpublished }: Props) => {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ResourceCategory>("other");
@@ -271,13 +275,22 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete }: Props) =
                   {copied ? "Copied!" : "Copy"}
                 </button>
 
-                <ShareToCommunityToggle
+                <PublishToggle
+                  artifactId={sharedArtifactId}
                   artifactType="resource"
                   title={resource.title}
                   resourceUrl={resource.url}
                   resourceCategory={resource.category}
                   description={resource.description || undefined}
                   tags={resource.tags}
+                  onPublished={() => onPublished?.()}
+                  onUnpublished={() => onUnpublished?.()}
+                />
+
+                <ShareButton
+                  artifactId={sharedArtifactId}
+                  fallbackUrl={resource.url}
+                  title={resource.title}
                 />
 
                 <div className="flex-1" />

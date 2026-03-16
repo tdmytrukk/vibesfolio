@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
+import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
 import { toast } from "sonner";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";
@@ -45,7 +45,7 @@ const categoryEmoji: Record<ResourceCategory, string> = {
 
 const VaultPage = () => {
   const { resources, loading, addResource, updateResource, deleteResource, fetchUrlMetadata } = useResources();
-  const { myArtifacts } = usePublicArtifacts();
+  const { myArtifacts, refetchMy } = usePublicArtifacts();
   
   const sharedResourceMap = new Map(
     myArtifacts
@@ -188,8 +188,9 @@ const VaultPage = () => {
                         {resource.title}
                       </h3>
                       {sharedResourceMap.has(resource.title) && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary px-1.5 py-0.5 text-[9px] font-medium shrink-0 mt-0.5">
-                          <Globe size={9} />
+                        <span className="relative flex h-2.5 w-2.5 shrink-0 mt-1" title="Published">
+                          <span className="absolute inset-0 rounded-full bg-status-shipped animate-ping opacity-40" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-shipped" />
                         </span>
                       )}
                     </div>
@@ -232,6 +233,9 @@ const VaultPage = () => {
         onClose={() => setDetailResource(null)}
         onUpdate={updateResource}
         onDelete={handleDeleteFromDetail}
+        sharedArtifactId={detailResource ? sharedResourceMap.get(detailResource.title) || null : null}
+        onPublished={() => refetchMy()}
+        onUnpublished={() => refetchMy()}
       />
       <AddResourceModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onSave={async (resource) => {
         const result = await addResource(resource);

@@ -16,6 +16,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import CommunityPage from "@/pages/CommunityPage";
 import BuildersPage from "@/pages/BuildersPage";
 import LandingPage from "@/pages/LandingPage";
+import SharedArtifactPage from "@/pages/SharedArtifactPage";
 import DocsHomePage from "@/pages/docs/DocsHomePage";
 import ArchitecturePage from "@/pages/docs/ArchitecturePage";
 import ComponentsPage from "@/pages/docs/ComponentsPage";
@@ -51,6 +52,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
             <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
+            <Route path="/shared/:artifactId" element={<SharedArtifactPage />} />
             <Route path="/docs" element={<DocsLayout />}>
               <Route index element={<DocsHomePage />} />
               <Route path="architecture" element={<ArchitecturePage />} />
