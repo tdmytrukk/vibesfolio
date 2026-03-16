@@ -43,7 +43,7 @@ const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="light" storageKey="vibesfolio-theme" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="dark" storageKey="vibesfolio-theme" enableSystem={false}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
