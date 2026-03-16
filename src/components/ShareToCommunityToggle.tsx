@@ -57,13 +57,13 @@ const ShareToCommunityToggle = ({
         onUnshared?.();
       }
     } else {
-      // Share - create a public artifact
       const insertData: any = {
         user_id: user.id,
         artifact_type: artifactType,
         title,
         tags: tags || [],
         is_public: true,
+        cover_image_url: coverImageUrl || null,
       };
 
       if (artifactType === "prompt") {
@@ -73,6 +73,39 @@ const ShareToCommunityToggle = ({
         insertData.resource_category = resourceCategory || null;
         insertData.description = description || null;
       }
+
+      // If no cover image, try fetching metadata in background
+      if (!coverImageUrl && artifactType === "resource" && resourceUrl) {
+        const fetchMeta = async (artifactId: string) => {
+          try {
+            const { data: metaData } = await supabase.functions.invoke("fetch-url-metadata", {
+              body: { url: resourceUrl },
+            });
+            if (metaData?.ogImage) {
+              await supabase
+                .from("public_artifacts")
+                .update({ cover_image_url: metaData.ogImage })
+                .eq("id", artifactId);
+            }
+          } catch {}
+        };
+
+        const { data, error } = await supabase
+          .from("public_artifacts")
+          .insert(insertData)
+          .select("id")
+          .single();
+
+        if (!error && data) {
+          setShared(true);
+          setLocalArtifactId(data.id);
+          toast({ title: "Shared to community." });
+          onShared?.(data.id);
+          fetchMeta(data.id); // fire and forget
+        } else {
+          toast({ title: "Failed to share.", variant: "destructive" });
+        }
+      } else {
 
       const { data, error } = await supabase
         .from("public_artifacts")
