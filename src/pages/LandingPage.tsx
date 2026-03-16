@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lightbulb, Sparkles, Archive, Radio, ArrowRight } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const features = [
   {
