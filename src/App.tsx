@@ -52,6 +52,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<PublicOnlyRoute><LandingPage /></PublicOnlyRoute>} />
             <Route path="/auth" element={<PublicOnlyRoute><AuthPage /></PublicOnlyRoute>} />
+            <Route path="/shared/:artifactId" element={<SharedArtifactPage />} />
             <Route path="/docs" element={<DocsLayout />}>
               <Route index element={<DocsHomePage />} />
               <Route path="architecture" element={<ArchitecturePage />} />

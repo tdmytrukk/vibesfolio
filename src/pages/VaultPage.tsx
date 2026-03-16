@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip, Globe } from "lucide-react";
+import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
 import { toast } from "sonner";
 import { useResources, Resource, ResourceCategory } from "@/hooks/useResources";
 import { usePublicArtifacts } from "@/hooks/usePublicArtifacts";

@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, Search, Sparkles, Globe, ChevronDown } from "lucide-react";
+import { Copy, Check, Search, Sparkles, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";

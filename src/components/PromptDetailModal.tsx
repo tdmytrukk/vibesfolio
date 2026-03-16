@@ -164,14 +164,19 @@ const PromptDetailModal = ({ prompt, onClose, onEdit, onDelete, sharedArtifactId
                   {copiedAll ? "Copied!" : hasSections ? "Copy All" : "Copy"}
                 </button>
 
-                <ShareToCommunityToggle
+                <PublishToggle
                   artifactId={sharedArtifactId}
                   artifactType="prompt"
                   title={prompt.title}
                   promptContent={prompt.content}
                   tags={prompt.tags}
-                  onShared={() => onShared?.()}
-                  onUnshared={() => onUnshared?.()}
+                  onPublished={() => onShared?.()}
+                  onUnpublished={() => onUnshared?.()}
+                />
+
+                <ShareButton
+                  artifactId={sharedArtifactId}
+                  title={prompt.title}
                 />
 
                 <div className="flex-1" />

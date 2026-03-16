@@ -275,13 +275,22 @@ const ResourceDetailModal = ({ resource, onClose, onUpdate, onDelete, sharedArti
                   {copied ? "Copied!" : "Copy"}
                 </button>
 
-                <ShareToCommunityToggle
+                <PublishToggle
+                  artifactId={sharedArtifactId}
                   artifactType="resource"
                   title={resource.title}
                   resourceUrl={resource.url}
                   resourceCategory={resource.category}
                   description={resource.description || undefined}
                   tags={resource.tags}
+                  onPublished={() => onPublished?.()}
+                  onUnpublished={() => onUnpublished?.()}
+                />
+
+                <ShareButton
+                  artifactId={sharedArtifactId}
+                  fallbackUrl={resource.url}
+                  title={resource.title}
                 />
 
                 <div className="flex-1" />
