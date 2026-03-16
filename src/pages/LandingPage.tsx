@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lightbulb, Sparkles, Archive, Radio, ArrowRight } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const features = [
   {
@@ -35,6 +37,16 @@ const fadeUp = {
 };
 
 const LandingPage = () => {
+  const { setTheme, theme } = useTheme();
+
+  useEffect(() => {
+    const prev = theme;
+    setTheme("light");
+    return () => {
+      if (prev) setTheme(prev);
+    };
+  }, []);
+
   return (
     <div className="bg-gradient-app bg-noise min-h-screen relative">
       {/* Nav */}
