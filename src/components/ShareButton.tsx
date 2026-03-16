@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Share2, Copy, Check, ExternalLink } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "@/hooks/use-toast";
 import {
   Popover,
@@ -18,10 +19,13 @@ interface ShareButtonProps {
 const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const shareUrl = artifactId
     ? `${window.location.origin}/shared/${artifactId}`
     : fallbackUrl || null;
+
+  const supportsNativeShare = isMobile && typeof navigator !== "undefined" && !!navigator.share;
 
   const handleNativeShare = async () => {
     if (!shareUrl) {
@@ -73,7 +77,7 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
   };
 
   // On mobile with Web Share API, use native share directly
-  if (typeof navigator !== "undefined" && navigator.share) {
+  if (supportsNativeShare) {
     return (
       <button
         onClick={(e) => {
@@ -84,7 +88,6 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
         aria-label="Share"
       >
         <Share2 size={13} />
-        Share
       </button>
     );
   }
@@ -98,7 +101,6 @@ const ShareButton = ({ artifactId, fallbackUrl, title }: ShareButtonProps) => {
           aria-label="Share"
         >
           <Share2 size={13} />
-          Share
         </button>
       </PopoverTrigger>
       <PopoverContent
