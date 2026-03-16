@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Copy, Check, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
+import { X, ExternalLink, Trash2, Pencil, Save, Download, FileText, Image, File } from "lucide-react";
 import { Resource, ResourceCategory } from "@/hooks/useResources";
 import TagChip from "@/components/TagChip";
 import PublishToggle from "@/components/PublishToggle";
