@@ -125,6 +125,7 @@ const PromptsPage = () => {
           >
             {showAllTags ? "Show less" : "Show all"} <ChevronDown size={12} className={`transition-transform ${showAllTags ? "rotate-180" : ""}`} />
           </button>
+        )}
         {hasFilters && (
           <button
             onClick={clearFilters}
