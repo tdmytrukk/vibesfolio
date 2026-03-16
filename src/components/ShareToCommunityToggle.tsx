@@ -106,20 +106,20 @@ const ShareToCommunityToggle = ({
           toast({ title: "Failed to share.", variant: "destructive" });
         }
       } else {
+        const { data, error } = await supabase
+          .from("public_artifacts")
+          .insert(insertData)
+          .select("id")
+          .single();
 
-      const { data, error } = await supabase
-        .from("public_artifacts")
-        .insert(insertData)
-        .select("id")
-        .single();
-
-      if (!error && data) {
-        setShared(true);
-        setLocalArtifactId(data.id);
-        toast({ title: "Shared to community." });
-        onShared?.(data.id);
-      } else {
-        toast({ title: "Failed to share.", variant: "destructive" });
+        if (!error && data) {
+          setShared(true);
+          setLocalArtifactId(data.id);
+          toast({ title: "Shared to community." });
+          onShared?.(data.id);
+        } else {
+          toast({ title: "Failed to share.", variant: "destructive" });
+        }
       }
     }
 
