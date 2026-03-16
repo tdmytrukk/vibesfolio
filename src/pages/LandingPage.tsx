@@ -8,7 +8,7 @@ const features = [
   {
     icon: Lightbulb,
     title: "Idea Inbox",
-    desc: "Stop losing ideas to Apple Notes and voice memos. One inbox for every raw idea — tagged, searchable, there when you're ready to ship.",
+    desc: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
   },
   {
     icon: Sparkles,
