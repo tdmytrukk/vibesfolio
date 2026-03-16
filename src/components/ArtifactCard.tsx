@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ExternalLink, Sparkles } from "lucide-react";
 import type { PublicArtifact } from "@/hooks/usePublicArtifacts";
 
@@ -21,6 +21,10 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
       })()
     : null;
 
+  const faviconUrl = resourceDomain
+    ? `https://www.google.com/s2/favicons?domain=${resourceDomain}&sz=128`
+    : null;
+
   const hasImage = artifact.cover_image_url && !imgError;
 
   return (
@@ -41,7 +45,9 @@ const ArtifactCard = ({ artifact, onClick }: ArtifactCardProps) => {
           />
         ) : (
           <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-muted/40 via-muted/20 to-muted/40">
-            {isPrompt ? (
+            {faviconUrl ? (
+              <img src={faviconUrl} alt="" className="w-10 h-10 rounded-lg" loading="lazy" />
+            ) : isPrompt ? (
               <Sparkles size={28} className="text-primary/30" />
             ) : (
               <ExternalLink size={28} className="text-muted-foreground/30" />
