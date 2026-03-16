@@ -77,8 +77,8 @@ const PromptsPage = () => {
     return [...raw].sort((a, b) => (freq.get(b) || 0) - (freq.get(a) || 0));
   }, [allTags, prompts]);
 
-  const displayTags = showAllTags ? sortedTags : sortedTags;
-  const hiddenTagCount = sortedTags.length - TAG_MOBILE_LIMIT;
+  const displayTags = sortedTags;
+  const hasHiddenTags = sortedTags.length > 5;
 
   return (
     <div className="max-w-4xl mx-auto">
