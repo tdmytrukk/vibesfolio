@@ -47,7 +47,7 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Steps list */}
-          <div className="order-2 md:order-1 space-y-6">
+          <div className="order-2 md:order-1 space-y-4 flex flex-col justify-between">
             {features.map((feature, index) => (
               <motion.button
                 key={index}
@@ -64,27 +64,21 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
                 {/* Step indicator */}
                 <motion.div
                   className={cn(
-                    "w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 shrink-0 mt-0.5 transition-colors duration-300",
+                    "w-3 h-3 rounded-full shrink-0 mt-1.5 transition-colors duration-300",
                     index === currentFeature
-                      ? "bg-primary border-primary text-primary-foreground"
+                      ? "bg-primary"
                       : index < currentFeature
-                        ? "bg-primary/20 border-primary/40 text-foreground"
-                        : "bg-muted border-border text-muted-foreground"
+                        ? "bg-primary/40"
+                        : "bg-border"
                   )}
-                >
-                  {index < currentFeature ? (
-                    <span className="text-sm font-semibold">✓</span>
-                  ) : (
-                    <span className="text-sm font-semibold">{index + 1}</span>
-                  )}
-                </motion.div>
+                />
 
                 {/* Text */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-heading text-lg md:text-xl text-foreground leading-snug">
                     {feature.title || feature.step}
                   </h3>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed mt-1">
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
                     {feature.content}
                   </p>
 

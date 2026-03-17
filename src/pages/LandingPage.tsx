@@ -11,28 +11,28 @@ import featureCommunity from "@/assets/feature-community.png";
 
 const features = [
   {
-    step: "Step 1",
-    title: "Idea Inbox",
-    content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
-    image: featureIdeaInbox,
-  },
-  {
-    step: "Step 2",
+    step: "Prompt Library",
     title: "Prompt Library",
     content: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
     image: featurePromptLibrary,
   },
   {
-    step: "Step 3",
+    step: "Resource Vault",
     title: "Resource Vault",
     content: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
     image: featureResourceVault,
   },
   {
-    step: "Step 4",
+    step: "Community",
     title: "Community",
     content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
     image: featureCommunity,
+  },
+  {
+    step: "Idea Inbox",
+    title: "Idea Inbox",
+    content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
+    image: featureIdeaInbox,
   },
 ];
 

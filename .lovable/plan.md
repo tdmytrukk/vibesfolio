@@ -1,15 +1,28 @@
 
 
-## Changes
+## Update Masterplan to Reflect Current Positioning
 
-### 1. Reorder features in `src/pages/LandingPage.tsx`
-Move Idea Inbox from first to last: Prompt Library → Resource Vault → Community → Idea Inbox.
+The masterplan still references the deferred project-tracking features (Build Log, Cockpit, session debriefs, shipping logs) as active pillars. These need to be removed or moved to a "Deferred" section to match the current focus: **ideas, prompts, resources, and community**.
 
-### 2. Remove numbered step indicators in `src/components/FeatureSteps.tsx`
-Replace the numbered circle (1-4) with a simple dot/bullet indicator. Keep the checkmark (✓) for visited steps — shows as a filled dot for current, muted dot for unvisited, checkmark for passed.
+### Changes to `docs/masterplan.md`
 
-### 3. Shrink description text and vertically align steps to image
-- Reduce description from `text-sm md:text-base` to `text-xs md:text-sm`
-- Reduce step gap from `space-y-6` to `space-y-4`
-- Add `justify-between` or `h-full` to the steps column so the list stretches to match the image panel height
+1. **Primary Value Loop** (lines 31–35) — Remove "Start build → Track progress → Reflect → Ship" steps. New loop:
+   ```
+   Capture idea → Collect resources → Save prompts → Share with community → Repeat
+   ```
+
+2. **Success Metrics** (lines 41–43) — Remove "Ideas → Builds conversion" and "Session debrief completion" rows. Replace with metrics like "Resources saved per user" and "Artifacts shared to community".
+
+3. **Product Principles** (line 53) — Replace principle #3 ("Reflection drives growth" referencing debriefs/shipping logs) with something like: **"Sharing accelerates learning"** — Publishing prompts and resources to the community creates a flywheel of collective growth.
+
+4. **Feature Pillars** (lines 67–71) — Remove **Build Log** and **Cockpit** sections entirely. Keep only: Idea Inbox, Resource Vault, Prompt Library, Community, Profile.
+
+5. **Indie Builder persona** (line 17) — Update description and pain points to remove "manages ideas and side projects" / "lightweight tracking". Reframe around saving and sharing resources.
+
+6. **Risks & Mitigations** (line 88) — Replace "Session debriefs and what's next nudges" with a return-loop strategy that fits (e.g., community notifications, new shared artifacts). Replace "Feature creep toward PM tools" with "Feature creep beyond curation" or similar.
+
+7. **Revenue Model** (line 83) — Keep as-is (already aligned with current positioning).
+
+### Also update
+- **`docs/changelog.md`** — Log the masterplan revision.
 
