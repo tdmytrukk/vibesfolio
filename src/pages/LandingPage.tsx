@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import FeatureSteps from "@/components/FeatureSteps";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
 import featurePromptLibrary from "@/assets/feature-prompt-library.png";
-import featureIdeaInbox from "@/assets/feature-idea-inbox.png";
+
 import featureCommunity from "@/assets/feature-community.png";
 
 const features = [
@@ -27,12 +27,6 @@ const features = [
     title: "Community",
     content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
     image: featureCommunity,
-  },
-  {
-    step: "Idea Inbox",
-    title: "Idea Inbox",
-    content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
-    image: featureIdeaInbox,
   },
 ];
 
