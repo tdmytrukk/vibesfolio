@@ -81,7 +81,7 @@ const PromptsPage = () => {
   const hasHiddenTags = sortedTags.length > 5;
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       {/* Search & filters */}
       <div className="mb-6 space-y-3">
         <div className="relative">
