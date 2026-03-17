@@ -23,7 +23,7 @@ const features = [
     step: "Step 3",
     title: "Resource Vault",
     content: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
-    image: "/placeholder.svg",
+    image: featureResourceVault,
   },
   {
     step: "Step 4",
