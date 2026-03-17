@@ -78,16 +78,18 @@ const VaultPage = () => {
   return (
     <div className="max-w-5xl mx-auto">
 
-      {/* Search bar — full-width rounded pill like Community */}
-      <div className="relative mb-4 sm:mb-6">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
-        <input
-          type="text"
-          placeholder="Search resources…"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full sm:max-w-sm rounded-full bg-card/80 backdrop-blur-sm border border-border/20 pl-11 pr-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
-        />
+      {/* Search bar */}
+      <div className="mb-6 space-y-3">
+        <div className="relative">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
+          <input
+            type="text"
+            placeholder="Search resources…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-pill bg-card/80 backdrop-blur-sm border border-border/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 shadow-sm"
+          />
+        </div>
       </div>
 
       {/* Category pills */}
