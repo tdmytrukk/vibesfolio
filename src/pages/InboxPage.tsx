@@ -18,6 +18,17 @@ const InboxPage = () => {
   const { isNewUser, loading: onboardingLoading, completeOnboarding } = useOnboarding();
   const [addOpen, setAddOpen] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open detail from ?highlight=id (e.g. from global search)
+  useEffect(() => {
+    const highlightId = searchParams.get("highlight");
+    if (highlightId && ideas.length > 0) {
+      const found = ideas.find((i) => i.id === highlightId);
+      if (found) setSelectedIdea(found);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, ideas, setSearchParams]);
 
   const formatDate = (iso: string) => {
     const d = new Date(iso);

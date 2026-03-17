@@ -32,6 +32,17 @@ const PromptsPage = () => {
   const [editTarget, setEditTarget] = useState<Prompt | null>(null);
   const [detailPrompt, setDetailPrompt] = useState<Prompt | null>(null);
   const [showAllTags, setShowAllTags] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open detail from ?highlight=id (e.g. from global search)
+  useEffect(() => {
+    const highlightId = searchParams.get("highlight");
+    if (highlightId && prompts.length > 0) {
+      const found = prompts.find((p) => p.id === highlightId);
+      if (found) setDetailPrompt(found);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, prompts, setSearchParams]);
 
   // Filter prompts
   const filtered = prompts.filter((p) => {
