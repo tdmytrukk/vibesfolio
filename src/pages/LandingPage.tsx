@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import FeatureSteps from "@/components/FeatureSteps";
+import featureResourceVault from "@/assets/feature-resource-vault.png";
 
 const features = [
   {
@@ -22,7 +23,7 @@ const features = [
     step: "Step 3",
     title: "Resource Vault",
     content: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
-    image: "/placeholder.svg",
+    image: featureResourceVault,
   },
   {
     step: "Step 4",
