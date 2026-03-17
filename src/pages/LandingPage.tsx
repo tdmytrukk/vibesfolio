@@ -7,6 +7,7 @@ import FeatureSteps from "@/components/FeatureSteps";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
 import featurePromptLibrary from "@/assets/feature-prompt-library.png";
 import featureIdeaInbox from "@/assets/feature-idea-inbox.png";
+import featureCommunity from "@/assets/feature-community.png";
 
 const features = [
   {
