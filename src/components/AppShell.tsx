@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { to: "/ideas", label: "Ideas", icon: Lightbulb },
   { to: "/prompts", label: "Prompts", icon: Sparkles },
   { to: "/vault", label: "Resources", icon: Archive },
   { to: "/community", label: "Community", icon: Radio },
+  { to: "/ideas", label: "Ideas", icon: Lightbulb },
 ];
 
 interface AppShellProps {
