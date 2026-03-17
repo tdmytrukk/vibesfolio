@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import FeatureSteps from "@/components/FeatureSteps";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
+import featurePromptLibrary from "@/assets/feature-prompt-library.png";
 
 const features = [
   {
@@ -17,7 +18,7 @@ const features = [
     step: "Step 2",
     title: "Prompt Library",
     content: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
-    image: "/placeholder.svg",
+    image: featurePromptLibrary,
   },
   {
     step: "Step 3",
