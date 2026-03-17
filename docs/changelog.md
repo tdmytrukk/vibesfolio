@@ -2,18 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2026-03-17]
 
 ### Changed
+- Community page search bar standardized — replaced `<Input>` component with raw `<input>` matching the exact same style (rounded-pill, py-2.5, border-border/40, shadow-sm) used on Prompts and Resources pages for visual consistency. (`src/pages/CommunityPage.tsx`)
+- Modal centering fix — Fixed framer-motion overriding CSS `-translate-y-1/2` on PromptDetailModal and ResourceDetailModal, causing modals to appear at the bottom instead of centered. Now uses `y: "-50%"` in the animate prop. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`)
+- Global search highlight — Clicking a search result now auto-opens the detail modal on Prompts, Ideas, and Resources pages via `?highlight=id` query param. (`src/pages/PromptsPage.tsx`, `src/pages/InboxPage.tsx`, `src/pages/VaultPage.tsx`)
+- Feature section remix — Replaced 2×2 grid with auto-cycling FeatureSteps component (numbered steps, progress bar, animated image panel with 3D rotateX transitions). (`src/components/FeatureSteps.tsx`, `src/pages/LandingPage.tsx`)
 
-- **2026-03-17**: Modal centering fix — Fixed framer-motion overriding CSS `-translate-y-1/2` on PromptDetailModal and ResourceDetailModal, causing modals to appear at the bottom instead of centered. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`)
-- **2026-03-17**: Global search highlight — Clicking a search result now auto-opens the detail modal on Prompts, Ideas, and Resources pages via `?highlight=id` query param. (`src/pages/PromptsPage.tsx`, `src/pages/InboxPage.tsx`, `src/pages/VaultPage.tsx`)
-- **2026-03-17**: Feature section remix — Replaced 2×2 grid with auto-cycling FeatureSteps component (numbered steps, progress bar, animated image panel with 3D rotateX transitions). Images use placeholders pending screenshots. (`src/components/FeatureSteps.tsx`, `src/pages/LandingPage.tsx`)
-- **2026-03-16**: Landing page copy refresh — Replaced repetitive "Stop..." marketing phrasing with builder-friendly alternatives across hero, feature cards, and bottom CTA. (`src/pages/LandingPage.tsx`)
-- **2026-03-16**: Community cover images fix — Fixed `publishArtifact` to insert first then fetch cover image async; `ShareToCommunityToggle` now accepts and passes `coverImageUrl`; added backfill for existing null cover images; ArtifactCard shows favicon fallback when no cover image. (`src/hooks/usePublicArtifacts.ts`, `src/components/ShareToCommunityToggle.tsx`, `src/components/ArtifactCard.tsx`)
-- **2026-03-16**: Action bar simplification — Merged two-row actions into single row; removed text labels from Open/Copy/Edit (icon-only); moved Delete button out of main card (appears only in edit mode for resources, handled via edit modal for prompts); changed Publish icon from Upload to Radio to match Community icon. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`, `src/components/PublishToggle.tsx`)
-- **2026-03-16**: Share vs Publish redesign — Split `ShareToCommunityToggle` into `PublishToggle` (green dot "Live" indicator with unpublish popover) and `ShareButton` (Web Share API / copy link / X / LinkedIn). Created public `SharedArtifactPage` at `/shared/:artifactId` for unauthenticated viewing. Updated `PromptDetailModal`, `ResourceDetailModal`, `VaultPage`, and `PromptsPage` cards with green dot indicator for published items. (`src/components/PublishToggle.tsx`, `src/components/ShareButton.tsx`, `src/pages/SharedArtifactPage.tsx`)
-- **2026-03-16**: Phase 5B complete — Global search via ⌘K/Ctrl+K command palette; `useSearch` hook queries ideas/prompts/resources with debounced ilike; `GlobalSearch` component with categorized results; search button in desktop nav + mobile header; navigates to page with `?highlight=id` (`src/hooks/useSearch.ts`, `src/components/GlobalSearch.tsx`, `src/components/AppShell.tsx`)
+## [2026-03-16]
+
+### Changed
 - **2026-03-03**: Masterplan revision — removed Build Log, Cockpit, session debriefs, shipping logs from active feature pillars; updated value loop, success metrics, product principles, personas, and risks to reflect current positioning around ideas, prompts, resources & community (`docs/masterplan.md`)
 
 ### Added
