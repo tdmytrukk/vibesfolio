@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { Search, Users, Radio } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArtifactCard from "@/components/ArtifactCard";
 import ArtifactDetailModal from "@/components/ArtifactDetailModal";
@@ -58,12 +57,13 @@ const CommunityPage = () => {
     <div className="max-w-2xl lg:max-w-6xl mx-auto space-y-5 sm:space-y-6">
       {/* Search bar */}
       <div className="relative">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
-        <Input
+        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
+        <input
+          type="text"
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           placeholder="Search resources…"
-          className="pl-11 h-11 rounded-full bg-card/80 border-border/20 text-sm placeholder:text-muted-foreground/50 focus-visible:ring-primary/20"
+          className="w-full rounded-pill bg-card/80 backdrop-blur-sm border border-border/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 shadow-sm"
         />
       </div>
 
