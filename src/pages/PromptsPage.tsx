@@ -117,15 +117,15 @@ const PromptsPage = () => {
               </button>
             );
           })}
+          {hasHiddenTags && (
+            <button
+              onClick={() => setShowAllTags(!showAllTags)}
+              className="flex items-center gap-0.5 rounded-pill px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showAllTags ? "Show less" : "Show all"} <ChevronDown size={12} className={`transition-transform ${showAllTags ? "rotate-180" : ""}`} />
+            </button>
+          )}
         </div>
-        {hasHiddenTags && (
-          <button
-            onClick={() => setShowAllTags(!showAllTags)}
-            className="flex items-center gap-0.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors mt-1"
-          >
-            {showAllTags ? "Show less" : "Show all"} <ChevronDown size={12} className={`transition-transform ${showAllTags ? "rotate-180" : ""}`} />
-          </button>
-        )}
         {hasFilters && (
           <button
             onClick={clearFilters}
