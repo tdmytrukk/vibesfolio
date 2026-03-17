@@ -6,13 +6,14 @@ import { useTheme } from "next-themes";
 import FeatureSteps from "@/components/FeatureSteps";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
 import featurePromptLibrary from "@/assets/feature-prompt-library.png";
+import featureIdeaInbox from "@/assets/feature-idea-inbox.png";
 
 const features = [
   {
     step: "Step 1",
     title: "Idea Inbox",
     content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
-    image: "/placeholder.svg",
+    image: featureIdeaInbox,
   },
   {
     step: "Step 2",
