@@ -102,17 +102,17 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
 
           {/* Image panel */}
           <div className="order-1 md:order-2 relative h-[220px] md:h-[320px] lg:h-[400px] w-full overflow-hidden rounded-xl card-glass">
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false}>
               {features.map(
                 (feature, index) =>
                   index === currentFeature && (
                     <motion.div
                       key={index}
                       className="absolute inset-0 rounded-xl overflow-hidden"
-                      initial={{ y: 80, opacity: 0, rotateX: -15 }}
-                      animate={{ y: 0, opacity: 1, rotateX: 0 }}
-                      exit={{ y: -80, opacity: 0, rotateX: 15 }}
-                      transition={{ duration: 0.45, ease: "easeInOut" }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.35, ease: "easeInOut" }}
                     >
                       <img
                         src={feature.image}
