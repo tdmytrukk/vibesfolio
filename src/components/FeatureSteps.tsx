@@ -64,20 +64,14 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
                 {/* Step indicator */}
                 <motion.div
                   className={cn(
-                    "w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 shrink-0 mt-0.5 transition-colors duration-300",
+                    "w-3 h-3 rounded-full shrink-0 mt-1.5 transition-colors duration-300",
                     index === currentFeature
-                      ? "bg-primary border-primary text-primary-foreground"
+                      ? "bg-primary"
                       : index < currentFeature
-                        ? "bg-primary/20 border-primary/40 text-foreground"
-                        : "bg-muted border-border text-muted-foreground"
+                        ? "bg-primary/40"
+                        : "bg-border"
                   )}
-                >
-                  {index < currentFeature ? (
-                    <span className="text-sm font-semibold">✓</span>
-                  ) : (
-                    <span className="text-sm font-semibold">{index + 1}</span>
-                  )}
-                </motion.div>
+                />
 
                 {/* Text */}
                 <div className="flex-1 min-w-0">
