@@ -41,9 +41,6 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
   return (
     <div className={cn("px-6 md:px-12", className)}>
       <div className="max-w-5xl mx-auto w-full">
-        <h2 className="font-heading text-2xl md:text-4xl text-foreground mb-10 text-center">
-          {title}
-        </h2>
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Steps list */}
