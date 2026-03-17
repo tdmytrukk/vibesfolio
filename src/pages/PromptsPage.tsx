@@ -95,10 +95,10 @@ const PromptsPage = () => {
           />
         </div>
 
-        <div className={`relative flex items-center gap-2 flex-wrap overflow-hidden transition-all duration-200 ${
-          showAllTags ? "" : "max-h-[40px] md:max-h-[40px]"
+        <div className={`relative flex items-center gap-2 flex-wrap transition-all duration-200 ${
+          showAllTags ? "" : "overflow-hidden"
         }`}
-          style={!showAllTags ? { maxHeight: isMobile ? '80px' : '40px' } : undefined}
+          style={!showAllTags ? { maxHeight: isMobile ? '36px' : '32px' } : undefined}
         >
           {displayTags.map((tag) => {
             const isSelected = selectedTags.includes(tag);
