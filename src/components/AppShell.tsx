@@ -63,10 +63,11 @@ const AppShell = ({ children }: AppShellProps) => {
 
         <button
           onClick={() => setSearchOpen(true)}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-white/25 dark:hover:bg-white/5 transition-colors"
+          className="flex items-center gap-2 rounded-full px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-white/25 dark:hover:bg-white/5 transition-colors"
           aria-label="Search (⌘K)"
         >
           <Search size={16} />
+          <kbd className="hidden md:inline-flex items-center gap-0.5 rounded bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground/70">⌘K</kbd>
         </button>
 
         <nav className="flex items-center gap-0.5">
