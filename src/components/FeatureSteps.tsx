@@ -78,7 +78,7 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
                   <h3 className="font-heading text-lg md:text-xl text-foreground leading-snug">
                     {feature.title || feature.step}
                   </h3>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed mt-1">
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mt-1">
                     {feature.content}
                   </p>
 
