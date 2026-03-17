@@ -1,40 +1,38 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lightbulb, Sparkles, Archive, Radio, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import FeatureSteps from "@/components/FeatureSteps";
 
 const features = [
   {
-    icon: Lightbulb,
+    step: "Step 1",
     title: "Idea Inbox",
-    desc: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
+    content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Sparkles,
+    step: "Step 2",
     title: "Prompt Library",
-    desc: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
+    content: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Archive,
+    step: "Step 3",
     title: "Resource Vault",
-    desc: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
+    content: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Radio,
+    step: "Step 4",
     title: "Community",
-    desc: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
+    content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
+    image: "/placeholder.svg",
   },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.1 + i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
-  }),
-};
+
 
 const LandingPage = () => {
   const { setTheme, theme } = useTheme();
@@ -108,26 +106,12 @@ const LandingPage = () => {
       </section>
 
       {/* Features */}
-       <section id="features" className="relative z-10 max-w-4xl mx-auto px-6 pb-20 md:pb-32">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              variants={fadeUp}
-              className="card-glass p-6 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                <f.icon size={20} className="text-foreground" strokeWidth={1.6} />
-              </div>
-              <h3 className="font-heading text-lg text-foreground">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
+       <section id="features" className="relative z-10 pb-20 md:pb-32">
+        <FeatureSteps
+          features={features}
+          title="Everything you need, one place"
+          autoPlayInterval={4000}
+        />
       </section>
 
       {/* Bottom CTA */}

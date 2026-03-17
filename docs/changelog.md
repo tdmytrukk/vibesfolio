@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **2026-03-17**: Feature section remix — Replaced 2×2 grid with auto-cycling FeatureSteps component (numbered steps, progress bar, animated image panel with 3D rotateX transitions). Images use placeholders pending screenshots. (`src/components/FeatureSteps.tsx`, `src/pages/LandingPage.tsx`)
 - **2026-03-16**: Landing page copy refresh — Replaced repetitive "Stop..." marketing phrasing with builder-friendly alternatives across hero, feature cards, and bottom CTA. (`src/pages/LandingPage.tsx`)
 - **2026-03-16**: Community cover images fix — Fixed `publishArtifact` to insert first then fetch cover image async; `ShareToCommunityToggle` now accepts and passes `coverImageUrl`; added backfill for existing null cover images; ArtifactCard shows favicon fallback when no cover image. (`src/hooks/usePublicArtifacts.ts`, `src/components/ShareToCommunityToggle.tsx`, `src/components/ArtifactCard.tsx`)
 - **2026-03-16**: Action bar simplification — Merged two-row actions into single row; removed text labels from Open/Copy/Edit (icon-only); moved Delete button out of main card (appears only in edit mode for resources, handled via edit modal for prompts); changed Publish icon from Upload to Radio to match Community icon. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`, `src/components/PublishToggle.tsx`)
