@@ -32,7 +32,7 @@ const features = [
     step: "Step 4",
     title: "Community",
     content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
-    image: "/placeholder.svg",
+    image: featureCommunity,
   },
 ];
 
