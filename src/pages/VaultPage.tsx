@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
 import { toast } from "sonner";
