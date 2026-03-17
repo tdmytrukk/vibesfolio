@@ -18,7 +18,7 @@ const features = [
     step: "Step 2",
     title: "Prompt Library",
     content: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
-    image: "/placeholder.svg",
+    image: featurePromptLibrary,
   },
   {
     step: "Step 3",
