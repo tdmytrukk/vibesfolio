@@ -7,6 +7,7 @@ import FeatureSteps from "@/components/FeatureSteps";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
 import featurePromptLibrary from "@/assets/feature-prompt-library.png";
 import featureIdeaInbox from "@/assets/feature-idea-inbox.png";
+import featureCommunity from "@/assets/feature-community.png";
 
 const features = [
   {
@@ -31,7 +32,7 @@ const features = [
     step: "Step 4",
     title: "Community",
     content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
-    image: "/placeholder.svg",
+    image: featureCommunity,
   },
 ];
 
