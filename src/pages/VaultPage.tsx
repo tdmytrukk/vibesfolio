@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Archive, Layers, Lightbulb, Wrench, BookOpen, Pin, Paperclip } from "lucide-react";
 import { toast } from "sonner";
@@ -56,6 +57,17 @@ const VaultPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [detailResource, setDetailResource] = useState<Resource | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Auto-open detail from ?highlight=id (e.g. from global search)
+  useEffect(() => {
+    const highlightId = searchParams.get("highlight");
+    if (highlightId && resources.length > 0) {
+      const found = resources.find((r) => r.id === highlightId);
+      if (found) setDetailResource(found);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, resources, setSearchParams]);
 
   const filtered = resources.filter((r) => {
     const matchCat = selectedCategory === "all" || r.category === selectedCategory;
