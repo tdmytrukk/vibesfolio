@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **2026-03-17**: Modal centering fix — Fixed framer-motion overriding CSS `-translate-y-1/2` on PromptDetailModal and ResourceDetailModal, causing modals to appear at the bottom instead of centered. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`)
 - **2026-03-17**: Global search highlight — Clicking a search result now auto-opens the detail modal on Prompts, Ideas, and Resources pages via `?highlight=id` query param. (`src/pages/PromptsPage.tsx`, `src/pages/InboxPage.tsx`, `src/pages/VaultPage.tsx`)
 - **2026-03-17**: Feature section remix — Replaced 2×2 grid with auto-cycling FeatureSteps component (numbered steps, progress bar, animated image panel with 3D rotateX transitions). Images use placeholders pending screenshots. (`src/components/FeatureSteps.tsx`, `src/pages/LandingPage.tsx`)
 - **2026-03-16**: Landing page copy refresh — Replaced repetitive "Stop..." marketing phrasing with builder-friendly alternatives across hero, feature cards, and bottom CTA. (`src/pages/LandingPage.tsx`)
