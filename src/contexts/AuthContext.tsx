@@ -29,14 +29,15 @@ interface AuthContextType {
   refreshSubscription: () => Promise<void>;
 }
 
+// TEMPORARY: Free for all users until 100 active users reached
 const defaultSubscription: SubscriptionInfo = {
-  subscribed: false,
+  subscribed: true,
   can_write: true,
-  trial_active: true,
-  trial_days_left: 14,
+  trial_active: false,
+  trial_days_left: 0,
   trial_ends_at: null,
   subscription_end: null,
-  plan_interval: null,
+  plan_interval: "free",
 };
 
 const AuthContext = createContext<AuthContextType>({
