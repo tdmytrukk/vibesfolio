@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [2026-03-17]
 
 ### Changed
+- Subscription temporarily disabled — App is now free for all users until 100 active users milestone. `fetchSubscription` bypassed in AuthContext; default subscription grants full `can_write` access. Trial banners and upgrade prompts still exist in code but won't trigger. (`src/contexts/AuthContext.tsx`)
+
+### Changed
 - Community page search bar standardized — replaced `<Input>` component with raw `<input>` matching the exact same style (rounded-pill, py-2.5, border-border/40, shadow-sm) used on Prompts and Resources pages for visual consistency. (`src/pages/CommunityPage.tsx`)
 - Modal centering fix — Fixed framer-motion overriding CSS `-translate-y-1/2` on PromptDetailModal and ResourceDetailModal, causing modals to appear at the bottom instead of centered. Now uses `y: "-50%"` in the animate prop. (`src/components/PromptDetailModal.tsx`, `src/components/ResourceDetailModal.tsx`)
 - Global search highlight — Clicking a search result now auto-opens the detail modal on Prompts, Ideas, and Resources pages via `?highlight=id` query param. (`src/pages/PromptsPage.tsx`, `src/pages/InboxPage.tsx`, `src/pages/VaultPage.tsx`)

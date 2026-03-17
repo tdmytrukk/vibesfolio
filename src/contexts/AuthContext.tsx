@@ -29,14 +29,15 @@ interface AuthContextType {
   refreshSubscription: () => Promise<void>;
 }
 
+// TEMPORARY: Free for all users until 100 active users reached
 const defaultSubscription: SubscriptionInfo = {
-  subscribed: false,
+  subscribed: true,
   can_write: true,
-  trial_active: true,
-  trial_days_left: 14,
+  trial_active: false,
+  trial_days_left: 0,
   trial_ends_at: null,
   subscription_end: null,
-  plan_interval: null,
+  plan_interval: "free",
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -69,18 +70,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setProfile(data ?? null);
   };
 
+  // TEMPORARY: Skip subscription check — free for all users
   const fetchSubscription = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
-      if (error) throw error;
-      setSubscription(data as SubscriptionInfo);
-    } catch (err) {
-      console.error("Failed to check subscription:", err);
-      // Default to allowing writes on error
-      setSubscription({ ...defaultSubscription, can_write: true });
-    } finally {
-      setSubscriptionLoading(false);
-    }
+    setSubscription({ ...defaultSubscription });
+    setSubscriptionLoading(false);
   }, []);
 
   useEffect(() => {
