@@ -116,6 +116,7 @@ const PromptsPage = () => {
                 {tag}
               </button>
             );
+          })}
           {hasHiddenTags && (
             <button
               onClick={() => setShowAllTags(!showAllTags)}
