@@ -47,7 +47,7 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
 
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Steps list */}
-          <div className="order-2 md:order-1 space-y-6">
+          <div className="order-2 md:order-1 space-y-4 flex flex-col justify-between">
             {features.map((feature, index) => (
               <motion.button
                 key={index}
