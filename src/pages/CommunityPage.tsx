@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { Search, Users, Radio } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ArtifactCard from "@/components/ArtifactCard";
 import ArtifactDetailModal from "@/components/ArtifactDetailModal";
