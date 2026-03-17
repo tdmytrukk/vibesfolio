@@ -26,17 +26,21 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (progress < 100) {
-        setProgress((prev) => prev + 100 / (autoPlayInterval / 100));
-      } else {
-        setCurrentFeature((prev) => (prev + 1) % features.length);
-        setProgress(0);
-      }
-    }, 100);
+    // Reset progress to 0, then start filling on next frame
+    setProgress(0);
+    const frameId = requestAnimationFrame(() => {
+      setProgress(100);
+    });
 
-    return () => clearInterval(timer);
-  }, [progress, features.length, autoPlayInterval]);
+    const timer = setTimeout(() => {
+      setCurrentFeature((prev) => (prev + 1) % features.length);
+    }, autoPlayInterval);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timer);
+    };
+  }, [currentFeature, features.length, autoPlayInterval]);
 
   return (
     <div className={cn("px-6 md:px-12", className)}>
@@ -82,10 +86,12 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
                   {/* Progress bar for active step */}
                   {index === currentFeature && (
                     <div className="mt-3 h-0.5 w-full bg-border rounded-full overflow-hidden">
-                      <motion.div
+                      <div
                         className="h-full bg-primary/50 rounded-full"
-                        style={{ width: `${progress}%` }}
-                        transition={{ duration: 0.1 }}
+                        style={{
+                          width: `${progress}%`,
+                          transition: progress === 0 ? 'none' : `width ${autoPlayInterval}ms linear`,
+                        }}
                       />
                     </div>
                   )}
