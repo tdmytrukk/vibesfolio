@@ -86,10 +86,12 @@ const FeatureSteps: React.FC<FeatureStepsProps> = ({
                   {/* Progress bar for active step */}
                   {index === currentFeature && (
                     <div className="mt-3 h-0.5 w-full bg-border rounded-full overflow-hidden">
-                      <motion.div
+                      <div
                         className="h-full bg-primary/50 rounded-full"
-                        style={{ width: `${progress}%` }}
-                        transition={{ duration: 0.1 }}
+                        style={{
+                          width: `${progress}%`,
+                          transition: progress === 0 ? 'none' : `width ${autoPlayInterval}ms linear`,
+                        }}
                       />
                     </div>
                   )}
