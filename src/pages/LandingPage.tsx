@@ -1,29 +1,34 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lightbulb, Sparkles, Archive, Radio, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import FeatureSteps from "@/components/FeatureSteps";
 
 const features = [
   {
-    icon: Lightbulb,
+    step: "Step 1",
     title: "Idea Inbox",
-    desc: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
+    content: "One inbox for every raw idea — no more Apple Notes chaos. Tagged, searchable, there when you're ready to ship.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Sparkles,
+    step: "Step 2",
     title: "Prompt Library",
-    desc: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
+    content: "The prompt that worked shouldn't live in your chat history. Save it once, find it instantly, copy in one click.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Archive,
+    step: "Step 3",
     title: "Resource Vault",
-    desc: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
+    content: "Bookmarks you'll actually use again. Save tools and links with auto-fetched metadata — organized, not buried.",
+    image: "/placeholder.svg",
   },
   {
-    icon: Radio,
+    step: "Step 4",
     title: "Community",
-    desc: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
+    content: "See the exact prompts other builders are shipping with. Share yours. Real artifacts — not thought leadership.",
+    image: "/placeholder.svg",
   },
 ];
 
