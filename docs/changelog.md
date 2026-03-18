@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [2026-03-18]
 
+### Added
+- New `Logo` component (`src/components/Logo.tsx`) — reusable SVG logo mark (black circle + white V chevron) with text, supports `small`/`default`/`large` sizes and optional `showText` prop
+- Replaced all text-only "Vibesfolio" branding with the new Logo component across AppShell, LandingPage, AuthPage, SharedArtifactPage, DocsLayout, and App loading screen
+
 ### Fixed
 - Auth redirect after email login pointed to `/log` (non-existent route) — now correctly goes to `/ideas`
 - Added success toast on email sign-in so users get immediate visual feedback while redirect processes
