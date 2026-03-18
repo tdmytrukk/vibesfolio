@@ -116,6 +116,12 @@ const AppShell = ({ children }: AppShellProps) => {
               <User size={14} />
               Profile
             </DropdownMenuItem>
+            {isAdmin && (
+              <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2">
+                <Shield size={14} />
+                Admin
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={signOut} className="gap-2">
               <LogOut size={14} />
               Log out
