@@ -49,7 +49,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicOnlyRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) return <AuthLoadingScreen message="Checking your session…" />;
-  if (user) return <Navigate to="/ideas" replace />;
+  if (user) return <Navigate to="/vault" replace />;
   return <>{children}</>;
 };
 
@@ -79,7 +79,7 @@ const App = () => (
                 <ProtectedRoute>
                   <AppShell>
                     <Routes>
-                      <Route path="/" element={<Navigate to="/ideas" replace />} />
+                      <Route path="/" element={<Navigate to="/vault" replace />} />
                       <Route path="/ideas" element={<InboxPage />} />
                       <Route path="/prompts" element={<PromptsPage />} />
                       <Route path="/vault" element={<VaultPage />} />

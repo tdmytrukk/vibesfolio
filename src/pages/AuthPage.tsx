@@ -37,7 +37,7 @@ const AuthPage = () => {
       </div>
     );
   }
-  if (user) return <Navigate to="/ideas" replace />;
+  if (user) return <Navigate to="/vault" replace />;
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
