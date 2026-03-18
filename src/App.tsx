@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { Loader2 } from "lucide-react";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import Logo from "@/components/Logo";
 import AppShell from "@/components/AppShell";
 import DocsLayout from "@/components/DocsLayout";
 import InboxPage from "@/pages/InboxPage";
@@ -33,7 +34,7 @@ const AuthLoadingScreen = ({ message }: { message: string }) => (
   <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center px-5">
     <div className="card-glass w-full max-w-sm p-8 text-center">
       <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-      <h1 className="mt-4 font-heading text-2xl text-foreground">Vibesfolio</h1>
+      <div className="mt-4 flex justify-center"><Logo size="large" /></div>
       <p className="mt-2 text-sm text-muted-foreground">{message}</p>
     </div>
   </div>

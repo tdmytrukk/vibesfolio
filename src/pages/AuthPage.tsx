@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 type Mode = "login" | "signup" | "forgot";
 
@@ -29,7 +30,7 @@ const AuthPage = () => {
       <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center px-5">
         <div className="card-glass w-full max-w-sm p-8 text-center">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-          <h1 className="mt-4 font-heading text-2xl text-foreground">Vibesfolio</h1>
+          <div className="mt-4 flex justify-center"><Logo size="large" /></div>
           <p className="mt-2 text-sm text-muted-foreground">
             {redirecting ? redirectMessage : "Checking your session…"}
           </p>
@@ -100,7 +101,7 @@ const AuthPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="card-glass w-full max-w-sm p-8"
       >
-        <h1 className="font-heading text-2xl text-foreground text-center mb-1">Vibesfolio</h1>
+        <div className="flex justify-center mb-1"><Logo size="large" /></div>
         <p className="text-sm text-muted-foreground text-center mb-8">
           {mode === "login" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
         </p>

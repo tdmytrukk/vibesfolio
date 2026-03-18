@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Book, Layers, Component, ArrowRightLeft, Server, Package, ChevronLeft, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Logo from "@/components/Logo";
 
 const docsNav = [
   { to: "/docs", label: "Overview", icon: Book, end: true },
@@ -38,9 +39,9 @@ const DocsLayout = () => {
           )}
         >
           <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-            <NavLink to="/" className="font-heading text-lg text-foreground hover:text-muted-foreground transition-colors flex items-center gap-2">
+            <NavLink to="/" className="hover:text-muted-foreground transition-colors flex items-center gap-2">
               <ChevronLeft size={16} />
-              Vibesfolio
+              <Logo size="small" />
             </NavLink>
           </div>
           <nav className="px-3 py-4 space-y-1">
