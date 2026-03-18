@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { Loader2 } from "lucide-react";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import Logo from "@/components/Logo";
 import AppShell from "@/components/AppShell";
 import DocsLayout from "@/components/DocsLayout";
 import InboxPage from "@/pages/InboxPage";
