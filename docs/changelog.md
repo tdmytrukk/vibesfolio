@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-03-18]
+
+### Added
+- Admin dashboard at `/admin` — protected page only visible to users with `admin` role. Includes: Feedback manager (view/update status), Total signups with weekly growth, Content overview (prompts, resources, ideas, builds, artifacts counts), Most active users leaderboard. Admin link appears in profile dropdown only for admin users. (`src/pages/AdminPage.tsx`, `src/hooks/useAdminData.ts`, `src/components/AppShell.tsx`, `src/App.tsx`)
+
 ## [2026-03-17]
 
 ### Changed
