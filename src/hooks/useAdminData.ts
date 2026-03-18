@@ -52,12 +52,34 @@ export function useAdminProfiles() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("user_id, display_name, email, created_at, is_public, avatar_url")
+        .select("user_id, display_name, email, created_at, is_public, avatar_url, is_banned")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data ?? [];
     },
   });
+}
+
+export function useAdminUserActions() {
+  const queryClient = useQueryClient();
+
+  const manageUser = useMutation({
+    mutationFn: async ({ action, targetUserId }: { action: "ban" | "unban" | "delete"; targetUserId: string }) => {
+      const { data, error } = await supabase.functions.invoke("admin-manage-user", {
+        body: { action, targetUserId },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-activity"] });
+    },
+  });
+
+  return manageUser;
 }
 
 export function useAdminFeedback() {

@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Users, MessageSquare, BarChart3, Activity } from "lucide-react";
+import { Shield, Users, MessageSquare, BarChart3, Activity, Ban, Trash2, ShieldOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useIsAdmin, useAdminStats, useAdminProfiles, useAdminFeedback, useAdminActivity } from "@/hooks/useAdminData";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useIsAdmin, useAdminStats, useAdminProfiles, useAdminFeedback, useAdminActivity, useAdminUserActions } from "@/hooks/useAdminData";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 const statusColors: Record<string, string> = {
@@ -23,6 +26,10 @@ const AdminPage = () => {
   const { data: profiles, isLoading: profilesLoading } = useAdminProfiles();
   const { data: feedback, isLoading: feedbackLoading, updateStatus } = useAdminFeedback();
   const { data: activeUsers, isLoading: activityLoading } = useAdminActivity();
+  const manageUser = useAdminUserActions();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [confirmAction, setConfirmAction] = useState<{ action: "ban" | "unban" | "delete"; userId: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!adminLoading && !isAdmin) navigate("/ideas", { replace: true });
@@ -168,18 +175,66 @@ const AdminPage = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Signed Up</TableHead>
-                      <TableHead>Public</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {profiles?.map((p) => (
-                      <TableRow key={p.user_id}>
-                        <TableCell className="text-sm font-medium">{p.display_name || "—"}</TableCell>
-                        <TableCell className="text-sm">{p.email || "—"}</TableCell>
-                        <TableCell className="text-xs text-muted-foreground">{format(new Date(p.created_at), "MMM d, yyyy")}</TableCell>
-                        <TableCell>{p.is_public ? <Badge variant="outline" className="text-xs">Public</Badge> : null}</TableCell>
-                      </TableRow>
-                    ))}
+                    {profiles?.map((p) => {
+                      const isSelf = p.user_id === user?.id;
+                      return (
+                        <TableRow key={p.user_id} className={p.is_banned ? "opacity-60" : ""}>
+                          <TableCell className="text-sm font-medium">{p.display_name || "—"}</TableCell>
+                          <TableCell className="text-sm">{p.email || "—"}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{format(new Date(p.created_at), "MMM d, yyyy")}</TableCell>
+                          <TableCell>
+                            {p.is_banned ? (
+                              <Badge variant="destructive" className="text-xs">Banned</Badge>
+                            ) : p.is_public ? (
+                              <Badge variant="outline" className="text-xs">Public</Badge>
+                            ) : (
+                              <Badge variant="secondary" className="text-xs">Active</Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {!isSelf && (
+                              <div className="flex items-center justify-end gap-1">
+                                {p.is_banned ? (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 px-2 text-xs gap-1"
+                                    onClick={() => setConfirmAction({ action: "unban", userId: p.user_id, name: p.display_name || p.email || "user" })}
+                                  >
+                                    <ShieldOff size={12} />
+                                    Unban
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 px-2 text-xs gap-1 text-orange-500 hover:text-orange-600"
+                                    onClick={() => setConfirmAction({ action: "ban", userId: p.user_id, name: p.display_name || p.email || "user" })}
+                                  >
+                                    <Ban size={12} />
+                                    Ban
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-7 px-2 text-xs gap-1 text-destructive hover:text-destructive"
+                                  onClick={() => setConfirmAction({ action: "delete", userId: p.user_id, name: p.display_name || p.email || "user" })}
+                                >
+                                  <Trash2 size={12} />
+                                  Delete
+                                </Button>
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               )}
@@ -240,6 +295,47 @@ const AdminPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Confirm ban/delete dialog */}
+      <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction?.action === "delete" ? "Delete user permanently?" : confirmAction?.action === "ban" ? "Ban this user?" : "Unban this user?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction?.action === "delete"
+                ? `This will permanently delete "${confirmAction.name}" and all their data. This cannot be undone.`
+                : confirmAction?.action === "ban"
+                ? `"${confirmAction?.name}" will be signed out and unable to log back in.`
+                : `"${confirmAction?.name}" will be able to log in again.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={confirmAction?.action === "delete" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+              onClick={() => {
+                if (!confirmAction) return;
+                manageUser.mutate(
+                  { action: confirmAction.action, targetUserId: confirmAction.userId },
+                  {
+                    onSuccess: () => {
+                      toast({ title: confirmAction.action === "delete" ? "User deleted" : confirmAction.action === "ban" ? "User banned" : "User unbanned" });
+                      setConfirmAction(null);
+                    },
+                    onError: (err: any) => {
+                      toast({ title: "Action failed", description: err.message, variant: "destructive" });
+                    },
+                  }
+                );
+              }}
+            >
+              {manageUser.isPending ? "Processing..." : confirmAction?.action === "delete" ? "Delete" : confirmAction?.action === "ban" ? "Ban" : "Unban"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

@@ -64,10 +64,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, is_banned")
       .eq("user_id", userId)
       .maybeSingle();
-    setProfile(data ?? null);
+    if (data?.is_banned) {
+      await supabase.auth.signOut();
+      return;
+    }
+    setProfile(data ? { display_name: data.display_name, avatar_url: data.avatar_url } : null);
   };
 
   // TEMPORARY: Skip subscription check — free for all users
