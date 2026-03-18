@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Users, MessageSquare, BarChart3, Activity } from "lucide-react";
+import { Shield, Users, MessageSquare, BarChart3, Activity, Ban, Trash2, ShieldOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useIsAdmin, useAdminStats, useAdminProfiles, useAdminFeedback, useAdminActivity } from "@/hooks/useAdminData";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useIsAdmin, useAdminStats, useAdminProfiles, useAdminFeedback, useAdminActivity, useAdminUserActions } from "@/hooks/useAdminData";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 const statusColors: Record<string, string> = {
