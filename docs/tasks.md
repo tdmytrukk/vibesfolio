@@ -23,6 +23,7 @@
 | 5A.6 | Empty state improvements across all pages | ✅ | Added action buttons to EmptyState component; contextual CTAs on all 5 pages |
 | 5A.7 | Prompts page compact grid redesign | ✅ | 3-col grid (2 on mobile), compact cards, PromptDetailModal for full view + actions |
 | 5A.8 | Mobile layout optimization | ✅ | Reduced top spacing, frequency-sorted tags (2-row limit on mobile), even bottom nav spacing |
+| 5A.9 | Fix Google OAuth on custom domain | ✅ | Custom domains now bypass the Lovable auth bridge and use a validated direct OAuth URL before redirecting to Google |
 
 ## Phase 5B — Search & Discovery
 

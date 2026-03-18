@@ -139,12 +139,13 @@ docs/                 # Project documentation (markdown)
     <section className="space-y-3">
       <h2 className="text-xl">Authentication Flow</h2>
       <div className="bg-muted/50 rounded-lg p-4 text-xs font-mono text-foreground">
-        <p>1. User signs up via email/password → verification email sent</p>
-        <p>2. User verifies email → can log in</p>
-        <p>3. On first login → DB trigger creates profile row</p>
-        <p>4. AuthContext provides user + profile + subscription state globally</p>
-        <p>5. ProtectedRoute redirects unauthenticated users to /auth</p>
-        <p>6. PublicOnlyRoute redirects authenticated users to /ideas</p>
+        <p>1. User signs up via email/password or Google</p>
+        <p>2. Lovable-hosted Google auth uses the Lovable auth bridge</p>
+        <p>3. Custom-domain Google auth bypasses the bridge and validates a direct backend OAuth URL before redirecting</p>
+        <p>4. On first login → DB trigger creates profile row</p>
+        <p>5. AuthContext provides user + profile + subscription state globally</p>
+        <p>6. ProtectedRoute redirects unauthenticated users to /auth</p>
+        <p>7. PublicOnlyRoute redirects authenticated users to /ideas</p>
       </div>
     </section>
   </div>

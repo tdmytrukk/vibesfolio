@@ -33,14 +33,46 @@ const AuthPage = () => {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+
     try {
+      const hostname = window.location.hostname;
+      const isLovableHostedDomain =
+        hostname.endsWith("lovable.app") ||
+        hostname.endsWith("lovableproject.com") ||
+        hostname.endsWith("lovable.dev");
+
+      if (!isLovableHostedDomain) {
+        const redirectTo = `${window.location.origin}/auth`;
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo,
+            skipBrowserRedirect: true,
+          },
+        });
+
+        if (error) throw error;
+        if (!data?.url) throw new Error("No Google sign-in URL was returned.");
+
+        const oauthUrl = new URL(data.url);
+        const allowedHost = new URL(import.meta.env.VITE_SUPABASE_URL).hostname;
+
+        if (oauthUrl.hostname !== allowedHost) {
+          throw new Error("Invalid Google redirect URL.");
+        }
+
+        window.location.assign(data.url);
+        return;
+      }
+
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
+
       if (result.error) {
         throw result.error;
       }
-      // If redirected, the page will navigate away — no need to reset loading
+
       if (!result.redirected) {
         setGoogleLoading(false);
       }

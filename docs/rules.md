@@ -53,6 +53,7 @@ This file is the single source of truth for all project-wide decisions. Update i
 ## Integrations
 
 - **Stripe**: Checkout, subscription management, customer portal via edge functions (`create-checkout`, `check-subscription`, `customer-portal`)
+- **Google OAuth**: On Lovable-hosted domains use `lovable.auth.signInWithOAuth()`. On custom domains, bypass the auth bridge and request a direct OAuth URL with `supabase.auth.signInWithOAuth({ skipBrowserRedirect: true })`, validating that the redirect host matches the backend auth host before navigation.
 - **Lovable AI Gateway**: Used for `generate-tags` and `generate-summary` edge functions. No external API key needed.
 - **URL Metadata**: `fetch-url-metadata` edge function for OG data extraction
 
