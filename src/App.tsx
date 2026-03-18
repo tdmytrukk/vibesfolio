@@ -75,6 +75,7 @@ const App = () => (
                       <Route path="/community" element={<CommunityPage />} />
                       <Route path="/community/builders" element={<BuildersPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/admin" element={<AdminPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppShell>
