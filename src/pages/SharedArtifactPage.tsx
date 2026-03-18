@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ExternalLink, Copy, Check, Sparkles, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import TagChip from "@/components/TagChip";
+import Logo from "@/components/Logo";
 
 interface ArtifactData {
   id: string;

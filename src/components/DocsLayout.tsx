@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Book, Layers, Component, ArrowRightLeft, Server, Package, ChevronLeft, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Logo from "@/components/Logo";
 
 const docsNav = [
   { to: "/docs", label: "Overview", icon: Book, end: true },
