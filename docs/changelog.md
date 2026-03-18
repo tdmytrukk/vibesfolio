@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [2026-03-18]
 
 ### Added
+- Chrome extension session sync: writes `vibesfolio_extension_session` to localStorage on auth state changes so the extension can detect the logged-in user without re-authentication
 - New `Logo` component (`src/components/Logo.tsx`) — reusable SVG logo mark (black circle + white V chevron) with text, supports `small`/`default`/`large` sizes and optional `showText` prop
 - Replaced all text-only "Vibesfolio" branding with the new Logo component across AppShell, LandingPage, AuthPage, SharedArtifactPage, DocsLayout, and App loading screen
 - `ProfileVisibilityPrompt` dialog — asks users with private profiles to make their profile visible before publishing content
