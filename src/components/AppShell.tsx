@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
 import UpgradeModal from "@/components/UpgradeModal";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useIsAdmin } from "@/hooks/useAdminData";
 import {
   DropdownMenu,
   DropdownMenuContent,
