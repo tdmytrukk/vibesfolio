@@ -36,6 +36,9 @@ Response → React Query cache → UI re-renders`}
 supabase.auth.signUp() / signInWithPassword()
     │
     ▼
+AuthPage shows explicit "Loading your workspace…" handoff after successful sign-in
+    │
+    ▼
 AuthContext.onAuthStateChange() fires
     │
     ▼
@@ -46,6 +49,9 @@ Checks subscription via "check-subscription" edge function
     │
     ▼
 { user, profile, subscription } available globally via useAuth()
+    │
+    ▼
+ProtectedRoute / PublicOnlyRoute show a loading screen while auth is bootstrapping
     │
     ▼
 ProtectedRoute grants access to app routes

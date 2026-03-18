@@ -20,12 +20,20 @@ const AuthPage = () => {
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const [redirectMessage, setRedirectMessage] = useState("Loading your workspace…");
   const { toast } = useToast();
 
-  if (authLoading) {
+  if (authLoading || redirecting) {
     return (
-      <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="bg-gradient-app bg-noise min-h-screen flex items-center justify-center px-5">
+        <div className="card-glass w-full max-w-sm p-8 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+          <h1 className="mt-4 font-heading text-2xl text-foreground">Vibesfolio</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {redirecting ? redirectMessage : "Checking your session…"}
+          </p>
+        </div>
       </div>
     );
   }
@@ -38,9 +46,12 @@ const AuthPage = () => {
         redirect_uri: window.location.origin,
       });
       if (error) throw error;
+      setRedirectMessage("Google sign-in confirmed. Loading your workspace…");
+      setRedirecting(true);
     } catch (err: any) {
       toast({ title: "Google sign-in failed", description: err.message, variant: "destructive" });
       setGoogleLoading(false);
+      setRedirecting(false);
     }
   };
 
@@ -70,10 +81,13 @@ const AuthPage = () => {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast({ title: "Signing you in…", description: "Redirecting to your dashboard." });
+        setRedirectMessage("Signed in. Loading your workspace…");
+        setRedirecting(true);
+        toast({ title: "Sign-in successful", description: "Loading your workspace…" });
       }
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
+      setRedirecting(false);
     } finally {
       setLoading(false);
     }
@@ -91,7 +105,6 @@ const AuthPage = () => {
           {mode === "login" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
         </p>
 
-        {/* Google Sign-In */}
         {mode !== "forgot" && (
           <>
             <button

@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Auth redirect after email login pointed to `/log` (non-existent route) — now correctly goes to `/ideas`
 - Added success toast on email sign-in so users get immediate visual feedback while redirect processes
-
+- Fixed confusing post-login freeze — AuthPage now shows a signed-in loading handoff, and auth-protected routing shows a visible loading screen instead of silent blank states while the workspace boots. (`src/pages/AuthPage.tsx`, `src/App.tsx`)
 
 ### Added
 - Admin dashboard at `/admin` — protected page only visible to users with `admin` role. Includes: Feedback manager (view/update status), Total signups with weekly growth, Content overview (prompts, resources, ideas, builds, artifacts counts), Most active users leaderboard. Admin link appears in profile dropdown only for admin users. (`src/pages/AdminPage.tsx`, `src/hooks/useAdminData.ts`, `src/components/AppShell.tsx`, `src/App.tsx`)
