@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [2026-03-18]
 
+### Fixed
+- Auth redirect after email login pointed to `/log` (non-existent route) — now correctly goes to `/ideas`
+- Added success toast on email sign-in so users get immediate visual feedback while redirect processes
+
+
 ### Added
 - Admin dashboard at `/admin` — protected page only visible to users with `admin` role. Includes: Feedback manager (view/update status), Total signups with weekly growth, Content overview (prompts, resources, ideas, builds, artifacts counts), Most active users leaderboard. Admin link appears in profile dropdown only for admin users. (`src/pages/AdminPage.tsx`, `src/hooks/useAdminData.ts`, `src/components/AppShell.tsx`, `src/App.tsx`)
 - Ban/unban/delete user actions in admin dashboard. Soft ban sets `is_banned` flag on profiles, signs user out on next login. Delete permanently removes user + all data via `admin-manage-user` edge function. Confirmation dialog for all destructive actions. (`src/pages/AdminPage.tsx`, `src/hooks/useAdminData.ts`, `src/contexts/AuthContext.tsx`, `supabase/functions/admin-manage-user/index.ts`)
