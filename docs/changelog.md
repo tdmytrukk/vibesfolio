@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New `Logo` component (`src/components/Logo.tsx`) — reusable SVG logo mark (black circle + white V chevron) with text, supports `small`/`default`/`large` sizes and optional `showText` prop
 - Replaced all text-only "Vibesfolio" branding with the new Logo component across AppShell, LandingPage, AuthPage, SharedArtifactPage, DocsLayout, and App loading screen
+- `ProfileVisibilityPrompt` dialog — asks users with private profiles to make their profile visible before publishing content
+- `useProfileVisibility` hook — checks profile visibility status and gates publish actions behind the prompt
+- Integrated visibility check into `PublishToggle`, `ShareToCommunityToggle`, and `PublishArtifactModal`
+- Confirmed that `is_public` defaults to `false` for new profiles in the database schema
 
 ### Fixed
 - Auth redirect after email login pointed to `/log` (non-existent route) — now correctly goes to `/ideas`
