@@ -58,8 +58,8 @@ const AppShell = ({ children }: AppShellProps) => {
       <header
         className="nav-glass fixed top-4 left-1/2 -translate-x-1/2 z-30 hidden md:flex items-center gap-1 rounded-full border border-white/30 dark:border-white/10 px-2 py-1.5"
       >
-        <span className="font-heading text-sm text-foreground tracking-tight pl-4 pr-3 select-none">
-          Vibesfolio
+        <span className="pl-4 pr-3">
+          <Logo size="small" />
         </span>
 
         <div className="h-5 w-px bg-border/50 mx-1" />

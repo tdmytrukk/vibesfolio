@@ -117,8 +117,7 @@ const SharedArtifactPage = () => {
       <header className="border-b border-border/30 bg-card/80 backdrop-blur-sm">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/images/logo-icon.png" alt="Vibesfolio" className="w-6 h-6" />
-            <span className="font-heading text-sm text-foreground">Vibesfolio</span>
+            <Logo size="small" />
           </Link>
           <Link
             to="/auth"
