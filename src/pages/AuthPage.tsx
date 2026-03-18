@@ -29,7 +29,7 @@ const AuthPage = () => {
       </div>
     );
   }
-  if (user) return <Navigate to="/log" replace />;
+  if (user) return <Navigate to="/ideas" replace />;
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -70,6 +70,7 @@ const AuthPage = () => {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        toast({ title: "Signing you in…", description: "Redirecting to your dashboard." });
       }
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
