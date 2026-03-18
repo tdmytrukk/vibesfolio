@@ -34,12 +34,20 @@ const AuthPage = () => {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
+      const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
-      if (error) throw error;
+      if (result.error) {
+        throw result.error;
+      }
+      // If redirected, the page will navigate away — no need to reset loading
+      if (!result.redirected) {
+        setGoogleLoading(false);
+      }
     } catch (err: any) {
-      toast({ title: "Google sign-in failed", description: err.message, variant: "destructive" });
+      console.error("Google sign-in error:", err);
+      const message = err?.message || "Something went wrong. Please try again.";
+      toast({ title: "Google sign-in failed", description: message, variant: "destructive" });
       setGoogleLoading(false);
     }
   };
