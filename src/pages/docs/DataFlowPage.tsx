@@ -32,8 +32,13 @@ Response → React Query cache → UI re-renders`}
       <pre className="bg-muted/50 rounded-lg p-4 text-xs font-mono text-foreground overflow-x-auto">
 {`AuthPage (signup/login form)
     │
-    ▼
-supabase.auth.signUp() / signInWithPassword()
+    ├─ Email auth → supabase.auth.signUp() / signInWithPassword()
+    │
+    └─ Google auth
+          ├─ Lovable-hosted domains → lovable.auth.signInWithOAuth()
+          └─ Custom domains → supabase.auth.signInWithOAuth({ skipBrowserRedirect: true })
+                              → validate returned OAuth URL host
+                              → window.location.assign(oauthUrl)
     │
     ▼
 AuthContext.onAuthStateChange() fires
