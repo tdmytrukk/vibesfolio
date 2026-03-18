@@ -23,6 +23,7 @@ import ComponentsPage from "@/pages/docs/ComponentsPage";
 import DataFlowPage from "@/pages/docs/DataFlowPage";
 import ApiPage from "@/pages/docs/ApiPage";
 import DependenciesPage from "@/pages/docs/DependenciesPage";
+import AdminPage from "@/pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
