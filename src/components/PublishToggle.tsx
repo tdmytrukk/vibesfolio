@@ -3,6 +3,8 @@ import { Radio, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useProfileVisibility } from "@/hooks/useProfileVisibility";
+import ProfileVisibilityPrompt from "@/components/ProfileVisibilityPrompt";
 import {
   Popover,
   PopoverContent,
@@ -40,7 +42,14 @@ const PublishToggle = ({
   const [localArtifactId, setLocalArtifactId] = useState(artifactId || null);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const handlePublish = async () => {
+  const {
+    showVisibilityPrompt,
+    setShowVisibilityPrompt,
+    guardPublish,
+    handleVisibilityConfirm,
+  } = useProfileVisibility();
+
+  const doPublish = async () => {
     if (!user) return;
     setLoading(true);
 
@@ -138,17 +147,24 @@ const PublishToggle = ({
   }
 
   return (
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        handlePublish();
-      }}
-      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-      aria-label="Publish to community"
-    >
-      <Radio size={13} />
-      Publish
-    </button>
+    <>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          guardPublish(doPublish);
+        }}
+        className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+        aria-label="Publish to community"
+      >
+        <Radio size={13} />
+        Publish
+      </button>
+      <ProfileVisibilityPrompt
+        open={showVisibilityPrompt}
+        onOpenChange={setShowVisibilityPrompt}
+        onConfirm={handleVisibilityConfirm}
+      />
+    </>
   );
 };
 
