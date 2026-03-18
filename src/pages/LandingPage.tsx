@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import FeatureSteps from "@/components/FeatureSteps";
+import Logo from "@/components/Logo";
 import featureResourceVault from "@/assets/feature-resource-vault.png";
 import featurePromptLibrary from "@/assets/feature-prompt-library.png";
 import featureIdeaInbox from "@/assets/feature-idea-inbox.png";
