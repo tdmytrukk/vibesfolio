@@ -14,7 +14,7 @@ const Logo = ({ size = "default", showText = true, className = "" }: LogoProps) 
   const { icon, text } = sizes[size];
 
   return (
-    <span className={`inline-flex items-center gap-2 select-none ${className}`}>
+    <span className={`inline-flex items-center justify-center gap-2 select-none ${className}`}>
       <svg
         width={icon}
         height={icon}
