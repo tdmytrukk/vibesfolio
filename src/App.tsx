@@ -23,6 +23,7 @@ import ComponentsPage from "@/pages/docs/ComponentsPage";
 import DataFlowPage from "@/pages/docs/DataFlowPage";
 import ApiPage from "@/pages/docs/ApiPage";
 import DependenciesPage from "@/pages/docs/DependenciesPage";
+import AdminPage from "@/pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -74,6 +75,7 @@ const App = () => (
                       <Route path="/community" element={<CommunityPage />} />
                       <Route path="/community/builders" element={<BuildersPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/admin" element={<AdminPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppShell>

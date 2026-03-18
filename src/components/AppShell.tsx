@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown, Search } from "lucide-react";
+import { Lightbulb, Sparkles, Archive, LogOut, User, Radio, Crown, Search, Shield } from "lucide-react";
 import GlobalSearch from "@/components/GlobalSearch";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFollows } from "@/hooks/useFollows";
 import UpgradeModal from "@/components/UpgradeModal";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useIsAdmin } from "@/hooks/useAdminData";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +31,7 @@ const AppShell = ({ children }: AppShellProps) => {
   const { signOut, user, profile, subscription, subscriptionLoading } = useAuth();
   const { incomingRequests } = useFollows();
   const { startCheckout } = useSubscription();
+  const { data: isAdmin } = useIsAdmin();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -114,6 +116,12 @@ const AppShell = ({ children }: AppShellProps) => {
               <User size={14} />
               Profile
             </DropdownMenuItem>
+            {isAdmin && (
+              <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2">
+                <Shield size={14} />
+                Admin
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={signOut} className="gap-2">
               <LogOut size={14} />
               Log out
@@ -180,6 +188,12 @@ const AppShell = ({ children }: AppShellProps) => {
                 <User size={14} />
                 Profile
               </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem onClick={() => navigate("/admin")} className="gap-2">
+                  <Shield size={14} />
+                  Admin
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={signOut} className="gap-2">
                 <LogOut size={14} />
                 Log out

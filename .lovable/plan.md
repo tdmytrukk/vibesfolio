@@ -1,48 +1,28 @@
 
 
-# Admin Dashboard Plan
+## Update Masterplan to Reflect Current Positioning
 
-## Overview
-Create a protected admin page at `/admin` that only users with the `admin` role in `user_roles` can access. The dashboard will show four sections: Feedback, Signups, Content Overview, and User Activity.
+The masterplan still references the deferred project-tracking features (Build Log, Cockpit, session debriefs, shipping logs) as active pillars. These need to be removed or moved to a "Deferred" section to match the current focus: **ideas, prompts, resources, and community**.
 
-## Sections
+### Changes to `docs/masterplan.md`
 
-### 1. Feedback Manager
-- Table of all feedback entries (email, type, message, page_url, status, date)
-- Ability to update status (new → reviewed → resolved)
+1. **Primary Value Loop** (lines 31–35) — Remove "Start build → Track progress → Reflect → Ship" steps. New loop:
+   ```
+   Capture idea → Collect resources → Save prompts → Share with community → Repeat
+   ```
 
-### 2. Total Signups
-- Count of all profiles + list view with display_name, email, created_at
-- Simple growth indicator (signups this week vs last week)
+2. **Success Metrics** (lines 41–43) — Remove "Ideas → Builds conversion" and "Session debrief completion" rows. Replace with metrics like "Resources saved per user" and "Artifacts shared to community".
 
-### 3. Content Overview
-- Aggregate counts: total prompts, resources, ideas, builds, public artifacts
-- Fetched via individual count queries
+3. **Product Principles** (line 53) — Replace principle #3 ("Reflection drives growth" referencing debriefs/shipping logs) with something like: **"Sharing accelerates learning"** — Publishing prompts and resources to the community creates a flywheel of collective growth.
 
-### 4. User Activity & Community
-- Most active users (by content count)
-- Public artifacts count, follow requests pending
+4. **Feature Pillars** (lines 67–71) — Remove **Build Log** and **Cockpit** sections entirely. Keep only: Idea Inbox, Resource Vault, Prompt Library, Community, Profile.
 
-## Technical Approach
+5. **Indie Builder persona** (line 17) — Update description and pain points to remove "manages ideas and side projects" / "lightweight tracking". Reframe around saving and sharing resources.
 
-### New files
-- **`src/pages/AdminPage.tsx`** — Main dashboard with tabs for each section. Uses `supabase` client to query tables (admin RLS policies already exist on all relevant tables). Checks `has_role` via a query to `user_roles` on mount; redirects non-admins.
-- **`src/hooks/useAdminData.ts`** — Hook that fetches all admin stats (profiles count, feedback list, content counts, active users). Only runs if user has admin role.
+6. **Risks & Mitigations** (line 88) — Replace "Session debriefs and what's next nudges" with a return-loop strategy that fits (e.g., community notifications, new shared artifacts). Replace "Feature creep toward PM tools" with "Feature creep beyond curation" or similar.
 
-### Route setup
-- Add `/admin` route inside the `ProtectedRoute` wrapper in `App.tsx`
-- Add an "Admin" link in the profile dropdown (only visible when user has admin role)
+7. **Revenue Model** (line 83) — Keep as-is (already aligned with current positioning).
 
-### Role check
-- Query `user_roles` table where `user_id = auth.uid()` and `role = 'admin'` on page load
-- If not admin, show access denied or redirect to `/ideas`
-
-### No database changes needed
-- All admin SELECT policies already exist on feedback, profiles, prompts, resources, ideas, builds, public_artifacts, and user_roles tables
-- The `has_role` security definer function is already in place
-
-### UI Design
-- Consistent with existing app styling (glassmorphism, rounded cards, dark theme)
-- Stats cards at top (total users, total content, pending feedback)
-- Tabbed interface below for detailed views (Feedback, Users, Content, Activity)
+### Also update
+- **`docs/changelog.md`** — Log the masterplan revision.
 
