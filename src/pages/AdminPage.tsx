@@ -295,6 +295,47 @@ const AdminPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Confirm ban/delete dialog */}
+      <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction?.action === "delete" ? "Delete user permanently?" : confirmAction?.action === "ban" ? "Ban this user?" : "Unban this user?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction?.action === "delete"
+                ? `This will permanently delete "${confirmAction.name}" and all their data. This cannot be undone.`
+                : confirmAction?.action === "ban"
+                ? `"${confirmAction?.name}" will be signed out and unable to log back in.`
+                : `"${confirmAction?.name}" will be able to log in again.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={confirmAction?.action === "delete" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+              onClick={() => {
+                if (!confirmAction) return;
+                manageUser.mutate(
+                  { action: confirmAction.action, targetUserId: confirmAction.userId },
+                  {
+                    onSuccess: () => {
+                      toast({ title: confirmAction.action === "delete" ? "User deleted" : confirmAction.action === "ban" ? "User banned" : "User unbanned" });
+                      setConfirmAction(null);
+                    },
+                    onError: (err: any) => {
+                      toast({ title: "Action failed", description: err.message, variant: "destructive" });
+                    },
+                  }
+                );
+              }}
+            >
+              {manageUser.isPending ? "Processing..." : confirmAction?.action === "delete" ? "Delete" : confirmAction?.action === "ban" ? "Ban" : "Unban"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
