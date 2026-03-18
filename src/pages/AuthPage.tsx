@@ -70,6 +70,7 @@ const AuthPage = () => {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        toast({ title: "Signing you in…", description: "Redirecting to your dashboard." });
       }
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
