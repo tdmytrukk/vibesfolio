@@ -80,11 +80,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setSubscriptionLoading(false);
   }, []);
 
+  // Sync session to localStorage for Chrome extension
+  const syncExtensionSession = (s: Session | null) => {
+    if (s) {
+      localStorage.setItem("vibesfolio_extension_session", JSON.stringify({
+        access_token: s.access_token,
+        refresh_token: s.refresh_token,
+      }));
+    } else {
+      localStorage.removeItem("vibesfolio_extension_session");
+    }
+  };
+
   useEffect(() => {
     const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setLoading(false);
+        syncExtensionSession(session);
         if (session?.user) {
           setTimeout(() => fetchProfile(session.user.id), 0);
           setTimeout(() => fetchSubscription(), 0);
@@ -99,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
+      syncExtensionSession(session);
       if (session?.user) {
         fetchProfile(session.user.id);
         fetchSubscription();
