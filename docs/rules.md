@@ -39,6 +39,7 @@ This file is the single source of truth for all project-wide decisions. Update i
 - **Tags**: Stored as `text[]` arrays in Postgres, rendered via `TagChip` component
 - **Grid layouts**: 2 cols on mobile, 3 on tablet, 4 on desktop for card grids
 - **Empty states**: Use `EmptyState` component with contextual CTAs
+- **Auth loading UX**: Never return `null` during auth bootstrapping on route guards; always show an explicit loading state so session restoration and post-login routing feel intentional
 
 ## Business Logic
 
