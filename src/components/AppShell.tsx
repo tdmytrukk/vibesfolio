@@ -31,6 +31,7 @@ const AppShell = ({ children }: AppShellProps) => {
   const { signOut, user, profile, subscription, subscriptionLoading } = useAuth();
   const { incomingRequests } = useFollows();
   const { startCheckout } = useSubscription();
+  const { data: isAdmin } = useIsAdmin();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
