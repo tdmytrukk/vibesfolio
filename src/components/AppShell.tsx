@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Logo from "@/components/Logo";
 
 const navItems = [
   { to: "/prompts", label: "Prompts", icon: Sparkles },
