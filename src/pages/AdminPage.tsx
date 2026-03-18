@@ -26,6 +26,10 @@ const AdminPage = () => {
   const { data: profiles, isLoading: profilesLoading } = useAdminProfiles();
   const { data: feedback, isLoading: feedbackLoading, updateStatus } = useAdminFeedback();
   const { data: activeUsers, isLoading: activityLoading } = useAdminActivity();
+  const manageUser = useAdminUserActions();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [confirmAction, setConfirmAction] = useState<{ action: "ban" | "unban" | "delete"; userId: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!adminLoading && !isAdmin) navigate("/ideas", { replace: true });
