@@ -207,6 +207,41 @@ Mobile:  [Projects] [Ideas] [Prompts] [Resources] [Community]  (bottom tabs)
 
 - **Name**: Vibesfolio
 - **Tagline**: "Your space for ideas, prompts & resources"
-- **Logo treatment**: Text-only in nav, `font-heading` (DM Serif Display), `text-sm`, tracking-tight
 - **Favicon**: Standard (public/favicon.ico)
-- **No external logo asset currently** — text mark only
+
+### Logo System
+
+The logo uses a custom SVG icon mark (dark circle with a chevron "V" and underline) paired with the "Vibesfolio" wordmark in DM Serif Display.
+
+**Assets available:**
+
+| File | Usage |
+|------|-------|
+| `vibesfolio-logo-horizontal-small.svg` | Inline nav, compact layouts |
+| `vibesfolio-logo-compact.svg` | Icon-only (mobile nav, favicon-style) |
+| `vibesfolio-logo-vertical.svg` | Stacked layout (auth screens, splash) |
+
+**React Component:** `src/components/Logo.tsx`
+
+```tsx
+import Logo from "@/components/Logo";
+
+<Logo />                          // Default: icon + text, 24px icon
+<Logo size="small" />             // 20px icon, smaller text
+<Logo size="large" />             // 32px icon, larger text
+<Logo showText={false} />         // Icon mark only
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `"small" \| "default" \| "large"` | `"default"` | Controls icon size and text scale |
+| `showText` | `boolean` | `true` | Show/hide the "Vibesfolio" wordmark |
+| `className` | `string` | `""` | Additional CSS classes |
+
+**Icon mark details:**
+- 32×32 viewBox, filled circle background using `currentColor`
+- Chevron stroke: `hsl(var(--primary-foreground))`, 1.6px width
+- Underline stroke: `hsl(var(--primary-foreground))`, 1.2px width
+- Inherits text color for the circle fill, making it theme-aware (light/dark)
+
+**Where it's used:** AppShell nav, LandingPage header, AuthPage, SharedArtifactPage, DocsLayout sidebar, App loading screen.
