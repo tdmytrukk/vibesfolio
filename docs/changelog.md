@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2026-03-19]
+
+### Added
+- Created `create-test-user` edge function (admin-only) for creating pre-verified test accounts
+- Created test account `testtest@gmail.com` / `TestVibes2026!` (regular user, no admin role) for Google review testers
+
 ## [2026-03-18]
 
 ### Added
