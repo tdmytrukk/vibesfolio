@@ -1,28 +1,31 @@
 
 
-## Update Masterplan to Reflect Current Positioning
+# Create Test User Account — Implementation Plan
 
-The masterplan still references the deferred project-tracking features (Build Log, Cockpit, session debriefs, shipping logs) as active pillars. These need to be removed or moved to a "Deferred" section to match the current focus: **ideas, prompts, resources, and community**.
+## Overview
+Create an edge function `create-test-user` that uses the admin API to create a pre-verified test account, then invoke it to create the account.
 
-### Changes to `docs/masterplan.md`
+## Steps
 
-1. **Primary Value Loop** (lines 31–35) — Remove "Start build → Track progress → Reflect → Ship" steps. New loop:
-   ```
-   Capture idea → Collect resources → Save prompts → Share with community → Repeat
-   ```
+### 1. Create Edge Function `supabase/functions/create-test-user/index.ts`
+- Admin-only (verified via `has_role` check)
+- Calls `supabase.auth.admin.createUser()` with `email_confirm: true`
+- Accepts `{ email, password, display_name }` in request body
+- The existing `create_profile_on_signup` trigger handles profile creation automatically
 
-2. **Success Metrics** (lines 41–43) — Remove "Ideas → Builds conversion" and "Session debrief completion" rows. Replace with metrics like "Resources saved per user" and "Artifacts shared to community".
+### 2. Update `supabase/config.toml`
+- Add `[functions.create-test-user]` with `verify_jwt = false` (auth checked in code)
 
-3. **Product Principles** (line 53) — Replace principle #3 ("Reflection drives growth" referencing debriefs/shipping logs) with something like: **"Sharing accelerates learning"** — Publishing prompts and resources to the community creates a flywheel of collective growth.
+### 3. Invoke the function
+- Call it once from the admin page or via the deployed URL to create:
+  - Email: `testtest@gmail.com`
+  - Password: `TestVibes2026!`
+  - Display name: `Test User`
+- No admin role assigned — regular user by default
+- Admins can delete via existing Admin Dashboard
 
-4. **Feature Pillars** (lines 67–71) — Remove **Build Log** and **Cockpit** sections entirely. Keep only: Idea Inbox, Resource Vault, Prompt Library, Community, Profile.
-
-5. **Indie Builder persona** (line 17) — Update description and pain points to remove "manages ideas and side projects" / "lightweight tracking". Reframe around saving and sharing resources.
-
-6. **Risks & Mitigations** (line 88) — Replace "Session debriefs and what's next nudges" with a return-loop strategy that fits (e.g., community notifications, new shared artifacts). Replace "Feature creep toward PM tools" with "Feature creep beyond curation" or similar.
-
-7. **Revenue Model** (line 83) — Keep as-is (already aligned with current positioning).
-
-### Also update
-- **`docs/changelog.md`** — Log the masterplan revision.
+### Technical Notes
+- No database migration needed
+- No new secrets needed (uses existing `SUPABASE_SERVICE_ROLE_KEY`)
+- Edge function can remain for future test accounts
 
